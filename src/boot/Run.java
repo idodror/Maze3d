@@ -10,7 +10,7 @@ import model.*;
 import view.*;
 
 public class Run {
-//
+
 	public static void main(String[] args) throws FileNotFoundException {
 		Controller controller = new MyController();
 		Model model = new MyModel(controller);	
