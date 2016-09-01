@@ -1,7 +1,5 @@
 package controller;
 
-import java.util.HashMap;
-
 import algorithms.mazeGenerators.Position;
 import model.Model;
 import view.View;
@@ -16,26 +14,27 @@ public class MyController implements Controller {
 	}
 
 	@Override
-	public void executeCommand(String commandLine) {
-		this.commandsManager.executeCommand(commandLine);
+	public void executeCommand (Command cmd, String[] args) {
+		cmd.doCommand(args);
 	}
 
 	@Override
 	public void displayPosition(Position pos) {
-
-		
+		this.view.displayPosition(pos);
 	}
 
 	@Override
 	public void setModelAndView(Model model, View view) {
 		this.model = model;
 		this.view = view;
-		
+		this.view.setCommandsMap(this.commandsManager.getCommandMap());
 		this.commandsManager.setModelAndView(model, view);
 	}
-	
-	public CommandsManager getCommandsManager() {
-		return this.commandsManager;
+
+	@Override
+	public void printToScreen(String out) {
+		this.view.printToScreen(out);
+		
 	}
 
 }

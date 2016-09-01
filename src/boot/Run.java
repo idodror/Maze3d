@@ -5,9 +5,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import controller.*;
-import model.*;
-import view.*;
+
+import controller.Controller;
+import controller.MyController;
+import model.Model;
+import model.MyModel;
+import view.MyView;
+import view.View;
 
 public class Run {
 
@@ -18,4 +22,5 @@ public class Run {
 		controller.setModelAndView(model, view);
 		view.start();
 	}
+
 }

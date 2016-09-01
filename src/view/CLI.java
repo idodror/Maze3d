@@ -3,6 +3,7 @@ package view;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import algorithms.mazeGenerators.Position;
@@ -14,17 +15,15 @@ public class CLI implements View {
 	private HashMap<String, Command> commandMap;
 	private MyView view;
 	
-	public CLI(MyView view, BufferedReader in, PrintWriter out, HashMap<String, Command> commandMap) {
+	public CLI(MyView view, BufferedReader in, PrintWriter out) {
 		this.in = in;
 		this.out = out;
-		this.commandMap = commandMap;
 		this.view = view;
 	}
 
 	@Override
 	public void displayPosition(Position pos) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Current Position: " + pos);
 	}
 	
 	@Override
@@ -37,7 +36,32 @@ public class CLI implements View {
 			} catch (IOException e) {
 				System.out.println("IO Exception");
 			}
-			this.view.executeCommand(commandLine);
+			try {
+				executeCommand(commandLine);
+			} catch (IllegalArgumentException e) {
+				if (!commandLine.equals("e"))
+					System.out.println(e.getMessage());
+				else System.out.println("Goodbye!");
+			}
 		} while (!(commandLine.equals("e")));
+	}
+
+	@Override
+	public void setCommandsMap(HashMap<String, Command> commandMap) {
+		this.commandMap = commandMap;
+	}
+	
+	public void executeCommand(String commandLine) {
+		Command cmd;
+		String[] args = commandLine.split(" ");
+		cmd = this.commandMap.get(args[0]);
+		if (cmd == null)
+			throw new IllegalArgumentException("Invalid Command!");
+		this.view.executeCommand(cmd, Arrays.copyOfRange(args, 1, args.length));
+	}
+
+	@Override
+	public void printToScreen(String out) {
+		System.out.println(out);
 	}
 }

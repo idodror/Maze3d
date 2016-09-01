@@ -25,53 +25,71 @@ public class CommandsManager {
 		this.commandMap.put("l", new LeftCommand());
 		this.commandMap.put("f", new ForwardCommand());
 		this.commandMap.put("b", new BackwardCommand());
+		this.commandMap.put("generate_maze", new GenerateMaze());
+		this.commandMap.put("display", new DisplayMaze());
 	}
 	
 	class UpCommand implements Command {
 
 		@Override
-		public void doCommand() {
-			model.goUp();
+		public void doCommand(String[] args) {
+			model.goUp(args[0]);
 		}
 	}
 	
 	class DownCommand implements Command {
 
 		@Override
-		public void doCommand() {
-			model.goDown();
+		public void doCommand(String[] args) {
+			model.goDown(args[0]);
 		}
 	}
 	
 	class RightCommand implements Command {
 
 		@Override
-		public void doCommand() {
-			model.goRight();
+		public void doCommand(String[] args) {
+			model.goRight(args[0]);
 		}
 	}
 	
 	class LeftCommand implements Command {
 
 		@Override
-		public void doCommand() {
-			model.goLeft();
+		public void doCommand(String[] args) {
+			model.goLeft(args[0]);
 		}
 	}
 	
 	class ForwardCommand implements Command {
 
 		@Override
-		public void doCommand() {
-			model.goForward();
+		public void doCommand(String[] args) {
+			model.goForward(args[0]);
 		}
 	}
 	
 	class BackwardCommand implements Command {
 
 		@Override
-		public void doCommand() {
-			model.goBackward();
+		public void doCommand(String[] args) {
+			model.goBackward(args[0]);
+		}
+	}
+	
+	class GenerateMaze implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			model.generateMaze(args);
+		}
+	}
+	
+	class DisplayMaze implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			model.displayMaze(args);	
 		}
 	}
 
@@ -81,13 +99,6 @@ public class CommandsManager {
 
 	public HashMap<String, Command> getCommandMap() {
 		return this.commandMap;
-	}
-	
-	public void executeCommand(String commandLine) {
-		Command cmd = this.commandMap.get(commandLine);
-		if (cmd == null)
-			throw new IllegalArgumentException("Invalid Command!");
-		cmd.doCommand();
 	}
 
 	public void setModelAndView(Model model, View view) {

@@ -2,7 +2,10 @@ package view;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
+import java.util.HashMap;
+
 import algorithms.mazeGenerators.Position;
+import controller.Command;
 import controller.Controller;
 
 public class MyView implements View {
@@ -11,7 +14,7 @@ public class MyView implements View {
 
 	public MyView(Controller controller, BufferedReader in, PrintWriter out) {
 		this.controller = controller;
-		this.cli = new CLI(this, in, out, this.controller.getCommandsManager().getCommandMap());
+		this.cli = new CLI(this, in, out);
 	}
 
 	@Override
@@ -21,10 +24,21 @@ public class MyView implements View {
 
 	@Override
 	public void displayPosition(Position pos) {
-	
+		this.cli.displayPosition(pos);
+	}
+
+	@Override
+	public void setCommandsMap(HashMap<String, Command> commandMap) {
+		this.cli.setCommandsMap(commandMap);
+		
+	}
+
+	public void executeCommand(Command cmd, String[] args) {
+		this.controller.executeCommand(cmd, args);		
 	}
 	
-	public void executeCommand(String commandLine) {
-		this.controller.executeCommand(commandLine);
+	@Override
+	public void printToScreen(String out) {
+		System.out.println(out);
 	}
 }
