@@ -32,9 +32,8 @@ public class MyController implements Controller {
 	}
 
 	@Override
-	public void printToScreen(String out) {
-		this.view.printToScreen(out);
-		
+	public void printToOutputStream(String out) {
+		this.view.printToOutputStream(out);
 	}
 
 }

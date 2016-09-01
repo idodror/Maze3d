@@ -61,7 +61,7 @@ public class CLI implements View {
 	}
 
 	@Override
-	public void printToScreen(String out) {
+	public void printToOutputStream(String out) {
 		System.out.println(out);
 	}
 }

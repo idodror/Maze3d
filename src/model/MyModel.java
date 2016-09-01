@@ -83,7 +83,7 @@ public class MyModel implements Model {
 		maze.setMaze(mg.generate(mazeDimensions[0], mazeDimensions[1], mazeDimensions[2]));
 		maze.setCurrPosition(maze.getMaze().getStartPosition());
 		this.mazeDatabase.put(args[0], maze);
-		this.controller.printToScreen("maze " + args[0] + " is ready");
+		this.controller.printToOutputStream("maze " + args[0] + " is ready");
 		
 	}
 	
@@ -114,7 +114,7 @@ public class MyModel implements Model {
 	@Override
 	public void displayMaze(String[] args) {
 		getMazeFromDatabase(args[0]);
-		this.controller.printToScreen(this.currMaze.toString());
+		this.controller.printToOutputStream(this.currMaze.toString());
 	}
 
 }

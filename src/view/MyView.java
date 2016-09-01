@@ -38,7 +38,7 @@ public class MyView implements View {
 	}
 	
 	@Override
-	public void printToScreen(String out) {
-		System.out.println(out);
+	public void printToOutputStream(String out) {
+		this.cli.printToOutputStream(out);
 	}
 }
