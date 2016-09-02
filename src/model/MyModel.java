@@ -1,5 +1,7 @@
 package model;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -12,19 +14,19 @@ import controller.Controller;
 public class MyModel implements Model {
 	private Controller controller;
 	private Position wantedPosition;
-	private Position currPosition;
-	private Maze3d currMaze;
-	private HashMap<String, MazeCurrent> mazeDatabase;
+	private Maze3d currMaze;		// current maze play on from the database
+	private Position currPosition;	// current maze's position on the maze
+	private HashMap<String, MazeAndPlayer> mazeDatabase;
 
 	public MyModel(Controller controller) {
 		this.controller = controller;
 		this.currPosition = null;
 		this.wantedPosition = null;
-		this.mazeDatabase = new HashMap<String, MazeCurrent>();
+		this.mazeDatabase = new HashMap<String, MazeAndPlayer>();
 	}
 	
 	private void getMazeFromDatabase(String name) {
-		MazeCurrent maze = this.mazeDatabase.get(name);
+		MazeAndPlayer maze = this.mazeDatabase.get(name);
 		if (maze == null)
 			throw new IllegalArgumentException("There is no maze called " + name);
 		this.currMaze = maze.getMaze();
@@ -79,7 +81,7 @@ public class MyModel implements Model {
 			throw new IllegalArgumentException("Illegal Arguments!");
 		int[] mazeDimensions = argsToMazeDimension(Arrays.copyOfRange(args, 1, args.length));
 		Maze3dGenerator mg = new GrowingTreeGenerator();
-		MazeCurrent maze = new MazeCurrent();
+		MazeAndPlayer maze = new MazeAndPlayer();
 		maze.setMaze(mg.generate(mazeDimensions[0], mazeDimensions[1], mazeDimensions[2]));
 		maze.setCurrPosition(maze.getMaze().getStartPosition());
 		this.mazeDatabase.put(args[0], maze);
@@ -107,7 +109,7 @@ public class MyModel implements Model {
 	private void goSomewhere() {
 		if (this.currMaze.validPos(this.wantedPosition) && !this.currMaze.isWall(this.wantedPosition))
 			setCurrentToWanted();
-		else System.out.println("sorry, you can't go there");
+		else this.controller.printToOutputStream("sorry, you can't go there");
 		this.controller.displayPosition(this.currPosition);
 	}
 
@@ -115,6 +117,18 @@ public class MyModel implements Model {
 	public void displayMaze(String[] args) {
 		getMazeFromDatabase(args[0]);
 		this.controller.printToOutputStream(this.currMaze.toString());
+	}
+
+	@Override
+	public void displayFilesInPath(String[] args) {
+		if (args.length != 1)
+			throw new IllegalArgumentException("Invalid Arguments!");
+		File folder = new File(args[0]);
+		File[] listOfFiles = folder.listFiles();
+		if (listOfFiles == null)
+			throw new NullPointerException("There is no such path or path is empty");
+		for (int i = 0; i < listOfFiles.length; i++)
+			this.controller.printToOutputStream(listOfFiles[i].getName());
 	}
 
 }

@@ -9,4 +9,5 @@ public interface Model {
 	public void goBackward(String name);
 	public void generateMaze(String[] args);
 	public void displayMaze(String[] args);
+	public void displayFilesInPath(String[] args);
 }

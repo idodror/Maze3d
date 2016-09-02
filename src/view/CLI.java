@@ -23,25 +23,27 @@ public class CLI implements View {
 
 	@Override
 	public void displayPosition(Position pos) {
-		System.out.println("Current Position: " + pos);
+		this.out.println("Current Position: " + pos);
 	}
 	
 	@Override
 	public void start() { 
 		String commandLine = null;
 		do {
-			System.out.println("Choose: u(up), d(down), l(left), r(right), f(forward), b(backward), e(exit)");
+			this.out.println("Choose: u(up), d(down), l(left), r(right), f(forward), b(backward), e(exit)");
 			try {
 				commandLine = in.readLine();
 			} catch (IOException e) {
-				System.out.println("IO Exception");
+				this.out.println("IO Exception");
 			}
 			try {
 				executeCommand(commandLine);
 			} catch (IllegalArgumentException e) {
 				if (!commandLine.equals("e"))
-					System.out.println(e.getMessage());
-				else System.out.println("Goodbye!");
+					this.out.println(e.getMessage());
+				else this.out.println("Goodbye!");
+			} catch (NullPointerException e) {
+				this.out.println(e.getMessage());
 			}
 		} while (!(commandLine.equals("e")));
 	}
@@ -62,6 +64,6 @@ public class CLI implements View {
 
 	@Override
 	public void printToOutputStream(String out) {
-		System.out.println(out);
+		this.out.println(out);
 	}
 }

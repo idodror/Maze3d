@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.util.HashMap;
 
 import model.Model;
@@ -27,6 +28,7 @@ public class CommandsManager {
 		this.commandMap.put("b", new BackwardCommand());
 		this.commandMap.put("generate_maze", new GenerateMaze());
 		this.commandMap.put("display", new DisplayMaze());
+		this.commandMap.put("dir", new DisplayFilesInPath());
 	}
 	
 	class UpCommand implements Command {
@@ -90,6 +92,14 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			model.displayMaze(args);	
+		}
+	}
+	
+	class DisplayFilesInPath implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			model.displayFilesInPath(args);
 		}
 	}
 
