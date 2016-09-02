@@ -1,7 +1,6 @@
 package view;
 
 import java.util.HashMap;
-
 import algorithms.mazeGenerators.Position;
 import controller.Command;
 

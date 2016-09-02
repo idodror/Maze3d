@@ -30,22 +30,20 @@ public class CLI implements View {
 	public void start() { 
 		String commandLine = null;
 		do {
-			this.out.println("Choose: u(up), d(down), l(left), r(right), f(forward), b(backward), e(exit)");
+			menu();
 			try {
 				commandLine = in.readLine();
+				executeCommand(commandLine);
 			} catch (IOException e) {
 				this.out.println("IO Exception");
-			}
-			try {
-				executeCommand(commandLine);
 			} catch (IllegalArgumentException e) {
-				if (!commandLine.equals("e"))
+				if (!commandLine.equals("exit"))
 					this.out.println(e.getMessage());
-				else this.out.println("Goodbye!");
 			} catch (NullPointerException e) {
 				this.out.println(e.getMessage());
 			}
-		} while (!(commandLine.equals("e")));
+		} while (!(commandLine.equals("exit")));
+		this.out.println("Goodbye!");
 	}
 
 	@Override
@@ -62,8 +60,29 @@ public class CLI implements View {
 		this.view.executeCommand(cmd, Arrays.copyOfRange(args, 1, args.length));
 	}
 
+	/**
+	 * Prints the string to the output stream
+	 * @param out, String to print
+	 */
 	@Override
 	public void printToOutputStream(String out) {
 		this.out.println(out);
+	}
+	
+	/**
+	 * Menu
+	 */
+	private void menu() {
+		this.out.println("*****MENU*****");
+		this.out.println("(0) <u/d/f/b/r/l> <maze_name>");
+		this.out.println("(1) dir <path>");
+		this.out.println("(2) generate_maze <name> <other params>");
+		this.out.println("(3) display <name>");
+		this.out.println("(4) display_cross_section <index> <{X,Y,Z}> <name>");
+		this.out.println("(5) save_maze <name> <file name>");
+		this.out.println("(6) load_maze <file name> <name>");
+		this.out.println("(7) solve <name> <algorithm>");
+		this.out.println("(8) display_solution <name>");
+		this.out.println("(9) exit");
 	}
 }

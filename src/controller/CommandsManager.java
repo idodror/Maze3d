@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.File;
 import java.util.HashMap;
 
 import model.Model;
@@ -29,13 +28,15 @@ public class CommandsManager {
 		this.commandMap.put("generate_maze", new GenerateMaze());
 		this.commandMap.put("display", new DisplayMaze());
 		this.commandMap.put("dir", new DisplayFilesInPath());
+		this.commandMap.put("display_cross_section", new DisplayCrossSection());
+		this.commandMap.put("save_maze", new SaveMaze());
 	}
 	
 	class UpCommand implements Command {
 
 		@Override
 		public void doCommand(String[] args) {
-			model.goUp(args[0]);
+			model.goUp(args);
 		}
 	}
 	
@@ -43,7 +44,7 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			model.goDown(args[0]);
+			model.goDown(args);
 		}
 	}
 	
@@ -51,7 +52,7 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			model.goRight(args[0]);
+			model.goRight(args);
 		}
 	}
 	
@@ -59,7 +60,7 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			model.goLeft(args[0]);
+			model.goLeft(args);
 		}
 	}
 	
@@ -67,7 +68,7 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			model.goForward(args[0]);
+			model.goForward(args);
 		}
 	}
 	
@@ -75,7 +76,7 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			model.goBackward(args[0]);
+			model.goBackward(args);
 		}
 	}
 	
@@ -100,6 +101,22 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			model.displayFilesInPath(args);
+		}
+	}
+	
+	class DisplayCrossSection implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			model.DisplayCrossSection(args);
+		}
+	}
+	
+	class SaveMaze implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			model.saveMaze(args);
 		}
 	}
 
