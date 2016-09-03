@@ -41,4 +41,5 @@ public interface Model {
 	 */
 	public void saveMaze(String[] args);
 	public void loadMaze(String[] args);
+	public void solve(String[] args);
 }

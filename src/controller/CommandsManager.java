@@ -31,6 +31,7 @@ public class CommandsManager {
 		this.commandMap.put("display_cross_section", new DisplayCrossSection());
 		this.commandMap.put("save_maze", new SaveMaze());
 		this.commandMap.put("load_maze", new loadMaze());
+		this.commandMap.put("solve",new solve());
 	}
 	
 	class UpCommand implements Command {
@@ -126,6 +127,14 @@ public class CommandsManager {
 		public void doCommand(String[] args) {
 			model.loadMaze(args);
 		}
+	}
+	class solve implements Command{
+
+		@Override
+		public void doCommand(String[] args) {
+			model.solve(args);			
+		}
+		
 	}
 
 	public View getView() {

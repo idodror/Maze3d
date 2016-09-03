@@ -7,16 +7,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
 
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Maze3dGenerator;
 import algorithms.mazeGenerators.Position;
+import algorithms.search.BFS;
+import algorithms.search.CommonSearcher;
+import algorithms.search.DFS;
+import algorithms.search.Maze3dDomain;
+import algorithms.search.Searchable;
+import algorithms.search.Searcher;
 import controller.Controller;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
-import javafx.scene.transform.Scale;
 
 /**
  * This is the Model layer of the MVC
@@ -284,29 +288,51 @@ public class MyModel implements Model {
 		
 		if (args.length != 2)
 			throw new IllegalArgumentException("Illegal Arguments!");
-		File myFile = new File(args[1]);
+		File myFile = new File(args[0]);
 			try{
 				MyDecompressorInputStream in = new MyDecompressorInputStream(new FileInputStream(myFile));
 				byte[] b=new byte[in.read()];
 				MazeAndPlayer maze=new MazeAndPlayer();
 				Maze3d tempMaze= new Maze3d(b);
+				maze.setMaze(tempMaze);
 				if(tempMaze==null)
 					throw new IllegalArgumentException("Illegal Arguments!");
-				maze.setMaze(new Maze3d(b));
+				else{
+				
 				mazeDatabase.put(args[1], maze);
 				in.read(this.currMaze.toByteArray());
+				}
 			}catch (FileNotFoundException e){
 				throw new IllegalArgumentException("File not found");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		
-		
-		
-	
-	
-	
+
 	}
+
+	@Override
+	public  void solve(String[] args) {
+		if (args.length != 2) 
+			throw new IllegalArgumentException("Illegal Arguments!");
+		getMazeFromDatabase(args[0]);
+		MazeAndPlayer maze= new MazeAndPlayer();
+		maze=this.mazeDatabase.get(args[0]);
+		Searchable<Maze3d> searchInMaze = new Maze3dDomain<>(7, 7, 7);
+		//Maze3dDomain<Position> maze3dDomain = new Maze3dDomain<>(1, 5, 5);
+		maze.setMaze3dDomain(maze3dDomain);
+		if(args[1].equals("bfs")){
+			Searcher<Maze3d> bfs = new BFS<Maze3d>();
+			Solution<Maze3d> sol = bfs.search(searchInMaze);
+			this.controller.printToOutputStream("solution for "+ args[0]+" is ready");
+		} else if(args[1].equals("dfs")){
+			DFS<Position> dfs=new DFS<Position>();
+			dfs.search(maze.getMaze3dDomain());
+			this.controller.printToOutputStream("solution for "+ args[0]+" is ready");
+		}
+	
+		
+	}
+	
 
 	
 	}
