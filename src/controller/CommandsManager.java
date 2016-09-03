@@ -1,7 +1,6 @@
 package controller;
 
 import java.util.HashMap;
-
 import model.Model;
 import view.View;
 
@@ -30,9 +29,9 @@ public class CommandsManager {
 		this.commandMap.put("dir", new DisplayFilesInPath());
 		this.commandMap.put("display_cross_section", new DisplayCrossSection());
 		this.commandMap.put("save_maze", new SaveMaze());
-		this.commandMap.put("load_maze", new loadMaze());
-		this.commandMap.put("solve",new solve());
-		this.commandMap.put("display_solution", new display_solution());
+		this.commandMap.put("load_maze", new LoadMaze());
+		this.commandMap.put("solve", new Solve());
+		this.commandMap.put("display_solution", new DisplaySolution());
 	}
 	
 	class UpCommand implements Command {
@@ -111,7 +110,7 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			model.DisplayCrossSection(args);
+			model.displayCrossSection(args);
 		}
 	}
 	
@@ -122,14 +121,14 @@ public class CommandsManager {
 			model.saveMaze(args);
 		}
 	}
-	class loadMaze implements Command {
+	class LoadMaze implements Command {
 
 		@Override
 		public void doCommand(String[] args) {
 			model.loadMaze(args);
 		}
 	}
-	class solve implements Command{
+	class Solve implements Command{
 
 		@Override
 		public void doCommand(String[] args) {
@@ -137,7 +136,7 @@ public class CommandsManager {
 		}
 		
 	}
-	class display_solution implements Command{
+	class DisplaySolution implements Command{
 
 		@Override
 		public void doCommand(String[] args) {

@@ -5,6 +5,7 @@ import model.Model;
 import view.View;
 
 public class MyController implements Controller {
+	
 	private Model model;
 	private View view;
 	private CommandsManager commandsManager;

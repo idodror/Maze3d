@@ -3,16 +3,16 @@ package view;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
-
 import algorithms.mazeGenerators.Position;
 import controller.Command;
 import controller.Controller;
 
 /**
  * This is the view layer of the MVC
- * get all the io from the cli
+ * get all the IO from the CLI
  */
 public class MyView implements View {
+	
 	private Controller controller;
 	private CLI cli;
 
@@ -52,12 +52,11 @@ public class MyView implements View {
 	@Override
 	public void setCommandsMap(HashMap<String, Command> commandMap) {
 		this.cli.setCommandsMap(commandMap);
-		
 	}
 	
 	/**
 	 * executeCommand
-	 * call the executeCommand of cli
+	 * call the executeCommand of CLI
 	 * @param Command, String[]
 	 */
 	public void executeCommand(Command cmd, String[] args) {
@@ -66,7 +65,7 @@ public class MyView implements View {
 	
 	/**
 	 * printToOutputStream
-	 * call the printToOutputStream of cli
+	 * call the printToOutputStream of CLI
 	 * @param String
 	 */
 	@Override

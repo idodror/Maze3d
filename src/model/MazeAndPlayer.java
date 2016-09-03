@@ -2,13 +2,13 @@ package model;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
-import algorithms.search.Maze3dDomain;
 import algorithms.search.Solution;
 
 /**
  * This class Represent a maze, a position of the player on the maze and it solution
  */
 public class MazeAndPlayer {
+	
 	private Maze3d maze;
 	private Position currPosition;
 	private Solution<Maze3d> solution;
@@ -19,6 +19,17 @@ public class MazeAndPlayer {
 	public MazeAndPlayer() {
 		this.maze = null;
 		this.currPosition = null;
+		this.solution = null;
+	}
+	
+	/**
+	 * Constructor
+	 * Get a Maze3d object and initial the maze of the object to it + the currPosition to maze's start
+	 * @param maze, Maze3d
+	 */
+	public MazeAndPlayer(Maze3d maze) {
+		this.maze = maze;
+		this.currPosition = maze.getStartPosition();
 		this.solution = null;
 	}
 	

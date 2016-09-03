@@ -33,23 +33,26 @@ public interface Model {
 	 * Display cross section by {X/Y/Z} of a maze
 	 * @param args
 	 */
-	public void DisplayCrossSection(String[] args);
+	public void displayCrossSection(String[] args);
 	
 	/**
 	 * Save the maze
 	 * @param args, maze name,file name
 	 */
 	public void saveMaze(String[] args);
+	
 	/**
 	 * load the maze
 	 * @param args, maze name,file name
 	 */
 	public void loadMaze(String[] args);
+	
 	/**
 	 * solve the maze
 	 * @param args, maze name,algorithm
 	 */
 	public void solve(String[] args);
+	
 	/**
 	 * display the solution
 	 * @param args, maze name

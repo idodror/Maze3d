@@ -9,23 +9,41 @@ import java.util.HashMap;
 import algorithms.mazeGenerators.Position;
 import controller.Command;
 
+/**
+ * This is the CLI which presents the Viewer of the MVC
+ */
 public class CLI implements View {
+	
 	private BufferedReader in;
 	private PrintWriter out;
 	private HashMap<String, Command> commandMap;
 	private MyView view;
 	
+	/**
+	 * Constructor
+	 * @param view, MyView
+	 * @param in, BufferedReader
+	 * @param out, PrintWriter
+	 */
 	public CLI(MyView view, BufferedReader in, PrintWriter out) {
 		this.in = in;
 		this.out = out;
 		this.view = view;
 	}
 
+	/**
+	 * Print the position pos to the output stream
+	 * @param pos, Position
+	 */
 	@Override
 	public void displayPosition(Position pos) {
 		this.out.println("Current Position: " + pos);
 	}
 	
+	/**
+	 * Start the CLI
+	 * Menu with command line to get commands from the user
+	 */
 	@Override
 	public void start() { 
 		String commandLine = null;
@@ -46,11 +64,20 @@ public class CLI implements View {
 		this.out.println("Goodbye!");
 	}
 
+	/**
+	 * Set the command map of the CLI
+	 * @param commandMap, HashMap
+	 */
 	@Override
 	public void setCommandsMap(HashMap<String, Command> commandMap) {
 		this.commandMap = commandMap;
 	}
 	
+	/**
+	 * Get a commandLine by string, if it exist in the commands map, asks the controller to execute it
+	 * @param commandLine, String
+	 * @throws IllegalArgumentException
+	 */
 	public void executeCommand(String commandLine) {
 		Command cmd;
 		String[] args = commandLine.split(" ");

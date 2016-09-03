@@ -7,20 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Maze3dGenerator;
 import algorithms.mazeGenerators.Position;
-import algorithms.search.BFS;
-import algorithms.search.DFS;
-import algorithms.search.Maze3dDomain;
-import algorithms.search.Searchable;
-import algorithms.search.Searcher;
-import algorithms.search.Solution;
+import algorithms.search.*;
 import controller.Controller;
-import io.MyCompressorOutputStream;
-import io.MyDecompressorInputStream;
+import io.*;
 
 /**
  * This is the Model layer of the MVC
@@ -28,6 +21,7 @@ import io.MyDecompressorInputStream;
  * Holds a HashMap of the maze's created (database)
  */
 public class MyModel implements Model {
+	
 	private Controller controller;
 	private Position wantedPosition;
 	private Maze3d currMaze;		// current maze play on from the database
@@ -208,7 +202,7 @@ public class MyModel implements Model {
 	 * @param args, String[] - index, X/Y/Z, maze name
 	 */
 	@Override
-	public void DisplayCrossSection(String[] args) {
+	public void displayCrossSection(String[] args) {
 		int[][] crossSection = null;
 		int index;
 		if (args.length != 3)
@@ -272,12 +266,10 @@ public class MyModel implements Model {
 		MyCompressorOutputStream save = null;
 		try {
 			save = new MyCompressorOutputStream(new FileOutputStream(myFile));
-		} catch (FileNotFoundException e) {
-			throw new IllegalArgumentException("File not found");
-		}
-		try {
 			save.write(this.currMaze.toByteArray());
 			save.close();
+		} catch (FileNotFoundException e) {
+			throw new IllegalArgumentException("File not found");
 		} catch (IOException e) {
 			throw new NullPointerException("Can't open/close or create this file");
 		}
@@ -286,80 +278,76 @@ public class MyModel implements Model {
 	/**
 	 * This method get a maze name and file name and load the maze from the file (deCompressed)
 	 *  Command input: load_maze [file_name] [name]
-	 * @throws IllegalArgumentException if something damaged with the file
+	 * @throws NullPointerException if something damaged with the file
 	 * @param args, String[] - maze name, file name
 	 */
 	@Override
-	public void loadMaze(String[] args)  {
-		
+	public void loadMaze(String[] args) {
 		if (args.length != 2)
 			throw new IllegalArgumentException("Illegal Arguments!");
+		Maze3d loadedMaze;
 		File myFile = new File(args[0]);
-			try{
-				MyDecompressorInputStream in = new MyDecompressorInputStream(new FileInputStream(myFile));
-				byte[] b=new byte[in.read()];
-				in.read(b);
-				MazeAndPlayer maze=new MazeAndPlayer();
-				Maze3d tempMaze = new Maze3d(b);
-				maze.setMaze(tempMaze);
-				if(tempMaze == null)
-					throw new IllegalArgumentException("Illegal Arguments!");
-				else{
-				mazeDatabase.put(args[1], maze);
-				}
-			}catch (FileNotFoundException e){
-				throw new IllegalArgumentException("File not found");
-			} catch (IOException e) {
-				throw new IllegalArgumentException("File not found");
-			}
+		MyDecompressorInputStream in = null;
+		byte[] readedData = null;
+		try {
+			in = new MyDecompressorInputStream(new FileInputStream(myFile));
+			readedData = new byte[in.read()];	// size of readedData needed
+			in.read(readedData);
+			in.close();
+		} catch (FileNotFoundException e){
+			throw new NullPointerException("File not found");
+		} catch (IOException e) {
+			throw new NullPointerException("File not found");
+		}
+		loadedMaze = new Maze3d(readedData);
+		if (loadedMaze != null)
+			mazeDatabase.put(args[1], new MazeAndPlayer(loadedMaze));
 	}
 
 	/**
  	* This method get a maze name and algorithm and return the solution is ready
- 	*   Command input: solve [name],algorithm
-	* @throws IllegalArgumentException,  if something damaged with the maze
-	* @param args, String[] - maze name,algorithm
+ 	* Command input: solve [name] [algorithm]
+	* @throws IllegalArgumentException, if something damaged with the maze
+	* @param args, String[] - maze name, algorithm
 	*/
 	@Override
-	public  void solve(String[] args) {
+	public void solve(String[] args) {
 		if (args.length != 2) 
 			throw new IllegalArgumentException("Illegal Arguments!");
 		getMazeFromDatabase(args[0]);
-		MazeAndPlayer maze= new MazeAndPlayer();
-		maze=this.mazeDatabase.get(args[0]);
+		MazeAndPlayer maze = new MazeAndPlayer();
+		Solution<Maze3d> solution = null;
+		Searcher<Maze3d> searchAlgorithm = null;
+		maze = this.mazeDatabase.get(args[0]);
 		Searchable<Maze3d> searchInMaze = new Maze3dDomain<Maze3d>(maze.getMaze());
-		switch(args[1]){
+		switch (args[1]) {
 		case "bfs":
 		case "BFS":
-			Searcher<Maze3d> bfs = new BFS<Maze3d>();
-			Solution<Maze3d> sol = bfs.search(searchInMaze);
-			maze.setSolution(sol);
-			this.controller.printToOutputStream("solution for "+ args[0]+" is ready");
+			searchAlgorithm = new BFS<Maze3d>();
+			solution = searchAlgorithm.search(searchInMaze);
 			break;
-		
 		case "dfs":
 		case "DFS":
-			Searcher<Maze3d> Dfs = new DFS<Maze3d>();
-		Solution<Maze3d> solution =Dfs .search(searchInMaze);
-		maze.setSolution(solution);
-		this.controller.printToOutputStream("solution for "+ args[0]+" is ready");
-		break;
+			searchAlgorithm = new DFS<Maze3d>();
+			solution = searchAlgorithm.search(searchInMaze);
+			break;
 		}
+		maze.setSolution(solution);
+		this.controller.printToOutputStream("solution for " + args[0] + " is ready");
 	}
 
 	/**
 	 * This method get a maze name  and return all the states until the solution
-	 *  Command input: display_solution  [name]
+	 *  Command input: display_solution [name]
 	 * @throws IllegalArgumentException if something damaged with the file
 	 * @param args, String[] - maze name
 	 */
 	@Override
 	public void displaySolution(String[] args) {
 		if (args.length != 1)
-			throw new IllegalArgumentException("Invalid Arguments!");
+			throw new IllegalArgumentException("Illegal Arguments!");
 		getMazeFromDatabase(args[0]);
-		this.controller.printToOutputStream(this.mazeDatabase.get(args[0]).getSolution().toString());
-			
+		this.controller.printToOutputStream(this.mazeDatabase.get(args[0]).getSolution().toString());	
 	}
 
 }
