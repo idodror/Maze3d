@@ -30,6 +30,7 @@ public class CommandsManager {
 		this.commandMap.put("dir", new DisplayFilesInPath());
 		this.commandMap.put("display_cross_section", new DisplayCrossSection());
 		this.commandMap.put("save_maze", new SaveMaze());
+		this.commandMap.put("load_maze", new loadMaze());
 	}
 	
 	class UpCommand implements Command {
@@ -117,6 +118,13 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			model.saveMaze(args);
+		}
+	}
+	class loadMaze implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			model.loadMaze(args);
 		}
 	}
 

@@ -11,7 +11,9 @@ public class MazeAndPlayer {
 	private Maze3d maze;
 	private Position currPosition;
 	private Solution<Maze3d> solution;
+	private String MazeName;
 	
+
 	/**
 	 * Constructor
 	 */
@@ -19,6 +21,7 @@ public class MazeAndPlayer {
 		this.maze = null;
 		this.currPosition = null;
 		this.solution = null;
+		this.MazeName=null;
 	}
 	
 	/**
@@ -67,4 +70,6 @@ public class MazeAndPlayer {
 	public void setSolution(Solution<Maze3d> solution) {
 		this.solution = solution;
 	}
+	
+
 }

@@ -1,17 +1,22 @@
 package model;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Scanner;
+
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Maze3dGenerator;
 import algorithms.mazeGenerators.Position;
 import controller.Controller;
 import io.MyCompressorOutputStream;
+import io.MyDecompressorInputStream;
+import javafx.scene.transform.Scale;
 
 /**
  * This is the Model layer of the MVC
@@ -273,4 +278,37 @@ public class MyModel implements Model {
 			throw new NullPointerException("Can't open/close or create this file");
 		}
 	}
-}
+
+	@Override
+	public void loadMaze(String[] args)  {
+		if (args.length != 2)
+			throw new IllegalArgumentException("Illegal Arguments!");
+		File myFile = new File(args[0]);
+			try{
+				MyDecompressorInputStream in = new MyDecompressorInputStream(new FileInputStream(myFile));
+				byte[] b=new byte[in.read()];
+				MazeAndPlayer maze=new MazeAndPlayer();
+				Maze3d tempMaze= new Maze3d(b);
+				if(tempMaze==null)
+					throw new IllegalArgumentException("Illegal Arguments!");
+				maze.setMaze(new Maze3d(b));
+				mazeDatabase.put(args[1], maze);
+				in.read(this.currMaze.toByteArray());
+			}catch (FileNotFoundException e){
+				throw new IllegalArgumentException("File not found");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
+		
+		
+	
+	
+	
+	}
+
+	
+	}
+
+
+

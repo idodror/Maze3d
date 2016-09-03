@@ -40,4 +40,5 @@ public interface Model {
 	 * @param args, maze name
 	 */
 	public void saveMaze(String[] args);
+	public void loadMaze(String[] args);
 }
