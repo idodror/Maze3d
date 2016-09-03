@@ -281,9 +281,10 @@ public class MyModel implements Model {
 
 	@Override
 	public void loadMaze(String[] args)  {
+		
 		if (args.length != 2)
 			throw new IllegalArgumentException("Illegal Arguments!");
-		File myFile = new File(args[0]);
+		File myFile = new File(args[1]);
 			try{
 				MyDecompressorInputStream in = new MyDecompressorInputStream(new FileInputStream(myFile));
 				byte[] b=new byte[in.read()];
