@@ -282,14 +282,13 @@ public class MyModel implements Model {
 			throw new NullPointerException("Can't open/close or create this file");
 		}
 	}
+	
 	/**
 	 * This method get a maze name and file name and load the maze from the file (deCompressed)
 	 *  Command input: load_maze [file_name] [name]
-	 * @throws IllegalArgumentException, NullPointerException if something damaged with the file
+	 * @throws IllegalArgumentException if something damaged with the file
 	 * @param args, String[] - maze name, file name
 	 */
-	
-
 	@Override
 	public void loadMaze(String[] args)  {
 		
@@ -301,22 +300,26 @@ public class MyModel implements Model {
 				byte[] b=new byte[in.read()];
 				in.read(b);
 				MazeAndPlayer maze=new MazeAndPlayer();
-				Maze3d tempMaze= new Maze3d(b);
+				Maze3d tempMaze = new Maze3d(b);
 				maze.setMaze(tempMaze);
-				if(tempMaze==null)
+				if(tempMaze == null)
 					throw new IllegalArgumentException("Illegal Arguments!");
 				else{
 				mazeDatabase.put(args[1], maze);
-//				in.read(this.currMaze.toByteArray());
 				}
 			}catch (FileNotFoundException e){
 				throw new IllegalArgumentException("File not found");
 			} catch (IOException e) {
 				throw new IllegalArgumentException("File not found");
 			}
-
 	}
 
+	/**
+ 	* This method get a maze name and algorithm and return the solution is ready
+ 	*   Command input: solve [name],algorithm
+	* @throws IllegalArgumentException,  if something damaged with the maze
+	* @param args, String[] - maze name,algorithm
+	*/
 	@Override
 	public  void solve(String[] args) {
 		if (args.length != 2) 
@@ -342,15 +345,14 @@ public class MyModel implements Model {
 		this.controller.printToOutputStream("solution for "+ args[0]+" is ready");
 		break;
 		}
-	
-		}
-	/**
- 	* This method get a maze name and algorithm and return the solution is ready
- 	*   Command input: display_solution  [name]
-	* @throws IllegalArgumentException,  if something damaged with the maze
-	* @param args, String[] - maze name
-	*/
+	}
 
+	/**
+	 * This method get a maze name  and return all the states until the solution
+	 *  Command input: display_solution  [name]
+	 * @throws IllegalArgumentException if something damaged with the file
+	 * @param args, String[] - maze name
+	 */
 	@Override
 	public void displaySolution(String[] args) {
 		if (args.length != 1)
@@ -358,9 +360,7 @@ public class MyModel implements Model {
 		getMazeFromDatabase(args[0]);
 		this.controller.printToOutputStream(this.mazeDatabase.get(args[0]).getSolution().toString());
 			
-		
 	}
-
 
 }
 	

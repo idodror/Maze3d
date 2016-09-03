@@ -3,7 +3,9 @@ package view;
 import java.util.HashMap;
 import algorithms.mazeGenerators.Position;
 import controller.Command;
-
+/**
+ * This is the view interface of the MVC
+ */
 public interface View {
 	public void displayPosition(Position pos);
 	public void start();
