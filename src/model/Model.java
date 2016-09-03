@@ -37,9 +37,22 @@ public interface Model {
 	
 	/**
 	 * Save the maze
-	 * @param args, maze name
+	 * @param args, maze name,file name
 	 */
 	public void saveMaze(String[] args);
+	/**
+	 * load the maze
+	 * @param args, maze name,file name
+	 */
 	public void loadMaze(String[] args);
+	/**
+	 * solve the maze
+	 * @param args, maze name,algorithm
+	 */
 	public void solve(String[] args);
+	/**
+	 * display the solution
+	 * @param args, maze name
+	 */
+	public void displaySolution(String[] args);
 }

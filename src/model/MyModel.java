@@ -13,11 +13,11 @@ import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Maze3dGenerator;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.BFS;
-import algorithms.search.CommonSearcher;
 import algorithms.search.DFS;
 import algorithms.search.Maze3dDomain;
 import algorithms.search.Searchable;
 import algorithms.search.Searcher;
+import algorithms.search.Solution;
 import controller.Controller;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
@@ -282,6 +282,13 @@ public class MyModel implements Model {
 			throw new NullPointerException("Can't open/close or create this file");
 		}
 	}
+	/**
+	 * This method get a maze name and file name and load the maze from the file (deCompressed)
+	 *  Command input: load_maze [file_name] [name]
+	 * @throws IllegalArgumentException, NullPointerException if something damaged with the file
+	 * @param args, String[] - maze name, file name
+	 */
+	
 
 	@Override
 	public void loadMaze(String[] args)  {
@@ -292,20 +299,20 @@ public class MyModel implements Model {
 			try{
 				MyDecompressorInputStream in = new MyDecompressorInputStream(new FileInputStream(myFile));
 				byte[] b=new byte[in.read()];
+				in.read(b);
 				MazeAndPlayer maze=new MazeAndPlayer();
 				Maze3d tempMaze= new Maze3d(b);
 				maze.setMaze(tempMaze);
 				if(tempMaze==null)
 					throw new IllegalArgumentException("Illegal Arguments!");
 				else{
-				
 				mazeDatabase.put(args[1], maze);
-				in.read(this.currMaze.toByteArray());
+//				in.read(this.currMaze.toByteArray());
 				}
 			}catch (FileNotFoundException e){
 				throw new IllegalArgumentException("File not found");
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new IllegalArgumentException("File not found");
 			}
 
 	}
@@ -317,25 +324,48 @@ public class MyModel implements Model {
 		getMazeFromDatabase(args[0]);
 		MazeAndPlayer maze= new MazeAndPlayer();
 		maze=this.mazeDatabase.get(args[0]);
-		Searchable<Maze3d> searchInMaze = new Maze3dDomain<>(7, 7, 7);
-		//Maze3dDomain<Position> maze3dDomain = new Maze3dDomain<>(1, 5, 5);
-		maze.setMaze3dDomain(maze3dDomain);
-		if(args[1].equals("bfs")){
+		Searchable<Maze3d> searchInMaze = new Maze3dDomain<Maze3d>(maze.getMaze());
+		switch(args[1]){
+		case "bfs":
+		case "BFS":
 			Searcher<Maze3d> bfs = new BFS<Maze3d>();
 			Solution<Maze3d> sol = bfs.search(searchInMaze);
+			maze.setSolution(sol);
 			this.controller.printToOutputStream("solution for "+ args[0]+" is ready");
-		} else if(args[1].equals("dfs")){
-			DFS<Position> dfs=new DFS<Position>();
-			dfs.search(maze.getMaze3dDomain());
-			this.controller.printToOutputStream("solution for "+ args[0]+" is ready");
+			break;
+		
+		case "dfs":
+		case "DFS":
+			Searcher<Maze3d> Dfs = new DFS<Maze3d>();
+		Solution<Maze3d> solution =Dfs .search(searchInMaze);
+		maze.setSolution(solution);
+		this.controller.printToOutputStream("solution for "+ args[0]+" is ready");
+		break;
 		}
 	
+		}
+	/**
+ 	* This method get a maze name and algorithm and return the solution is ready
+ 	*   Command input: display_solution  [name]
+	* @throws IllegalArgumentException,  if something damaged with the maze
+	* @param args, String[] - maze name
+	*/
+
+	@Override
+	public void displaySolution(String[] args) {
+		if (args.length != 1)
+			throw new IllegalArgumentException("Invalid Arguments!");
+		getMazeFromDatabase(args[0]);
+		this.controller.printToOutputStream(this.mazeDatabase.get(args[0]).getSolution().toString());
+			
 		
 	}
+
+
+}
 	
 
 	
-	}
-
+	
 
 

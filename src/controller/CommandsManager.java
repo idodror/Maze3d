@@ -32,6 +32,7 @@ public class CommandsManager {
 		this.commandMap.put("save_maze", new SaveMaze());
 		this.commandMap.put("load_maze", new loadMaze());
 		this.commandMap.put("solve",new solve());
+		this.commandMap.put("display_solution", new display_solution());
 	}
 	
 	class UpCommand implements Command {
@@ -133,6 +134,14 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			model.solve(args);			
+		}
+		
+	}
+	class display_solution implements Command{
+
+		@Override
+		public void doCommand(String[] args) {
+			model.displaySolution(args);			
 		}
 		
 	}
