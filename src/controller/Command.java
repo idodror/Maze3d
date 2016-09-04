@@ -5,7 +5,7 @@ package controller;
  */
 public interface Command {
 	/**
-	 * Execute the command and send with it arguments in String[]
+	 * Execute the command and send with it arguments in String[] 
 	 * @param args, String[]
 	 */
 	void doCommand(String[] args);
