@@ -7,12 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Observable;
+
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Maze3dGenerator;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.*;
-import controller.Controller;
 import io.*;
 
 /**
@@ -20,23 +21,25 @@ import io.*;
  * Makes all the calculations of the game
  * Holds a HashMap of the maze's created (database)
  */
-public class MyModel implements Model {
+public class MyModel  extends Observable implements Model {
 	
-	private Controller controller;
 	private Position wantedPosition;
 	private Maze3d currMaze;		// current maze play on from the database
 	private Position currPosition;	// current maze's position on the maze
 	private HashMap<String, MazeAndPlayer> mazeDatabase;
 
+	public HashMap<String, MazeAndPlayer> getMazeDatabase() {
+		return mazeDatabase;
+	}
+
 	/**
 	 * Constructor
-	 * @param controller
 	 */
-	public MyModel(Controller controller) {
-		this.controller = controller;
+	public MyModel() {
 		this.currPosition = null;
 		this.wantedPosition = null;
 		this.mazeDatabase = new HashMap<String, MazeAndPlayer>();
+	
 	}
 	
 	/**
@@ -64,14 +67,25 @@ public class MyModel implements Model {
 	public void generateMaze(String[] args) {
 		if (args.length != 4) 
 			throw new IllegalArgumentException("Illegal Arguments!");
-		int[] mazeDimensions = argsToMazeDimension(Arrays.copyOfRange(args, 1, args.length));
-		Maze3dGenerator mg = new GrowingTreeGenerator();
-		MazeAndPlayer maze = new MazeAndPlayer();
-		maze.setMaze(mg.generate(mazeDimensions[0], mazeDimensions[1], mazeDimensions[2]));
-		maze.setCurrPosition(maze.getMaze().getStartPosition());
-		this.mazeDatabase.put(args[0], maze);
-		this.controller.printToOutputStream("maze " + args[0] + " is ready");
+		Thread generate = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				int[] mazeDimensions = argsToMazeDimension(Arrays.copyOfRange(args, 1, args.length));
+				Maze3dGenerator mg = new GrowingTreeGenerator();
+				MazeAndPlayer maze = new MazeAndPlayer();
+				maze.setMaze(mg.generate(mazeDimensions[0], mazeDimensions[1], mazeDimensions[2]));
+				maze.setCurrPosition(maze.getMaze().getStartPosition());
+				putInDatabase(args[0], maze);
+				printToOutputStream("maze " + args[0] + " is ready");
+			}
+		});
+		generate.start();
 		
+	}
+	
+	private void putInDatabase(String key, MazeAndPlayer value) {
+		this.mazeDatabase.put(key, value);
 	}
 	
 	/**
@@ -162,10 +176,13 @@ public class MyModel implements Model {
 	 * asks the controller to display the current position now
 	 */
 	private void goSomewhere() {
+		String out;
 		if (this.currMaze.validPos(this.wantedPosition) && !this.currMaze.isWall(this.wantedPosition))
 			setCurrentToWanted();
-		else this.controller.printToOutputStream("sorry, you can't go there");
-		this.controller.displayPosition(this.currPosition);
+		else out = "sorry, you can't go there";
+		out = this.currPosition.toString();
+		setChanged();
+		notifyObservers(out);
 	}
 
 	/**
@@ -175,7 +192,8 @@ public class MyModel implements Model {
 	@Override
 	public void displayMaze(String[] args) {
 		getMazeFromDatabase(args[0]);
-		this.controller.printToOutputStream(this.currMaze.toString());
+		setChanged();
+		notifyObservers(this.currMaze.toString());
 	}
 
 	/**
@@ -185,6 +203,7 @@ public class MyModel implements Model {
 	 */
 	@Override
 	public void displayFilesInPath(String[] args) {
+		StringBuilder sb = new StringBuilder();
 		if (args.length != 1)
 			throw new IllegalArgumentException("Invalid Arguments!");
 		File folder = new File(args[0]);
@@ -192,7 +211,9 @@ public class MyModel implements Model {
 		if (listOfFiles == null)
 			throw new NullPointerException("There is no such path or path is empty");
 		for (int i = 0; i < listOfFiles.length; i++)
-			this.controller.printToOutputStream(listOfFiles[i].getName());
+			sb.append(listOfFiles[i].getName() + "\n");
+		setChanged();
+		notifyObservers(sb);
 	}
 
 	/**
@@ -232,7 +253,8 @@ public class MyModel implements Model {
 		} catch (IndexOutOfBoundsException e) {
 			throw new IllegalArgumentException("Invalid Arguments!");
 		}
-		this.controller.printToOutputStream(Array2dtoString(crossSection));
+		setChanged();
+		notifyObservers(Array2dtoString(crossSection));
 	}
 
 	/**
@@ -314,26 +336,32 @@ public class MyModel implements Model {
 	public void solve(String[] args) {
 		if (args.length != 2) 
 			throw new IllegalArgumentException("Illegal Arguments!");
-		getMazeFromDatabase(args[0]);
-		MazeAndPlayer maze = new MazeAndPlayer();
-		Solution<Maze3d> solution = null;
-		Searcher<Maze3d> searchAlgorithm = null;
-		maze = this.mazeDatabase.get(args[0]);
-		Searchable<Maze3d> searchInMaze = new Maze3dDomain<Maze3d>(maze.getMaze());
-		switch (args[1]) {
-		case "bfs":
-		case "BFS":
-			searchAlgorithm = new BFS<Maze3d>();
-			solution = searchAlgorithm.search(searchInMaze);
-			break;
-		case "dfs":
-		case "DFS":
-			searchAlgorithm = new DFS<Maze3d>();
-			solution = searchAlgorithm.search(searchInMaze);
-			break;
-		}
-		maze.setSolution(solution);
-		this.controller.printToOutputStream("solution for " + args[0] + " is ready");
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				getMazeFromDatabase(args[0]);
+				MazeAndPlayer maze = new MazeAndPlayer();
+				Solution<Maze3d> solution = null;
+				Searcher<Maze3d> searchAlgorithm = null;
+				maze = getMazeDatabase().get(args[0]);
+				Searchable<Maze3d> searchInMaze = new Maze3dDomain<Maze3d>(maze.getMaze());
+				switch (args[1]) {
+				case "bfs":
+				case "BFS":
+					searchAlgorithm = new BFS<Maze3d>();
+					solution = searchAlgorithm.search(searchInMaze);
+					break;
+				case "dfs":
+				case "DFS":
+					searchAlgorithm = new DFS<Maze3d>();
+					solution = searchAlgorithm.search(searchInMaze);
+					break;
+					default: printToOutputStream("there isn't kind of algorithm");
+				}
+				maze.setSolution(solution);
+				printToOutputStream("solution for " + args[0] + " is ready");
+			}
+		}).start();
 	}
 
 	/**
@@ -344,16 +372,21 @@ public class MyModel implements Model {
 	 */
 	@Override
 	public void displaySolution(String[] args) {
+		String out;
 		if (args.length != 1)
 			throw new IllegalArgumentException("Illegal Arguments!");
 		getMazeFromDatabase(args[0]);
-		this.controller.printToOutputStream(this.mazeDatabase.get(args[0]).getSolution().toString());	
+		if (this.mazeDatabase.get(args[0]).getSolution() != null)
+			out=this.mazeDatabase.get(args[0]).getSolution().toString();
+		else out="There is no solution available for this maze";
+		setChanged();
+		notifyObservers(out);
+	}
+
+	@Override
+	public void printToOutputStream(String out) {
+		setChanged();
+		notifyObservers(out);
 	}
 
 }
-	
-
-	
-	
-
-

@@ -1,115 +1,95 @@
 package view;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Observable;
 
-import algorithms.mazeGenerators.Position;
-import controller.Command;
+import javafx.collections.SetChangeListener;
 
 /**
  * This is the CLI which presents the Viewer of the MVC
  */
-public class CLI implements View {
+public class CLI {
 	
-	private BufferedReader in;
-	private PrintWriter out;
-	private HashMap<String, Command> commandMap;
 	private MyView view;
+	private Thread ioThread;
 	
 	/**
 	 * Constructor
 	 * @param view, MyView
-	 * @param in, BufferedReader
-	 * @param out, PrintWriter
 	 */
-	public CLI(MyView view, BufferedReader in, PrintWriter out) {
-		this.in = in;
-		this.out = out;
+	public CLI(MyView view) {
 		this.view = view;
+		this.ioThread = null;
 	}
 
-	/**
-	 * Print the position pos to the output stream
-	 * @param pos, Position
-	 */
-	@Override
-	public void displayPosition(Position pos) {
-		this.out.println("Current Position: " + pos);
-	}
-	
 	/**
 	 * Start the CLI
 	 * Menu with command line to get commands from the user
 	 */
-	@Override
 	public void start() { 
-		String commandLine = null;
-		do {
-			menu();
-			try {
-				commandLine = in.readLine();
-				executeCommand(commandLine);
-			} catch (IOException e) {
-				this.out.println("IO Exception");
-			} catch (IllegalArgumentException e) {
-				if (!commandLine.equals("exit"))
-					this.out.println(e.getMessage());
-			} catch (NullPointerException e) {
-				this.out.println(e.getMessage());
+		this.ioThread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				String commandLine = null;
+				do {
+					menu();
+					commandLine = getLine();
+					try {
+						executeCommand(commandLine);
+					} catch (IllegalArgumentException e) {
+						if (!commandLine.equals("exit"))
+							printToOutputStream(e.getMessage());
+					} catch (NullPointerException e) {
+						printToOutputStream(e.getMessage());
+					}
+				} while (!(commandLine.equals("exit")));
+				exit();
 			}
-		} while (!(commandLine.equals("exit")));
-		this.out.println("Goodbye!");
-	}
 
-	/**
-	 * Set the command map of the CLI
-	 * @param commandMap, HashMap
-	 */
-	@Override
-	public void setCommandsMap(HashMap<String, Command> commandMap) {
-		this.commandMap = commandMap;
+	
+		});
+		this.ioThread.start();
 	}
 	
-	/**
-	 * Get a commandLine by string, if it exist in the commands map, asks the controller to execute it
-	 * @param commandLine, String
-	 * @throws IllegalArgumentException
-	 */
-	public void executeCommand(String commandLine) {
-		Command cmd;
-		String[] args = commandLine.split(" ");
-		cmd = this.commandMap.get(args[0]);
-		if (cmd == null)
-			throw new IllegalArgumentException("Invalid Command!");
-		this.view.executeCommand(cmd, Arrays.copyOfRange(args, 1, args.length));
+	private void executeCommand(String commandLine) {
+		this.view.executeCommand(commandLine);
 	}
-
-	/**
-	 * Prints the string to the output stream
-	 * @param out, String to print
-	 */
-	@Override
-	public void printToOutputStream(String out) {
-		this.out.println(out);
+	
+	public void exit() {
+		printToOutputStream("Goodbye!");
+		try {
+			this.view.getIn().close();
+		} catch (IOException e) {
+			
+		}
+		this.view.getOut().close();
+		this.ioThread.interrupt();
 	}
 	
 	/**
 	 * Menu
 	 */
 	private void menu() {
-		this.out.println("*****MENU*****");
-		this.out.println("(0) <u/d/f/b/r/l> <maze_name>");
-		this.out.println("(1) dir <path>");
-		this.out.println("(2) generate_maze <name> <other params>");
-		this.out.println("(3) display <name>");
-		this.out.println("(4) display_cross_section <index> <{X,Y,Z}> <name>");
-		this.out.println("(5) save_maze <name> <file name>");
-		this.out.println("(6) load_maze <file name> <name>");
-		this.out.println("(7) solve <name> <algorithm>");
-		this.out.println("(8) display_solution <name>");
-		this.out.println("(9) exit");
+		this.view.printToOutputStream("*****MENU*****");
+		this.view.printToOutputStream("(0) <u/d/f/b/r/l> <maze_name>");
+		this.view.printToOutputStream("(1) dir <path>");
+		this.view.printToOutputStream("(2) generate_maze <name> <other params>");
+		this.view.printToOutputStream("(3) display <name>");
+		this.view.printToOutputStream("(4) display_cross_section <index> <{X,Y,Z}> <name>");
+		this.view.printToOutputStream("(5) save_maze <name> <file name>");
+		this.view.printToOutputStream("(6) load_maze <file name> <name>");
+		this.view.printToOutputStream("(7) solve <name> <algorithm>");
+		this.view.printToOutputStream("(8) display_solution <name>");
+		this.view.printToOutputStream("(9) exit");
+	}
+	
+	public void printToOutputStream(String out) {
+		this.view.printToOutputStream(out);
+	}
+	
+	public String getLine() {
+		return this.view.getLine();
 	}
 }

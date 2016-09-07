@@ -58,4 +58,6 @@ public interface Model {
 	 * @param args, maze name
 	 */
 	public void displaySolution(String[] args);
+	
+	public void printToOutputStream(String out);
 }

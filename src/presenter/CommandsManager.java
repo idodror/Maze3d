@@ -1,8 +1,10 @@
-package controller;
+package presenter;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import model.Model;
 import view.View;
+
 /**
  * CommandsManager
  * this is the CommandsManager that will control all the mvc
@@ -316,12 +318,27 @@ public class CommandsManager {
 	public HashMap<String, Command> getCommandMap() {
 		return this.commandMap;
 	}
-/**
- * setModelAndView
- * @param Model ,View
- */
+	
+	/**
+	 * setModelAndView
+	 * @param Model ,View
+	 */
 	public void setModelAndView(Model model, View view) {
 		this.model = model;
 		this.view = view;
+	}
+	
+	/**
+	 * Get a commandLine by string, if it exist in the commands map, asks the controller to execute it
+	 * @param commandLine, String
+	 * @throws IllegalArgumentException
+	 */
+	public void executeCommand(String commandLine){
+		Command cmd;
+		String[] args = commandLine.split(" ");
+		cmd = this.commandMap.get(args[0]);
+		if (cmd == null)
+			throw new IllegalArgumentException("Invalid Command!");
+		cmd.doCommand(Arrays.copyOfRange(args, 1, args.length));
 	}
 }

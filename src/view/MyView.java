@@ -1,30 +1,39 @@
 package view;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import algorithms.mazeGenerators.Position;
-import controller.Command;
-import controller.Controller;
+import java.util.Observable;
+
 
 /**
  * This is the view layer of the MVC
  * get all the IO from the CLI
  */
-public class MyView implements View {
+public class MyView extends Observable implements View {
 	
-	private Controller controller;
+	private BufferedReader in;
+	private PrintWriter out;
 	private CLI cli;
 
 	/**
 	 * Constructor
 	 * @param controller,BufferedReader ,PrintWriter
 	 */
-	public MyView(Controller controller, BufferedReader in, PrintWriter out) {
-		this.controller = controller;
-		this.cli = new CLI(this, in, out);
+	public MyView( BufferedReader in, PrintWriter out) {
+		this.cli = new CLI(this);
+		this.in = in;
+		this.out = out;
 	}
 
+	public BufferedReader getIn() {
+		return in;
+	}
+
+	public PrintWriter getOut() {
+		return out;
+	}
+	
 	/**
 	 * start
 	 * call the start of cli
@@ -33,43 +42,35 @@ public class MyView implements View {
 	public void start() {
 		this.cli.start();
 	}
-
-	/**
-	 * displayPosition
-	 * call the displayPosition of cli
-	 * @param position
-	 */
-	@Override
-	public void displayPosition(Position pos) {
-		this.cli.displayPosition(pos);
-	}
-	
-	/**
-	 * setCommandsMap
-	 * call the setCommandsMap of cli
-	 * @param HashMap<String, Command>
-	 */
-	@Override
-	public void setCommandsMap(HashMap<String, Command> commandMap) {
-		this.cli.setCommandsMap(commandMap);
-	}
 	
 	/**
 	 * executeCommand
 	 * call the executeCommand of CLI
-	 * @param Command, String[]
+	 * @param  String
 	 */
-	public void executeCommand(Command cmd, String[] args) {
-		this.controller.executeCommand(cmd, args);		
+	public void executeCommand(String commandLine) {
+		setChanged();
+		notifyObservers(commandLine);		
 	}
 	
 	/**
-	 * printToOutputStream
-	 * call the printToOutputStream of CLI
-	 * @param String
+	 * Prints the string to the output stream
+	 * @param out, String to print
 	 */
 	@Override
 	public void printToOutputStream(String out) {
-		this.cli.printToOutputStream(out);
+		setChanged();
+		notifyObservers(out);
+	}
+
+	@Override
+	public String getLine() {
+		String line = null;
+		try {
+			line = this.in.readLine();
+		} catch (IOException e) {
+			printToOutputStream("IO Exception");
+		}
+		return line;
 	}
 }

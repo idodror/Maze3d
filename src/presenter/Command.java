@@ -1,4 +1,4 @@
-package controller;
+package presenter;
 
 /**
  * This interface represent Command to do in the model
