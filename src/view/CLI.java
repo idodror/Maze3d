@@ -1,13 +1,10 @@
 package view;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Observable;
-
-import javafx.collections.SetChangeListener;
 
 /**
  * This is the CLI which presents the Viewer of the MVC
+ * @author Gal Basre & Ido Dror
  */
 public class CLI {
 	
@@ -53,16 +50,21 @@ public class CLI {
 		this.ioThread.start();
 	}
 	
+	/**
+	 * Execute the commandLine to the View
+	 * @param commandLine, String
+	 */
 	private void executeCommand(String commandLine) {
 		this.view.executeCommand(commandLine);
 	}
 	
+	/**
+	 * Exit from the program and close threads and files
+	 */
 	public void exit() {
-		printToOutputStream("Goodbye!");
 		try {
 			this.view.getIn().close();
 		} catch (IOException e) {
-			
 		}
 		this.view.getOut().close();
 		this.ioThread.interrupt();
@@ -85,10 +87,18 @@ public class CLI {
 		this.view.printToOutputStream("(9) exit");
 	}
 	
+	/**
+	 * Print to the output stream
+	 * @param out, String
+	 */
 	public void printToOutputStream(String out) {
 		this.view.printToOutputStream(out);
 	}
 	
+	/**
+	 * Get line input from the view
+	 * @return String, the input
+	 */
 	public String getLine() {
 		return this.view.getLine();
 	}

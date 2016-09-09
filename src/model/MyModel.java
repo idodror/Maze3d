@@ -20,17 +20,16 @@ import io.*;
  * This is the Model layer of the MVC
  * Makes all the calculations of the game
  * Holds a HashMap of the maze's created (database)
+ * @author Gal Basre & Ido Dror
  */
 public class MyModel  extends Observable implements Model {
 	
 	private Position wantedPosition;
 	private Maze3d currMaze;		// current maze play on from the database
 	private Position currPosition;	// current maze's position on the maze
-	private HashMap<String, MazeAndPlayer> mazeDatabase;
-
-	public HashMap<String, MazeAndPlayer> getMazeDatabase() {
-		return mazeDatabase;
-	}
+	private HashMap<String, MazeRecord> mazeDatabase;
+	private Thread generateMazeThread;
+	private Thread solveThread;
 
 	/**
 	 * Constructor
@@ -38,10 +37,17 @@ public class MyModel  extends Observable implements Model {
 	public MyModel() {
 		this.currPosition = null;
 		this.wantedPosition = null;
-		this.mazeDatabase = new HashMap<String, MazeAndPlayer>();
-	
+		this.mazeDatabase = new HashMap<String, MazeRecord>();
 	}
 	
+	/**
+	 * Return the mazeDatabase HashMap
+	 * @return HashMap
+	 */
+	public HashMap<String, MazeRecord> getMazeDatabase() {
+		return mazeDatabase;
+	}
+
 	/**
 	 * Gets a name of maze and get it from the mazeDatabase map
 	 * If there is no such maze, throws exception
@@ -50,7 +56,7 @@ public class MyModel  extends Observable implements Model {
 	 * @throws IllegalArgumentException if there is no such maze in the database
 	 */
 	private void getMazeFromDatabase(String name) {
-		MazeAndPlayer maze = this.mazeDatabase.get(name);
+		MazeRecord maze = this.mazeDatabase.get(name);
 		if (maze == null)
 			throw new IllegalArgumentException("There is no maze called " + name);
 		this.currMaze = maze.getMaze();
@@ -67,24 +73,28 @@ public class MyModel  extends Observable implements Model {
 	public void generateMaze(String[] args) {
 		if (args.length != 4) 
 			throw new IllegalArgumentException("Illegal Arguments!");
-		Thread generate = new Thread(new Runnable() {
+		this.generateMazeThread = new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				int[] mazeDimensions = argsToMazeDimension(Arrays.copyOfRange(args, 1, args.length));
 				Maze3dGenerator mg = new GrowingTreeGenerator();
-				MazeAndPlayer maze = new MazeAndPlayer();
+				MazeRecord maze = new MazeRecord();
 				maze.setMaze(mg.generate(mazeDimensions[0], mazeDimensions[1], mazeDimensions[2]));
 				maze.setCurrPosition(maze.getMaze().getStartPosition());
 				putInDatabase(args[0], maze);
 				printToOutputStream("maze " + args[0] + " is ready");
 			}
 		});
-		generate.start();
-		
+		generateMazeThread.start();	
 	}
 	
-	private void putInDatabase(String key, MazeAndPlayer value) {
+	/**
+	 * Put a MazeRecord + maze's name in the HashMap
+	 * @param key, String - maze's name
+	 * @param value, MazeRecord Object (the maze and current player's position)
+	 */
+	private void putInDatabase(String key, MazeRecord value) {
 		this.mazeDatabase.put(key, value);
 	}
 	
@@ -116,6 +126,11 @@ public class MyModel  extends Observable implements Model {
 		this.currPosition.x = this.wantedPosition.x;
 	}
 	
+	/**
+	 * Go one step left
+	 * @param args, String[]
+	 * @throws IllegalArgumentException if the arguments illegal
+	 */
 	@Override
 	public void goLeft(String[] args) {
 		if (args.length != 1)
@@ -125,6 +140,11 @@ public class MyModel  extends Observable implements Model {
 		goSomewhere();
 	}
 
+	/**
+	 * Go one step right
+	 * @param args, String[]
+	 * @throws IllegalArgumentException if the arguments illegal
+	 */
 	@Override
 	public void goRight(String[] args) {
 		if (args.length != 1)
@@ -134,6 +154,11 @@ public class MyModel  extends Observable implements Model {
 		goSomewhere();
 	}
 
+	/**
+	 * Go one step up
+	 * @param args, String[]
+	 * @throws IllegalArgumentException if the arguments illegal
+	 */
 	@Override
 	public void goUp(String[] args) {
 		if (args.length != 1)
@@ -143,6 +168,11 @@ public class MyModel  extends Observable implements Model {
 		goSomewhere();
 	}
 
+	/**
+	 * Go one step down
+	 * @param args, String[]
+	 * @throws IllegalArgumentException if the arguments illegal
+	 */
 	@Override
 	public void goDown(String[] args) {
 		if (args.length != 1)
@@ -152,6 +182,11 @@ public class MyModel  extends Observable implements Model {
 		goSomewhere();
 	}
 
+	/**
+	 * Go one step forward
+	 * @param args, String[]
+	 * @throws IllegalArgumentException if the arguments illegal
+	 */
 	@Override
 	public void goForward(String[] args) {
 		if (args.length != 1)
@@ -161,6 +196,11 @@ public class MyModel  extends Observable implements Model {
 		goSomewhere();
 	}
 
+	/**
+	 * Go one step backward
+	 * @param args, String[]
+	 * @throws IllegalArgumentException if the arguments illegal
+	 */
 	@Override
 	public void goBackward(String[] args) {
 		if (args.length != 1)
@@ -323,7 +363,7 @@ public class MyModel  extends Observable implements Model {
 		}
 		loadedMaze = new Maze3d(readedData);
 		if (loadedMaze != null)
-			mazeDatabase.put(args[1], new MazeAndPlayer(loadedMaze));
+			mazeDatabase.put(args[1], new MazeRecord(loadedMaze));
 	}
 
 	/**
@@ -336,11 +376,11 @@ public class MyModel  extends Observable implements Model {
 	public void solve(String[] args) {
 		if (args.length != 2) 
 			throw new IllegalArgumentException("Illegal Arguments!");
-		new Thread(new Runnable() {
+		this.solveThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				getMazeFromDatabase(args[0]);
-				MazeAndPlayer maze = new MazeAndPlayer();
+				MazeRecord maze = new MazeRecord();
 				Solution<Maze3d> solution = null;
 				Searcher<Maze3d> searchAlgorithm = null;
 				maze = getMazeDatabase().get(args[0]);
@@ -356,12 +396,13 @@ public class MyModel  extends Observable implements Model {
 					searchAlgorithm = new DFS<Maze3d>();
 					solution = searchAlgorithm.search(searchInMaze);
 					break;
-					default: printToOutputStream("there isn't kind of algorithm");
+				default: throw new IllegalArgumentException("Invalid Arguments!");
 				}
 				maze.setSolution(solution);
 				printToOutputStream("solution for " + args[0] + " is ready");
 			}
-		}).start();
+		});
+		this.solveThread.start();
 	}
 
 	/**
@@ -377,12 +418,30 @@ public class MyModel  extends Observable implements Model {
 			throw new IllegalArgumentException("Illegal Arguments!");
 		getMazeFromDatabase(args[0]);
 		if (this.mazeDatabase.get(args[0]).getSolution() != null)
-			out=this.mazeDatabase.get(args[0]).getSolution().toString();
-		else out="There is no solution available for this maze";
+			out = this.mazeDatabase.get(args[0]).getSolution().toString();
+		else out = "There is no solution available for this maze";
 		setChanged();
 		notifyObservers(out);
 	}
+	
+	/**
+	 * Exit command (close threads)
+	 */
+	@Override
+	public void exit() {
+		try {
+			this.generateMazeThread.interrupt();
+			this.solveThread.interrupt();
+		} catch (Exception e) {
+		}
+		setChanged();
+		notifyObservers("Goodbye!");
+	}
 
+	/**
+	 * Print String to the output stream
+	 * @param out, String
+	 */
 	@Override
 	public void printToOutputStream(String out) {
 		setChanged();

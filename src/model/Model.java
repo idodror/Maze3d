@@ -2,13 +2,44 @@ package model;
 
 /**
  * This is the Model interface of the MVC
+ * @author Gal Basre & Ido Dror
  */
 public interface Model {
+	
+	/**
+	 * Go one step left
+	 * @param args, String[]
+	 */
 	public void goLeft(String[] args);
+
+	/**
+	 * Go one step right
+	 * @param args, String[]
+	 */
 	public void goRight(String[] args);
+	
+	/**
+	 * Go one step up
+	 * @param args, String[]
+	 */
 	public void goUp(String[] args);
+	
+	/**
+	 * Go one step down
+	 * @param args, String[]
+	 */
 	public void goDown(String[] args);
+	
+	/**
+	 * Go one step forward
+	 * @param args, String[]
+	 */
 	public void goForward(String[] args);
+	
+	/**
+	 * Go one step backward
+	 * @param args, String[]
+	 */
 	public void goBackward(String[] args);
 	
 	/**
@@ -59,5 +90,14 @@ public interface Model {
 	 */
 	public void displaySolution(String[] args);
 	
+	/**
+	 * Exit command (close threads)
+	 */
+	public void exit();
+	
+	/**
+	 * Print String to the output stream
+	 * @param out, String
+	 */
 	public void printToOutputStream(String out);
 }

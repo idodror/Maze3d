@@ -2,12 +2,12 @@ package presenter;
 
 import java.util.Observable;
 import java.util.Observer;
-
-import model.Model;
 import model.MyModel;
 import view.MyView;
-import view.View;
 
+/**
+ * @author Gal Basre & Ido Dror
+ */
 public class Presenter implements Observer {
 	private MyView view;
 	private MyModel model;

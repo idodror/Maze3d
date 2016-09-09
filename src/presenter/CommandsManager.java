@@ -9,6 +9,7 @@ import view.View;
  * CommandsManager
  * this is the CommandsManager that will control all the mvc
  * it have Model, View and HashMap<String, Command>
+ * @author Gal Basre & Ido Dror
  */
 public class CommandsManager {
 	
@@ -47,6 +48,7 @@ public class CommandsManager {
 		this.commandMap.put("load_maze", new LoadMaze());
 		this.commandMap.put("solve", new Solve());
 		this.commandMap.put("display_solution", new DisplaySolution());
+		this.commandMap.put("exit", new Exit());
 	}
 	
 	/**
@@ -299,6 +301,22 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			model.displaySolution(args);			
+		}
+		
+	}
+	
+	/**
+	 * This command will kiil Threads/Files open on the model
+	 */
+	class Exit implements Command {
+
+		/**
+		 * doCommand
+		 * call the exit of model
+		 */
+		@Override
+		public void doCommand(String[] args) {
+			model.exit();
 		}
 		
 	}

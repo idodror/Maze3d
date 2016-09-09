@@ -6,8 +6,9 @@ import algorithms.search.Solution;
 
 /**
  * This class Represent a maze, a position of the player on the maze and it solution
+ * @author Gal Basre & Ido Dror
  */
-public class MazeAndPlayer {
+public class MazeRecord {
 	
 	private Maze3d maze;
 	private Position currPosition;
@@ -16,7 +17,7 @@ public class MazeAndPlayer {
 	/**
 	 * Constructor
 	 */
-	public MazeAndPlayer() {
+	public MazeRecord() {
 		this.maze = null;
 		this.currPosition = null;
 		this.solution = null;
@@ -27,7 +28,7 @@ public class MazeAndPlayer {
 	 * Get a Maze3d object and initial the maze of the object to it + the currPosition to maze's start
 	 * @param maze, Maze3d
 	 */
-	public MazeAndPlayer(Maze3d maze) {
+	public MazeRecord(Maze3d maze) {
 		this.maze = maze;
 		this.currPosition = maze.getStartPosition();
 		this.solution = null;
@@ -57,7 +58,7 @@ public class MazeAndPlayer {
 	}
 
 	/**
-	 * Set the maze of the MazeAndPlayer object
+	 * Set the maze of the MazeRecord object
 	 * @param maze, Maze3d object
 	 */
 	public void setMaze(Maze3d maze) {

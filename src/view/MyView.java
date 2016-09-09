@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Observable;
 
-
 /**
  * This is the view layer of the MVC
  * get all the IO from the CLI
+ * @author Gal Basre & Ido Dror
  */
 public class MyView extends Observable implements View {
 	
@@ -26,10 +26,18 @@ public class MyView extends Observable implements View {
 		this.out = out;
 	}
 
+	/**
+	 * Get the input stream
+	 * @return BufferedReader 
+	 */
 	public BufferedReader getIn() {
 		return in;
 	}
 
+	/**
+	 * Get the output stream
+	 * @return PrintWriter 
+	 */
 	public PrintWriter getOut() {
 		return out;
 	}
@@ -59,10 +67,13 @@ public class MyView extends Observable implements View {
 	 */
 	@Override
 	public void printToOutputStream(String out) {
-		setChanged();
-		notifyObservers(out);
+		this.out.println(out);
 	}
 
+	/**
+	 * Get line from the input stream
+	 * @return String, the input
+	 */
 	@Override
 	public String getLine() {
 		String line = null;

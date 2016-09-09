@@ -8,6 +8,9 @@ import model.MyModel;
 import presenter.Presenter;
 import view.MyView;
 
+/**
+ * @author Gal Basre & Ido Dror
+ */
 public class Run {
 
 	public static void main(String[] args) throws FileNotFoundException {

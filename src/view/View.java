@@ -2,9 +2,14 @@ package view;
 
 /**
  * This is the view interface of the MVC
+ * @author Gal Basre & Ido Dror
  */
 public interface View {
 	
+	/**
+	 * Get line from the input
+	 * @return String
+	 */
 	public String getLine();
 	
 	/**
