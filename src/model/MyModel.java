@@ -5,31 +5,44 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Maze3dGenerator;
 import algorithms.mazeGenerators.Position;
-import algorithms.search.*;
-import io.*;
+import algorithms.search.BFS;
+import algorithms.search.DFS;
+import algorithms.search.Maze3dDomain;
+import algorithms.search.Searchable;
+import algorithms.search.Searcher;
+import algorithms.search.Solution;
+import io.MyCompressorOutputStream;
+import io.MyDecompressorInputStream;
 
 /**
- * This is the Model layer of the MVC
+ * This is the Model layer of the MVP
  * Makes all the calculations of the game
  * Holds a HashMap of the maze's created (database)
  * @author Gal Basre & Ido Dror
  */
-public class MyModel  extends Observable implements Model {
+public class MyModel extends Observable implements Model {
 	
 	private Position wantedPosition;
 	private Maze3d currMaze;		// current maze play on from the database
 	private Position currPosition;	// current maze's position on the maze
-	private HashMap<String, MazeRecord> mazeDatabase;
-	private Thread generateMazeThread;
-	private Thread solveThread;
+	private Solution<Maze3d> currSolution;
+	private Map<String, MazeRecord> mazeDatabase;
+	private ExecutorService threadPool;
 
 	/**
 	 * Constructor
@@ -37,14 +50,15 @@ public class MyModel  extends Observable implements Model {
 	public MyModel() {
 		this.currPosition = null;
 		this.wantedPosition = null;
-		this.mazeDatabase = new HashMap<String, MazeRecord>();
+		this.mazeDatabase = Collections.synchronizedMap(new HashMap<String, MazeRecord>());
+		this.threadPool = Executors.newFixedThreadPool(10);
 	}
 	
 	/**
 	 * Return the mazeDatabase HashMap
 	 * @return HashMap
 	 */
-	public HashMap<String, MazeRecord> getMazeDatabase() {
+	public Map<String, MazeRecord> getMazeDatabase() {
 		return mazeDatabase;
 	}
 
@@ -61,6 +75,7 @@ public class MyModel  extends Observable implements Model {
 			throw new IllegalArgumentException("There is no maze called " + name);
 		this.currMaze = maze.getMaze();
 		this.currPosition = maze.getCurrPosition();
+		this.currSolution = maze.getSolution();
 	}
 
 	/**
@@ -73,20 +88,21 @@ public class MyModel  extends Observable implements Model {
 	public void generateMaze(String[] args) {
 		if (args.length != 4) 
 			throw new IllegalArgumentException("Illegal Arguments!");
-		this.generateMazeThread = new Thread(new Runnable() {
-			
+		Future<Maze3d> myFutureMaze = threadPool.submit(new Callable<Maze3d>() {
+
 			@Override
-			public void run() {
+			public Maze3d call() throws Exception {
 				int[] mazeDimensions = argsToMazeDimension(Arrays.copyOfRange(args, 1, args.length));
 				Maze3dGenerator mg = new GrowingTreeGenerator();
 				MazeRecord maze = new MazeRecord();
 				maze.setMaze(mg.generate(mazeDimensions[0], mazeDimensions[1], mazeDimensions[2]));
 				maze.setCurrPosition(maze.getMaze().getStartPosition());
 				putInDatabase(args[0], maze);
-				printToOutputStream("maze " + args[0] + " is ready");
+				setChanged();
+				notifyObservers("MazeIsReady " + args[0]);
+				return maze.getMaze();
 			}
 		});
-		generateMazeThread.start();	
 	}
 	
 	/**
@@ -315,6 +331,7 @@ public class MyModel  extends Observable implements Model {
 
 	/**
 	 * This method get a maze name and file name and save the maze to this file (Compressed)
+	 * Calls to the private method save to start the MyCompressorOutputStream
 	 * Command input: save_maze [name] [file_name]
 	 * @throws IllegalArgumentException, NullPointerException if something damaged with the file
 	 * @param args, String[] - maze name, file name
@@ -324,14 +341,28 @@ public class MyModel  extends Observable implements Model {
 		if (args.length != 2)
 			throw new IllegalArgumentException("Illegal Arguments!");
 		getMazeFromDatabase(args[0]);
-		File myFile = new File(args[1]);
+		File myFile = null;
+		FileOutputStream fileOutput = null;
+		try {
+			myFile = new File(args[1]);
+			fileOutput = new FileOutputStream(myFile);
+			save(fileOutput);
+		} catch (FileNotFoundException e) {
+			 new IllegalArgumentException("File not found");
+		}
+	}
+	
+	/**
+	 * Save the maze using MyCompressorOutputStream into the OutputStream object sent to it
+	 * @param output, OutputStream
+	 * @throws IllegalArgumentException
+	 */
+	private void save(OutputStream output) {
 		MyCompressorOutputStream save = null;
 		try {
-			save = new MyCompressorOutputStream(new FileOutputStream(myFile));
+			save = new MyCompressorOutputStream(output);
 			save.write(this.currMaze.toByteArray());
 			save.close();
-		} catch (FileNotFoundException e) {
-			throw new IllegalArgumentException("File not found");
 		} catch (IOException e) {
 			throw new NullPointerException("Can't open/close or create this file");
 		}
@@ -374,40 +405,47 @@ public class MyModel  extends Observable implements Model {
 	*/
 	@Override
 	public void solve(String[] args) {
-		if (args.length != 2) 
+		if (args.length != 2)
 			throw new IllegalArgumentException("Illegal Arguments!");
-		this.solveThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				getMazeFromDatabase(args[0]);
-				MazeRecord maze = new MazeRecord();
-				Solution<Maze3d> solution = null;
-				Searcher<Maze3d> searchAlgorithm = null;
-				maze = getMazeDatabase().get(args[0]);
-				Searchable<Maze3d> searchInMaze = new Maze3dDomain<Maze3d>(maze.getMaze());
-				switch (args[1]) {
-				case "bfs":
-				case "BFS":
-					searchAlgorithm = new BFS<Maze3d>();
-					solution = searchAlgorithm.search(searchInMaze);
-					break;
-				case "dfs":
-				case "DFS":
-					searchAlgorithm = new DFS<Maze3d>();
-					solution = searchAlgorithm.search(searchInMaze);
-					break;
-				default: throw new IllegalArgumentException("Invalid Arguments!");
+		getMazeFromDatabase(args[0]);
+		if (this.mazeDatabase.get(args[0]).getSolution() != null)
+			displaySolution(Arrays.copyOfRange(args, 0, 1));
+		else { 
+			Future<Solution<Maze3d>> myFutureSolution = threadPool.submit(new Callable<Solution<Maze3d>>() {
+	
+				@Override
+				public Solution<Maze3d> call() throws Exception {
+					getMazeFromDatabase(args[0]);
+					MazeRecord mazeRecord = new MazeRecord();
+					Solution<Maze3d> solution = null;
+					Searcher<Maze3d> searchAlgorithm = null;
+					mazeRecord = getMazeDatabase().get(args[0]);
+					Searchable<Maze3d> searchInMaze = new Maze3dDomain<Maze3d>(mazeRecord.getMaze());
+					switch (args[1]) {
+					case "bfs":
+					case "BFS":
+						searchAlgorithm = new BFS<Maze3d>();
+						solution = searchAlgorithm.search(searchInMaze);
+						break;
+					case "dfs":
+					case "DFS":
+						searchAlgorithm = new DFS<Maze3d>();
+						solution = searchAlgorithm.search(searchInMaze);
+						break;
+					default: throw new IllegalArgumentException("Invalid Arguments!");
+					}
+					mazeRecord.setSolution(solution);
+					setChanged();
+					notifyObservers("SolutionIsReady " + args[0]);
+					return solution;
 				}
-				maze.setSolution(solution);
-				printToOutputStream("solution for " + args[0] + " is ready");
-			}
-		});
-		this.solveThread.start();
+			});
+		}
 	}
 
 	/**
 	 * This method get a maze name  and return all the states until the solution
-	 *  Command input: display_solution [name]
+	 * Command input: display_solution [name]
 	 * @throws IllegalArgumentException if something damaged with the file
 	 * @param args, String[] - maze name
 	 */
@@ -430,12 +468,9 @@ public class MyModel  extends Observable implements Model {
 	@Override
 	public void exit() {
 		try {
-			this.generateMazeThread.interrupt();
-			this.solveThread.interrupt();
+			this.threadPool.shutdownNow();
 		} catch (Exception e) {
 		}
-		setChanged();
-		notifyObservers("Goodbye!");
 	}
 
 	/**
@@ -446,6 +481,36 @@ public class MyModel  extends Observable implements Model {
 	public void printToOutputStream(String out) {
 		setChanged();
 		notifyObservers(out);
+	}
+	
+	// save_maze [name] [file_name]
+	@Override
+	public void GZip() throws FileNotFoundException, IOException {
+		/*GZIPOutputStream gz = null;
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		String[] args = new String[2];
+		File file = null;
+		FileOutputStream out = null;
+		for (Map.Entry<String, MazeRecord> entry : this.mazeDatabase.entrySet()) {
+			getMazeFromDatabase(entry.getKey());
+			save(bytes);
+			file = new File(entry.getKey() + ".maz");
+			out = new FileOutputStream(file);
+			out.write(bytes);
+			out.close();
+		}*/
+	}
+
+	@Override
+	public Maze3d getMaze(String mazeName) {
+		getMazeFromDatabase(mazeName);
+		return this.currMaze;
+	}
+
+	@Override
+	public Solution<Maze3d> getSolution(String mazeName) {
+		getMazeFromDatabase(mazeName);
+		return this.currSolution;
 	}
 
 }

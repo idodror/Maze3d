@@ -36,16 +36,12 @@ public class CLI {
 					try {
 						executeCommand(commandLine);
 					} catch (IllegalArgumentException e) {
-						if (!commandLine.equals("exit"))
-							printToOutputStream(e.getMessage());
+						printToOutputStream(e.getMessage());
 					} catch (NullPointerException e) {
 						printToOutputStream(e.getMessage());
 					}
 				} while (!(commandLine.equals("exit")));
-				exit();
-			}
-
-	
+			}	
 		});
 		this.ioThread.start();
 	}
@@ -62,11 +58,6 @@ public class CLI {
 	 * Exit from the program and close threads and files
 	 */
 	public void exit() {
-		try {
-			this.view.getIn().close();
-		} catch (IOException e) {
-		}
-		this.view.getOut().close();
 		this.ioThread.interrupt();
 	}
 	

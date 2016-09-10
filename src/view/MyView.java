@@ -84,4 +84,14 @@ public class MyView extends Observable implements View {
 		}
 		return line;
 	}
+
+	@Override
+	public void exit() {
+		try {
+			in.close();
+		} catch (IOException e) {
+		}
+		out.close();
+		this.cli.exit();
+	}
 }

@@ -1,7 +1,13 @@
 package model;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import algorithms.mazeGenerators.Maze3d;
+import algorithms.search.Solution;
+
 /**
- * This is the Model interface of the MVC
+ * This is the Model interface of the MVP
  * @author Gal Basre & Ido Dror
  */
 public interface Model {
@@ -100,4 +106,10 @@ public interface Model {
 	 * @param out, String
 	 */
 	public void printToOutputStream(String out);
+	
+	public void GZip() throws FileNotFoundException, IOException ;
+
+	public Maze3d getMaze(String mazeName);
+	
+	public Solution<Maze3d> getSolution(String mazeName);
 }

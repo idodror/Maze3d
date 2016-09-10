@@ -23,11 +23,11 @@ public class Presenter implements Observer {
 	public void update(Observable o, Object arg) {
 		if (o == view){
 			String commandLine = (String)arg;
-			commandsManager.executeCommand(commandLine);
+			commandsManager.executeCommand(commandLine);  
 		}
-		else {
-			String str = (String)arg;
-			this.view.getOut().println(str);
+		if (o == model) {
+			String commandLine = (String)arg;
+			commandsManager.executeCommand(commandLine);
 		}
 	}
 	

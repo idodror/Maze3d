@@ -22,4 +22,6 @@ public interface View {
 	 * @param out, String
 	 */
 	public void printToOutputStream(String out);	
+	
+	public void exit();
 }

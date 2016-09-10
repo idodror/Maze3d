@@ -1,7 +1,12 @@
 package presenter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import algorithms.mazeGenerators.Maze3d;
+import algorithms.search.Solution;
 import model.Model;
 import view.View;
 
@@ -49,6 +54,8 @@ public class CommandsManager {
 		this.commandMap.put("solve", new Solve());
 		this.commandMap.put("display_solution", new DisplaySolution());
 		this.commandMap.put("exit", new Exit());
+		this.commandMap.put("MazeIsReady", new MazeIsReady());
+		this.commandMap.put("SolutionIsReady", new SolutionIsReady());
 	}
 	
 	/**
@@ -317,6 +324,27 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			model.exit();
+			view.exit();
+		}
+		
+	}
+	
+	class MazeIsReady implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			Maze3d maze = model.getMaze(args[0]);
+			view.printToOutputStream(maze.toString());
+		}
+		
+	}
+	
+	class SolutionIsReady implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			Solution<Maze3d> solution = model.getSolution(args[0]);
+			view.printToOutputStream(solution.toString());	
 		}
 		
 	}
