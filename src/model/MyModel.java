@@ -1,20 +1,26 @@
 package model;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
 
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
@@ -233,12 +239,13 @@ public class MyModel extends Observable implements Model {
 	 */
 	private void goSomewhere() {
 		String out;
-		if (this.currMaze.validPos(this.wantedPosition) && !this.currMaze.isWall(this.wantedPosition))
+		if (this.currMaze.validPos(this.wantedPosition) && !this.currMaze.isWall(this.wantedPosition)) { 
 			setCurrentToWanted();
+			out = this.currPosition.toString();
+		}
 		else out = "sorry, you can't go there";
-		out = this.currPosition.toString();
 		setChanged();
-		notifyObservers(out);
+		notifyObservers("DisplayOnOutputStream " + out);
 	}
 
 	/**
@@ -249,7 +256,7 @@ public class MyModel extends Observable implements Model {
 	public void displayMaze(String[] args) {
 		getMazeFromDatabase(args[0]);
 		setChanged();
-		notifyObservers(this.currMaze.toString());
+		notifyObservers("MazeIsReady " + args[0]);
 	}
 
 	/**
@@ -269,7 +276,7 @@ public class MyModel extends Observable implements Model {
 		for (int i = 0; i < listOfFiles.length; i++)
 			sb.append(listOfFiles[i].getName() + "\n");
 		setChanged();
-		notifyObservers(sb);
+		notifyObservers("DisplayOnOutputStream " + sb.toString());
 	}
 
 	/**
@@ -310,7 +317,7 @@ public class MyModel extends Observable implements Model {
 			throw new IllegalArgumentException("Invalid Arguments!");
 		}
 		setChanged();
-		notifyObservers(Array2dtoString(crossSection));
+		notifyObservers("DisplayOnOutputStream " + Array2dtoString(crossSection));
 	}
 
 	/**
@@ -355,7 +362,7 @@ public class MyModel extends Observable implements Model {
 	/**
 	 * Save the maze using MyCompressorOutputStream into the OutputStream object sent to it
 	 * @param output, OutputStream
-	 * @throws IllegalArgumentException
+	 * @throws NullPointerException
 	 */
 	private void save(OutputStream output) {
 		MyCompressorOutputStream save = null;
@@ -370,6 +377,7 @@ public class MyModel extends Observable implements Model {
 	
 	/**
 	 * This method get a maze name and file name and load the maze from the file (deCompressed)
+	 * Calls to the private method load to start the MyDecompressorInputStream
 	 *  Command input: load_maze [file_name] [name]
 	 * @throws NullPointerException if something damaged with the file
 	 * @param args, String[] - maze name, file name
@@ -379,22 +387,39 @@ public class MyModel extends Observable implements Model {
 		if (args.length != 2)
 			throw new IllegalArgumentException("Illegal Arguments!");
 		Maze3d loadedMaze;
-		File myFile = new File(args[0]);
-		MyDecompressorInputStream in = null;
+		File myFile = null;
+		FileInputStream input = null;
 		byte[] readedData = null;
 		try {
-			in = new MyDecompressorInputStream(new FileInputStream(myFile));
-			readedData = new byte[in.read()];	// size of readedData needed
-			in.read(readedData);
-			in.close();
+			myFile = new File(args[0]);
+			input = new FileInputStream(myFile);
+			readedData = load(input);
 		} catch (FileNotFoundException e){
-			throw new NullPointerException("File not found");
-		} catch (IOException e) {
 			throw new NullPointerException("File not found");
 		}
 		loadedMaze = new Maze3d(readedData);
 		if (loadedMaze != null)
 			mazeDatabase.put(args[1], new MazeRecord(loadedMaze));
+	}
+	
+	/**
+	 * Load the maze using MyDecompressorInputStream by the InputStream object sent to it
+	 * @param input, InputStream
+	 * @throws NullPointerException
+	 * @return byte[], the readed data
+	 */
+	private byte[] load(InputStream input) {
+		MyDecompressorInputStream load = null;
+		byte[] data = null;
+		try {
+			load = new MyDecompressorInputStream(input);
+			data = new byte[load.read()];	// size of readedData needed
+			load.read(data);
+			load.close();
+		} catch (IOException e) {
+			throw new NullPointerException("File not found");
+		}
+		return data;
 	}
 
 	/**
@@ -459,7 +484,7 @@ public class MyModel extends Observable implements Model {
 			out = this.mazeDatabase.get(args[0]).getSolution().toString();
 		else out = "There is no solution available for this maze";
 		setChanged();
-		notifyObservers(out);
+		notifyObservers("DisplayOnOutputStream " + out);
 	}
 	
 	/**
@@ -490,14 +515,18 @@ public class MyModel extends Observable implements Model {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		String[] args = new String[2];
 		File file = null;
+		List<File> files = new ArrayList<File>();
+		ZipEntry zipEntry = null;
 		FileOutputStream out = null;
 		for (Map.Entry<String, MazeRecord> entry : this.mazeDatabase.entrySet()) {
 			getMazeFromDatabase(entry.getKey());
 			save(bytes);
 			file = new File(entry.getKey() + ".maz");
 			out = new FileOutputStream(file);
-			out.write(bytes);
-			out.close();
+			gz = new GZIPOutputStream(out); 
+			gz.write(bytes.toByteArray());
+			gz.finish();
+			gz.close();
 		}*/
 	}
 

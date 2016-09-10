@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.search.Solution;
 import model.Model;
@@ -12,8 +11,8 @@ import view.View;
 
 /**
  * CommandsManager
- * this is the CommandsManager that will control all the mvc
- * it have Model, View and HashMap<String, Command>
+ * This is the CommandsManager that will control all the MVP
+ * It have Model, View and HashMap<String, Command>
  * @author Gal Basre & Ido Dror
  */
 public class CommandsManager {
@@ -56,6 +55,7 @@ public class CommandsManager {
 		this.commandMap.put("exit", new Exit());
 		this.commandMap.put("MazeIsReady", new MazeIsReady());
 		this.commandMap.put("SolutionIsReady", new SolutionIsReady());
+		this.commandMap.put("DisplayOnOutputStream", new DisplayOnOutputStream());
 	}
 	
 	/**
@@ -345,6 +345,19 @@ public class CommandsManager {
 		public void doCommand(String[] args) {
 			Solution<Maze3d> solution = model.getSolution(args[0]);
 			view.printToOutputStream(solution.toString());	
+		}
+		
+	}
+	
+	class DisplayOnOutputStream implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			StringBuilder sb = new StringBuilder();
+			for (String s : args) {
+				sb.append(s + " ");
+			}
+			view.printToOutputStream(sb.toString());
 		}
 		
 	}
