@@ -106,10 +106,23 @@ public interface Model {
 	 * @param out, String
 	 */
 	public void printToOutputStream(String out);
-	
+	/**
+	 * GZip
+	 * write all the maze in zip
+	 * @throws FileNotFoundException, IOException
+	 * @throws 
+	 */
 	public void GZip() throws FileNotFoundException, IOException ;
-
+/**
+ * getMaze
+ * @param String
+ * @return maze3d
+ */
 	public Maze3d getMaze(String mazeName);
-	
+	/**
+	 * getSolution
+	 * @param String
+	 * @return Solution
+	 */
 	public Solution<Maze3d> getSolution(String mazeName);
 }

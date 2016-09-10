@@ -314,12 +314,15 @@ public class CommandsManager {
 	
 	/**
 	 * This command will kiil Threads/Files open on the model
+	 * implements Command
 	 */
 	class Exit implements Command {
 
 		/**
 		 * doCommand
 		 * call the exit of model
+		 * call the exit of view
+		 * @param String[]
 		 */
 		@Override
 		public void doCommand(String[] args) {
@@ -329,8 +332,19 @@ public class CommandsManager {
 		
 	}
 	
+	/**
+	 * class MazeIsReady 
+	 * this command will be used after we will generate_maze and return  maze is ready
+	 * we have a command that called mazeIsReady
+	 *implements Command
+	 */
 	class MazeIsReady implements Command {
 
+		/**
+		 * doCommand
+		 * the command will get the maze from the model and print it to the view
+		 * @param String[]
+		 */
 		@Override
 		public void doCommand(String[] args) {
 			Maze3d maze = model.getMaze(args[0]);
@@ -339,8 +353,19 @@ public class CommandsManager {
 		
 	}
 	
+	/**
+	 * class SolutionIsReady 
+	 * this command will be used after we will solve_maze and return  solution is ready
+	 * we have a command that called SolutionIsReady
+	 *implements Command
+	 */
 	class SolutionIsReady implements Command {
-
+		
+		/**
+		 * doCommand
+		 * the command will get the solution from the model and print it to the view
+		 * @param String[]
+		 */
 		@Override
 		public void doCommand(String[] args) {
 			Solution<Maze3d> solution = model.getSolution(args[0]);
@@ -348,9 +373,17 @@ public class CommandsManager {
 		}
 		
 	}
-	
+	/**
+	 * DisplayOnOutputStream
+	 *implements Command
+	 */
 	class DisplayOnOutputStream implements Command {
 
+		/**
+		 * doCommand
+		 * use string builder for strings
+		 * @param String[]
+		 */
 		@Override
 		public void doCommand(String[] args) {
 			StringBuilder sb = new StringBuilder();

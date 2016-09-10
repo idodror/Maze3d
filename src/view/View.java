@@ -22,6 +22,8 @@ public interface View {
 	 * @param out, String
 	 */
 	public void printToOutputStream(String out);	
-	
+	/**
+	 * exit the program without anything open
+	 */
 	public void exit();
 }

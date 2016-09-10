@@ -529,13 +529,23 @@ public class MyModel extends Observable implements Model {
 			gz.close();
 		}*/
 	}
-
+	
+/**
+ * getMaze
+ * @param String
+ * return Maze3d
+ */
 	@Override
 	public Maze3d getMaze(String mazeName) {
 		getMazeFromDatabase(mazeName);
 		return this.currMaze;
 	}
 
+	/**
+	 * getSolution
+	 * @param String
+	 * return Solution
+	 */
 	@Override
 	public Solution<Maze3d> getSolution(String mazeName) {
 		getMazeFromDatabase(mazeName);

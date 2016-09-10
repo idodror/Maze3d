@@ -84,7 +84,11 @@ public class MyView extends Observable implements View {
 		}
 		return line;
 	}
-
+	
+	/**
+	 * exit
+	 * close all the input and output
+	 */
 	@Override
 	public void exit() {
 		try {
