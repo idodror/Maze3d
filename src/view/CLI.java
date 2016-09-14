@@ -3,7 +3,7 @@ package view;
 import java.io.IOException;
 
 /**
- * This is the CLI which presents the Viewer of the MVC
+ * This is the CLI which presents the Viewer of the MVP
  * @author Gal Basre & Ido Dror
  */
 public class CLI {

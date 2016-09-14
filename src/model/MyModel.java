@@ -26,6 +26,7 @@ import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Maze3dGenerator;
 import algorithms.mazeGenerators.Position;
+import algorithms.mazeGenerators.SimpleMaze3dGenerator;
 import algorithms.search.BFS;
 import algorithms.search.DFS;
 import algorithms.search.Maze3dDomain;
@@ -34,6 +35,7 @@ import algorithms.search.Searcher;
 import algorithms.search.Solution;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
+import utils.MyJaxbUtil;
 
 /**
  * This is the Model layer of the MVP
@@ -57,7 +59,7 @@ public class MyModel extends Observable implements Model {
 		this.currPosition = null;
 		this.wantedPosition = null;
 		this.mazeDatabase = Collections.synchronizedMap(new HashMap<String, MazeRecord>());
-		this.threadPool = Executors.newFixedThreadPool(10);
+		this.threadPool = Executors.newFixedThreadPool(MyJaxbUtil.getProperties().getThreadPoolNumber());
 	}
 	
 	/**
@@ -99,7 +101,7 @@ public class MyModel extends Observable implements Model {
 			@Override
 			public Maze3d call() throws Exception {
 				int[] mazeDimensions = argsToMazeDimension(Arrays.copyOfRange(args, 1, args.length));
-				Maze3dGenerator mg = new GrowingTreeGenerator();
+				Maze3dGenerator mg = GenerateByAlgorithmFromProperties();
 				MazeRecord maze = new MazeRecord();
 				maze.setMaze(mg.generate(mazeDimensions[0], mazeDimensions[1], mazeDimensions[2]));
 				maze.setCurrPosition(maze.getMaze().getStartPosition());
@@ -109,6 +111,17 @@ public class MyModel extends Observable implements Model {
 				return maze.getMaze();
 			}
 		});
+	}
+	
+	private Maze3dGenerator GenerateByAlgorithmFromProperties() {
+		switch (MyJaxbUtil.getProperties().getGenerateAlgorithm()) {
+		case "GrowingTree":
+		case "Growing Tree":
+			return new GrowingTreeGenerator();
+		case "Simple":
+			return new SimpleMaze3dGenerator();
+		default: return new GrowingTreeGenerator();
+		}
 	}
 	
 	/**

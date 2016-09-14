@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.Observable;
 
 /**
- * This is the view layer of the MVC
+ * This is the view layer of the MVP
  * get all the IO from the CLI
  * @author Gal Basre & Ido Dror
  */
@@ -20,7 +20,7 @@ public class MyView extends Observable implements View {
 	 * Constructor
 	 * @param controller,BufferedReader ,PrintWriter
 	 */
-	public MyView( BufferedReader in, PrintWriter out) {
+	public MyView (BufferedReader in, PrintWriter out) {
 		this.cli = new CLI(this);
 		this.in = in;
 		this.out = out;
