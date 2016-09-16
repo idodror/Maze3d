@@ -348,7 +348,7 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			Maze3d maze = model.getMaze(args[0]);
-			view.printToOutputStream(maze.toString());
+			view.generatedMaze(maze);
 		}
 		
 	}

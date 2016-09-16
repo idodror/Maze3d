@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <properties>
-    <threadPoolNumber>10</threadPoolNumber>
-    <floors>1</floors>
-    <rows>5</rows>
     <cols>5</cols>
+    <floors>1</floors>
     <generateAlgorithm>GrowingTree</generateAlgorithm>
+    <rows>5</rows>
     <solveAlgorithm>BFS</solveAlgorithm>
+    <threadPoolNumber>10</threadPoolNumber>
+    <userInterface>GUI</userInterface>
 </properties>

@@ -2,11 +2,13 @@ package view;
 
 import java.io.IOException;
 
+import algorithms.mazeGenerators.Maze3d;
+
 /**
  * This is the CLI which presents the Viewer of the MVP
  * @author Gal Basre & Ido Dror
  */
-public class CLI {
+public class CLI extends UI {
 	
 	private MyView view;
 	private Thread ioThread;
@@ -25,6 +27,11 @@ public class CLI {
 	 * Menu with command line to get commands from the user
 	 */
 	public void start() { 
+		run();
+	}
+	
+	@Override
+	public void run() {
 		this.ioThread = new Thread(new Runnable() {
 			
 			@Override
@@ -93,4 +100,10 @@ public class CLI {
 	public String getLine() {
 		return this.view.getLine();
 	}
+
+	@Override
+	public void mazeReady(Maze3d maze) {
+		this.printToOutputStream(maze.toString());
+	}
+
 }

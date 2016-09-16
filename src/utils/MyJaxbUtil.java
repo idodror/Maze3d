@@ -35,6 +35,7 @@ public class MyJaxbUtil {
 		properties.setThreadPoolNumber(10);
 		properties.setGenerateAlgorithm("GrowingTree");
 		properties.setSolveAlgorithm("BFS");
+		properties.setUserInterface("GUI");
 		
 		File file = null;
 		JAXBContext jaxbContext = null;

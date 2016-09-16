@@ -1,7 +1,9 @@
 package view;
 
+import algorithms.mazeGenerators.Maze3d;
+
 /**
- * This is the view interface of the MVC
+ * This is the view interface of the MVP
  * @author Gal Basre & Ido Dror
  */
 public interface View {
@@ -21,7 +23,13 @@ public interface View {
 	 * Print the string to output stream
 	 * @param out, String
 	 */
-	public void printToOutputStream(String out);	
+	public void printToOutputStream(String out);
+	
+	/**
+	 * 
+	 */
+	public void generatedMaze(Maze3d maze);
+	
 	/**
 	 * exit the program without anything open
 	 */

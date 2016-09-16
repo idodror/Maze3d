@@ -6,12 +6,23 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement
 public class Properties implements Serializable {
 	
-	private int floors = 0;
-	private int cols = 0;
-	private int rows = 0;
-	private int threadPoolNumber = 0;
-	private String generateAlgorithm = null;
-	private String solveAlgorithm = null;
+	private int floors;
+	private int cols;
+	private int rows;
+	private int threadPoolNumber;
+	private String generateAlgorithm;
+	private String solveAlgorithm;
+	private String userInterface;
+	
+	public Properties() {
+		this.floors = 0;
+		this.cols = 0;
+		this.rows = 0;
+		this.threadPoolNumber = 0;
+		this.generateAlgorithm = null;
+		this.solveAlgorithm = null;
+		this.userInterface = null;
+	}
 	
 	public int getFloors() {
 		return floors;
@@ -65,6 +76,15 @@ public class Properties implements Serializable {
 	@XmlElement
 	public void setSolveAlgorithm(String solveAlgorithm) {
 		this.solveAlgorithm = solveAlgorithm;
+	}
+
+	public String getUserInterface() {
+		return userInterface;
+	}
+
+	@XmlElement
+	public void setUserInterface(String userInterface) {
+		this.userInterface = userInterface;
 	}
 
 }

@@ -16,7 +16,7 @@ import view.MyView;
 public class Run {
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		//JaxbUtil.writeXml();
+		//MyJaxbUtil.writeXml();
 		MyJaxbUtil.readXML();
 		
 		MyModel model = new MyModel();	

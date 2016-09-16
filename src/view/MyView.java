@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Observable;
 
+import GUI.Maze3dWindow;
+import algorithms.mazeGenerators.Maze3d;
+import utils.MyJaxbUtil;
+
 /**
  * This is the view layer of the MVP
  * get all the IO from the CLI
@@ -14,16 +18,28 @@ public class MyView extends Observable implements View {
 	
 	private BufferedReader in;
 	private PrintWriter out;
-	private CLI cli;
+	private UI ui;
 
 	/**
 	 * Constructor
 	 * @param controller,BufferedReader ,PrintWriter
 	 */
 	public MyView (BufferedReader in, PrintWriter out) {
-		this.cli = new CLI(this);
+		this.ui = chooseUIFromProperties();
 		this.in = in;
 		this.out = out;
+	}
+
+	private UI chooseUIFromProperties() {
+		switch (MyJaxbUtil.getProperties().getUserInterface()) {
+		case "CLI":
+		case "cli":
+			return new CLI(this);
+		case "GUI":
+		case "gui":
+			return new Maze3dWindow(this);
+		}
+		return null;
 	}
 
 	/**
@@ -48,7 +64,7 @@ public class MyView extends Observable implements View {
 	 */
 	@Override
 	public void start() {
-		this.cli.start();
+		this.ui.start();
 	}
 	
 	/**
@@ -96,6 +112,11 @@ public class MyView extends Observable implements View {
 		} catch (IOException e) {
 		}
 		out.close();
-		this.cli.exit();
+		this.ui.exit();
+	}
+
+	@Override
+	public void generatedMaze(Maze3d maze) {
+		this.ui.mazeReady(maze);
 	}
 }
