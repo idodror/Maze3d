@@ -66,8 +66,6 @@ public class GenerateMazeWindows extends DialogWindow {
 					throw new IllegalArgumentException("Invalid Arguments!");
 				}
 				view.executeCommand("generate_maze " + mazeName + " " + floors + " " + rows + " " + cols);
-				GameDisplay gameDisplay = new GameDisplay(view);
-				//MazeDisplay mazeDisplay = new MazeDisplay(shell, SWT.FILL, view);
 				shell.dispose();
 			}
 			

@@ -6,5 +6,5 @@ public abstract class UI implements Runnable {
 	protected MyView view;
 	public abstract void start();
 	public abstract void exit();
-	public abstract void mazeReady(Maze3d maze);
+	public abstract void mazeReady(Maze3d maze, String mazeName);
 }

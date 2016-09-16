@@ -116,7 +116,7 @@ public class MyView extends Observable implements View {
 	}
 
 	@Override
-	public void generatedMaze(Maze3d maze) {
-		this.ui.mazeReady(maze);
+	public void generatedMaze(Maze3d maze, String mazeName) {
+		this.ui.mazeReady(maze, mazeName);
 	}
 }

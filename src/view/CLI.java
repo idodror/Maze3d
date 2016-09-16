@@ -102,7 +102,7 @@ public class CLI extends UI {
 	}
 
 	@Override
-	public void mazeReady(Maze3d maze) {
+	public void mazeReady(Maze3d maze, String mazeName) {
 		this.printToOutputStream(maze.toString());
 	}
 

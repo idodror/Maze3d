@@ -28,7 +28,7 @@ public interface View {
 	/**
 	 * 
 	 */
-	public void generatedMaze(Maze3d maze);
+	public void generatedMaze(Maze3d maze, String mazeName);
 	
 	/**
 	 * exit the program without anything open
