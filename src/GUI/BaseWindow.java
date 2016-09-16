@@ -2,7 +2,6 @@ package GUI;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import view.MyView;
 import view.UI;
 
 public abstract class BaseWindow extends UI {
@@ -37,7 +36,4 @@ public abstract class BaseWindow extends UI {
 		this.display.dispose();
 	}
 
-
-	
-	
 }

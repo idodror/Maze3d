@@ -2,9 +2,7 @@ package GUI;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-
 import view.MyView;
-import view.View;
 
 public abstract class DialogWindow {
 

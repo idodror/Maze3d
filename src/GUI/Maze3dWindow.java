@@ -45,22 +45,23 @@ public class Maze3dWindow extends BaseWindow {
 			public void widgetSelected(SelectionEvent arg0) {
 				GenerateMazeWindows genWin = new GenerateMazeWindows(view);
 				genWin.start(display);
-				int[][] cross = myMaze.getCrossSectionByZ(0);
-				mazeDisplay = new MazeDisplay(shell, SWT.BORDER, view, cross);
-				mazeDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			}
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
-
+		
+		mazeDisplay = new MazeDisplay(shell, SWT.BORDER);
+		mazeDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
 	
 	@Override
 	public void mazeReady(Maze3d maze, String mazeName) {
 		this.mazeName = mazeName;
 		this.myMaze = maze;
+		this.mazeDisplay.setCharacterPosition(this.myMaze.getStartPosition().x, this.myMaze.getStartPosition().y);
+		this.mazeDisplay.setCrossSection(this.myMaze.getCrossSectionByZ(0));
 	}
 	
 }
