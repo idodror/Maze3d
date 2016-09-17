@@ -6,6 +6,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+
 /**
  * MazeDisplay
  * extends Canvas
@@ -29,14 +30,9 @@ public class MazeDisplay extends Canvas {
 		character = new Character();
 		character.setPos(new Point(0, 0));
 		
+		// draw the maze
 		this.addPaintListener(new PaintListener() {
 			
-			/**
-			 * paintControl
-			 *@Override
-			 *@param PaintEvent
-			 *paint the maze
-			 */
 			@Override
 			public void paintControl(PaintEvent e) {
 				int x, y;
@@ -64,8 +60,8 @@ public class MazeDisplay extends Canvas {
 
 	/**
 	 * setCrossSection
-	 * paint the maze in crosssection [][]
-	 * @param int[][]crossSection
+	 * paint the maze in crossSection [][]
+	 * @param int[][] crossSection
 	 */
 	public void setCrossSection(int[][] crossSection) {
 		this.crossSection = crossSection;
@@ -85,20 +81,18 @@ public class MazeDisplay extends Canvas {
 	/**
 	 * setCharacterPosition
 	 * @param int x
-	 * @param  int y
+	 * @param int y
 	 */
 	public void setCharacterPosition(int x, int y) {
 		this.character.setPos(new Point(x, y));
+		
 		getDisplay().syncExec(new Runnable() {
-			/**
-			 * run
-			 * @Override
-			 * redraw -paint again
-			 */
+
 			@Override
 			public void run() {
 				redraw();
 			}
+			
 		});	
 	}
 	

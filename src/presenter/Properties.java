@@ -2,6 +2,7 @@ package presenter;
 
 import java.io.Serializable;
 import javax.xml.bind.annotation.*;
+
 /**
  * class Properties implements Serializable
  * This class is for the xml file
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.*;
  *  Data Member String solveAlgorithm, String userInterface
  * @author Gal Basre & Ido Dror
  */
+@SuppressWarnings("serial")
 @XmlRootElement
 public class Properties implements Serializable {
 	
@@ -20,6 +22,7 @@ public class Properties implements Serializable {
 	private String generateAlgorithm;
 	private String solveAlgorithm;
 	private String userInterface;
+	private String zipFilePath;
 	
 	/**
 	 * Constructor Properties
@@ -32,9 +35,11 @@ public class Properties implements Serializable {
 		this.generateAlgorithm = null;
 		this.solveAlgorithm = null;
 		this.userInterface = null;
+		this.zipFilePath = null;
 	}
+	
 	/**
-	 *getFloors 
+	 * getFloors 
 	 * @return int 
 	 */
 	public int getFloors() {
@@ -42,9 +47,8 @@ public class Properties implements Serializable {
 	}
 	
 	/**
-	 *setFloors 
-	 *@param int
-	 * @xmlElement 
+	 * setFloors 
+	 * @param floors, int
 	 */
 	@XmlElement
 	public void setFloors(int floors) {
@@ -52,7 +56,7 @@ public class Properties implements Serializable {
 	}
 	
 	/**
-	 *getCols 
+	 * getCols 
 	 * @return int 
 	 */
 	public int getCols() {
@@ -60,9 +64,8 @@ public class Properties implements Serializable {
 	}
 
 	/**
-	 *setCols
-	 *@param int 
-	 * @xmlElement 
+	 * setCols
+	 * @param cols, int
 	 */
 	@XmlElement
 	public void setCols(int cols) {
@@ -70,7 +73,7 @@ public class Properties implements Serializable {
 	}
 
 	/**
-	 *getRows 
+	 * getRows 
 	 * @return int 
 	 */
 	public int getRows() {
@@ -78,9 +81,8 @@ public class Properties implements Serializable {
 	}
 
 	/**
-	 *setRows 
-	 *@param int
-	 * @xmlElement 
+	 * setRows 
+	 * @param rows, int
 	 */
 	@XmlElement
 	public void setRows(int rows) {
@@ -88,7 +90,7 @@ public class Properties implements Serializable {
 	}
 
 	/**
-	 *getThreadPoolNumber 
+	 * getThreadPoolNumber 
 	 * @return int 
 	 */
 	public int getThreadPoolNumber() {
@@ -96,9 +98,8 @@ public class Properties implements Serializable {
 	}
 
 	/**
-	 *setThreadPoolNumber
-	 *@param int 
-	 * @xmlElement 
+	 * setThreadPoolNumber
+	 * @param threadPoolNumber, int 
 	 */
 	@XmlElement
 	public void setThreadPoolNumber(int threadPoolNumber) {
@@ -114,9 +115,8 @@ public class Properties implements Serializable {
 	}
 
 	/**
-	 *setGenerateAlgorithm 
-	 *@param String
-	 * @xmlElement 
+	 * setGenerateAlgorithm 
+	 * @param generateAlgorithm, String 
 	 */
 	@XmlElement
 	public void setGenerateAlgorithm(String generateAlgorithm) {
@@ -124,7 +124,7 @@ public class Properties implements Serializable {
 	}
 	
 	/**
-	 *getSolveAlgorithm 
+	 * getSolveAlgorithm 
 	 * @return String
 	 */
 	public String getSolveAlgorithm() {
@@ -132,14 +132,14 @@ public class Properties implements Serializable {
 	}
 
 	/**
-	 *setSolveAlgorithm 
-	 *@param String 
-	 * @xmlElement 
+	 * setSolveAlgorithm 
+	 * @param solveAlgorithm, String  
 	 */
 	@XmlElement
 	public void setSolveAlgorithm(String solveAlgorithm) {
 		this.solveAlgorithm = solveAlgorithm;
 	}
+	
 	/**
 	 * getUserInterface
 	 * @return String
@@ -149,13 +149,29 @@ public class Properties implements Serializable {
 	}
 
 	/**
-	 *setUserInterface
-	 *@param String 
-	 * @xmlElement 
+	 * setUserInterface
+	 * @param userInterface, String
 	 */
 	@XmlElement
 	public void setUserInterface(String userInterface) {
 		this.userInterface = userInterface;
+	}
+
+	/**
+	 * getZipFilePath
+	 * @return String
+	 */
+	public String getZipFilePath() {
+		return zipFilePath;
+	}
+
+	/**
+	 * 
+	 * @param zipFilePath, String
+	 */
+	@XmlElement
+	public void setZipFilePath(String zipFilePath) {
+		this.zipFilePath = zipFilePath;
 	}
 
 }

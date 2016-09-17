@@ -6,5 +6,6 @@
     <rows>5</rows>
     <solveAlgorithm>BFS</solveAlgorithm>
     <threadPoolNumber>10</threadPoolNumber>
-    <userInterface>gui</userInterface>
+    <userInterface>GUI</userInterface>
+    <zipFilePath>data\mymap.zip</zipFilePath>
 </properties>

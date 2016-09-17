@@ -17,7 +17,7 @@ public class Run {
 	public static void main(String[] args) throws FileNotFoundException {
 		//MyJaxbUtil.writeXml();
 		MyJaxbUtil.readXML();
-		
+
 		MyModel model = new MyModel();	
 		MyView view = new MyView( new BufferedReader(new InputStreamReader(System.in)), new PrintWriter(System.out, true));
 		Presenter presenter= new Presenter(view, model);

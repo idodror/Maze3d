@@ -1,7 +1,5 @@
 package GUI;
 
-import java.util.TimerTask;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -10,7 +8,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-
 import algorithms.mazeGenerators.Maze3d;
 import view.MyView;
 
@@ -38,8 +35,7 @@ public class Maze3dWindow extends BaseWindow {
 
 	/**
 	 * initWidgets
-	 * @Override
-	 * new grid layout,create a new composite and a new button to push.
+	 * New grid layout, create a new composite and a new button to push.
 	 */
 	@Override
 	protected void initWidgets() {
@@ -56,21 +52,12 @@ public class Maze3dWindow extends BaseWindow {
 		btnGenerateMaze.setText("Generate new maze");
 		btnGenerateMaze.addSelectionListener(new SelectionListener() {
 			
-			/**
-			 * widgetSelected
-			 *@Override 
-			 *@param SelectionEvent
-			 */
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				GenerateMazeWindows genWin = new GenerateMazeWindows(view);
 				genWin.start(display);
 			}
-			/**
-			 * widgetDefaultSelected
-			 * @Override 
-			 *@param SelectionEvent 
-			 */
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
@@ -82,8 +69,8 @@ public class Maze3dWindow extends BaseWindow {
 	
 	/**
 	 * mazeReady
-	 *@Override
-	 *@param Maze3d, String  
+	 * @param Maze3d, the maze
+	 * @param String, maze name  
 	 */
 	@Override
 	public void mazeReady(Maze3d maze, String mazeName) {
@@ -91,6 +78,14 @@ public class Maze3dWindow extends BaseWindow {
 		this.myMaze = maze;
 		this.mazeDisplay.setCharacterPosition(this.myMaze.getStartPosition().x, this.myMaze.getStartPosition().y);
 		this.mazeDisplay.setCrossSection(this.myMaze.getCrossSectionByZ(0));
+	}
+
+	/**
+	 * Get the maze name
+	 * @return String, mazeName
+	 */
+	public String getMazeName() {
+		return mazeName;
 	}
 	
 }

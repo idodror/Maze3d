@@ -1,8 +1,5 @@
 package model;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.search.Solution;
 
@@ -106,18 +103,24 @@ public interface Model {
 	 * @param out, String
 	 */
 	public void printToOutputStream(String out);
+	
 	/**
-	 * GZip
-	 * write all the maze in zip
-	 * @throws FileNotFoundException, IOException
-	 * @throws 
+	 * Save the mazeDatabase map to zip file
+	 * @throws NullPointerException
 	 */
-	public void GZip() throws FileNotFoundException, IOException ;
-/**
- * getMaze
- * @param String
- * @return maze3d
- */
+	public void zipSave();
+	
+	/**
+	 * Load the mazeDatabase map from zip file
+	 * @throws NullPointerException
+	 */
+	public void zipLoad();
+	
+	/**
+	 * getMaze
+	 * @param String
+	 * @return maze3d
+	 */
 	public Maze3d getMaze(String mazeName);
 	/**
 	 * getSolution

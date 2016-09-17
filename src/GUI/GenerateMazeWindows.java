@@ -9,24 +9,23 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import view.MyView;
+
 /**
  * class GenerateMazeWindows
  * extends DialogWindow
  * @author Gal Basre & Ido Dror
- *
  */
 public class GenerateMazeWindows extends DialogWindow {
-/**
- * Constructor
- * @param MyView
- */
+	
+	/**
+	 * Constructor
+	 * @param MyView
+	 */
 	public GenerateMazeWindows(MyView view) {
 		this.view = view;
 	}
 	
 	/**
-	 * initWidgets
-	 * @Override
 	 * this it the window of the generate maze.
 	 * we will enter the floors, cols, rows and the name of the maze.
 	 * then we will push the button to generate the maze.
@@ -63,10 +62,8 @@ public class GenerateMazeWindows extends DialogWindow {
 		btnStartGame.addSelectionListener(new SelectionListener() {
 			
 			/**
-			 * widgetSelected
-			 * @Override
+			 * take all the floors, cols, rows and make them from string to int with the parsint.
 			 * @param SelectionEvent
-			 *  take all the floors, cols, rows and make them from string to int with the parsint.
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -87,11 +84,7 @@ public class GenerateMazeWindows extends DialogWindow {
 				view.executeCommand("generate_maze " + mazeName + " " + floors + " " + rows + " " + cols);
 				shell.dispose();
 			}
-			/**
-			 * widgetDefaultSelected
-			 * @param SelectionEvent
-			 * @Override
-			 */
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}

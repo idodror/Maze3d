@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
@@ -8,7 +9,8 @@ import algorithms.search.Solution;
  * This class Represent a maze, a position of the player on the maze and it solution
  * @author Gal Basre & Ido Dror
  */
-public class MazeRecord {
+@SuppressWarnings("serial")
+public class MazeRecord implements Serializable{
 	
 	private Maze3d maze;
 	private Position currPosition;

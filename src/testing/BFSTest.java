@@ -15,10 +15,10 @@ import algorithms.search.State;
 
 /**
  * BFSTest
- * Unit Testing for  the algorithm BFS
- * take the algorithm and split it to part, then check  if every part is ok 
+ * Unit Testing for the algorithm BFS
+ * take the algorithm and split it to parts, then check if every part is ok 
  * Data member: maze for the tasting, Position startPosition ,Position goalPosition
- * Data member:Searchable<Position>, Searcher<Position> bfs, Solution<Position> sol 
+ * Data member: Searchable<Position>, Searcher<Position> bfs, Solution<Position> sol 
  * @author Gal Basre & Ido Dror
  */
 public class BFSTest {
@@ -44,12 +44,12 @@ public class BFSTest {
 	public void shouldReturnCountOfPathFromStartToFinishPosition() {
 		assertEquals(5, sol.getStates().size());
 	}
+	
 	/**
 	 * shouldReturnTheGoalStateOfTheMaze
 	 * check if the goal state is the same with the assertEquals
 	 * @test
 	 */
-	
 	@Test
 	public void shouldReturnTheGoalStateOfTheMaze() {
 		assertEquals(goalPosition, sol.getStates().get(sol.getStates().size()-1).getValue());
@@ -73,15 +73,16 @@ public class BFSTest {
 	public void checkIfReturnsZeroNeighborsOfInvalidPosition() {
 		assertEquals(0, mazeSearchable.getAllPossibleStates(new State<Position>(new Position(-1, 0, 0), null)).size());
 	}
+	
 	/**
 	 * checkIfTheEvaluatedNumberOfNodesOfTheSolutionIsValid
 	 * @test
 	 */
-	
 	@Test
 	public void checkIfTheEvaluatedNumberOfNodesOfTheSolutionIsValid() {
 		assertEquals(true, bfs.getNumberOfNodesEvaluated() >= sol.getStates().size());
 	}
+	
 	/**
 	 * shouldReturnAllThePossibleMovesOfState
 	 * check the neighbors of a position
@@ -89,7 +90,6 @@ public class BFSTest {
 	 * assertEquals between the two lists
 	 * @test
 	 */
-	
 	@Test
 	public void shouldReturnAllThePossibleMovesOfState() {
 		Position posToBeChecked = new Position(0, 3, 2);

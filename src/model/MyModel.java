@@ -1,27 +1,24 @@
 package model;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipEntry;
-
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Maze3dGenerator;
@@ -59,6 +56,7 @@ public class MyModel extends Observable implements Model {
 		this.currPosition = null;
 		this.wantedPosition = null;
 		this.mazeDatabase = Collections.synchronizedMap(new HashMap<String, MazeRecord>());
+		zipLoad();
 		this.threadPool = Executors.newFixedThreadPool(MyJaxbUtil.getProperties().getThreadPoolNumber());
 	}
 	
@@ -96,7 +94,7 @@ public class MyModel extends Observable implements Model {
 	public void generateMaze(String[] args) {
 		if (args.length != 4) 
 			throw new IllegalArgumentException("Illegal Arguments!");
-		Future<Maze3d> myFutureMaze = threadPool.submit(new Callable<Maze3d>() {
+		threadPool.submit(new Callable<Maze3d>() {
 
 			@Override
 			public Maze3d call() throws Exception {
@@ -449,7 +447,7 @@ public class MyModel extends Observable implements Model {
 		if (this.mazeDatabase.get(args[0]).getSolution() != null)
 			displaySolution(Arrays.copyOfRange(args, 0, 1));
 		else { 
-			Future<Solution<Maze3d>> myFutureSolution = threadPool.submit(new Callable<Solution<Maze3d>>() {
+			threadPool.submit(new Callable<Solution<Maze3d>>() {
 	
 				@Override
 				public Solution<Maze3d> call() throws Exception {
@@ -505,6 +503,7 @@ public class MyModel extends Observable implements Model {
 	 */
 	@Override
 	public void exit() {
+		zipSave();
 		try {
 			this.threadPool.shutdownNow();
 		} catch (Exception e) {
@@ -521,33 +520,51 @@ public class MyModel extends Observable implements Model {
 		notifyObservers(out);
 	}
 	
-	// save_maze [name] [file_name]
+	/**
+	 * Save the mazeDatabase map into a .zip file
+	 */
 	@Override
-	public void GZip() throws FileNotFoundException, IOException {
-		/*GZIPOutputStream gz = null;
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		String[] args = new String[2];
-		File file = null;
-		List<File> files = new ArrayList<File>();
-		ZipEntry zipEntry = null;
+	public void zipSave() {
+		ObjectOutputStream objectOut = null;
 		FileOutputStream out = null;
-		for (Map.Entry<String, MazeRecord> entry : this.mazeDatabase.entrySet()) {
-			getMazeFromDatabase(entry.getKey());
-			save(bytes);
-			file = new File(entry.getKey() + ".maz");
+		File file = new File(System.getProperty("user.dir") + "\\" + MyJaxbUtil.getProperties().getZipFilePath());
+		file.getParentFile().mkdirs();
+		try {
+			file.createNewFile();
 			out = new FileOutputStream(file);
-			gz = new GZIPOutputStream(out); 
-			gz.write(bytes.toByteArray());
-			gz.finish();
-			gz.close();
-		}*/
+			objectOut = new ObjectOutputStream(new GZIPOutputStream(out));
+			objectOut.writeObject(this.mazeDatabase);
+			objectOut.flush();
+			objectOut.close();
+		} catch (IOException e) {
+			setChanged();
+			notifyObservers("DisplayOnOutputStream There was a problem to save the .zip file");
+		}
 	}
 	
-/**
- * getMaze
- * @param String
- * return Maze3d
- */
+	
+	/**
+	 * Load the database from a .zip file and put it in the map mazeDatabase
+	 */
+	@SuppressWarnings("unchecked")
+	public void zipLoad() {
+		File file = new File(System.getProperty("user.dir") + "\\" + MyJaxbUtil.getProperties().getZipFilePath());
+		ObjectInputStream objectIn = null;
+		Map<String, MazeRecord> loadedMap = Collections.synchronizedMap(new HashMap<String, MazeRecord>());
+		try {
+			objectIn = new ObjectInputStream(new GZIPInputStream(new FileInputStream(file)));
+			loadedMap = (Map<String, MazeRecord>) objectIn.readObject();
+			objectIn.close();
+		} catch (ClassNotFoundException | IOException e) {
+		}
+		this.mazeDatabase = loadedMap;
+	}
+	
+	/**
+	 * Get the maze by name
+	 * @param mazeName, String
+	 * @return Maze3d, the maze
+	 */
 	@Override
 	public Maze3d getMaze(String mazeName) {
 		getMazeFromDatabase(mazeName);
@@ -555,9 +572,9 @@ public class MyModel extends Observable implements Model {
 	}
 
 	/**
-	 * getSolution
-	 * @param String
-	 * return Solution
+	 * Get the solution of the maze by maze name
+	 * @param mazeName, String
+	 * @return Solution, maze solution
 	 */
 	@Override
 	public Solution<Maze3d> getSolution(String mazeName) {

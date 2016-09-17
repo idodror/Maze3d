@@ -1,7 +1,5 @@
 package presenter;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import algorithms.mazeGenerators.Maze3d;

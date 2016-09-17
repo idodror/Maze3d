@@ -3,6 +3,7 @@ package GUI;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import view.MyView;
+
 /**
  * abstract class DialogWindow
  * Data member Shell, MyView
@@ -20,7 +21,6 @@ public abstract class DialogWindow {
 	protected abstract void initWidgets();
 	
 	/**
-	 * start
 	 * start the window
 	 * @param display
 	 */
