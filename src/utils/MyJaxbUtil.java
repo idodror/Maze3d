@@ -7,10 +7,21 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import presenter.Properties;
 
+/**
+ * MyJaxbUtil
+ * Existing package in java.xml.bind that create xml file
+ * Data member Properties
+ * @author Gal Basre & Ido Dror
+ */
 public class MyJaxbUtil {
 	
 	private static Properties properties = null;
 	
+	/**
+	 *  readXML from file
+	 *  read all the properties fron the xml
+	 * @return Properties
+	 */
 	public static Properties readXML() {
 		File file = null;
 		JAXBContext jaxbContext = null;
@@ -26,6 +37,10 @@ public class MyJaxbUtil {
 		return properties;
 	}
 
+	/**
+	 * writeXml
+	 * write the the xml file 
+	 */
 	public static void writeXml() {
 		properties = new Properties();
 		
@@ -56,6 +71,10 @@ public class MyJaxbUtil {
 		
 	}
 	
+	/**
+	 * getProperties
+	 * @return Properties
+	 */
 	public static Properties getProperties() {
 		return properties;
 	}

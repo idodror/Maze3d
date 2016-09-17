@@ -13,6 +13,14 @@ import algorithms.search.Searcher;
 import algorithms.search.Solution;
 import algorithms.search.State;
 
+/**
+ * BFSTest
+ * Unit Testing for  the algorithm BFS
+ * take the algorithm and split it to part, then check  if every part is ok 
+ * Data member: maze for the tasting, Position startPosition ,Position goalPosition
+ * Data member:Searchable<Position>, Searcher<Position> bfs, Solution<Position> sol 
+ * @author Gal Basre & Ido Dror
+ */
 public class BFSTest {
 
 	int[][][] maze = { { { 1, 1, 1, 1, 1 },
@@ -26,30 +34,61 @@ public class BFSTest {
 	Searcher<Position> bfs = new BFS<Position>();
 	Solution<Position> sol = bfs.search(mazeSearchable);
 	
+	/**
+	 * shouldReturnCountOfPathFromStartToFinishPosition
+	 * the way from the start position to the end is 5
+	 * we check if it is 5 by the assertEquals
+	 * @test
+	 */
 	@Test
 	public void shouldReturnCountOfPathFromStartToFinishPosition() {
 		assertEquals(5, sol.getStates().size());
 	}
+	/**
+	 * shouldReturnTheGoalStateOfTheMaze
+	 * check if the goal state is the same with the assertEquals
+	 * @test
+	 */
 	
 	@Test
 	public void shouldReturnTheGoalStateOfTheMaze() {
 		assertEquals(goalPosition, sol.getStates().get(sol.getStates().size()-1).getValue());
 	}
 	
+	/**
+	 *  shouldReturnTheStartStateOfTheMaze
+	 *  check if the start state is the same with the assertEquals
+	 *  @test
+	 */
 	@Test
 	public void shouldReturnTheStartStateOfTheMaze() {
 		assertEquals(startPosition, sol.getStates().get(0).getValue());
 	}
-
+	
+	/**
+	 * checkIfReturnsZeroNeighborsOfInvalidPosition
+	 * @test	
+	 */
 	@Test
 	public void checkIfReturnsZeroNeighborsOfInvalidPosition() {
 		assertEquals(0, mazeSearchable.getAllPossibleStates(new State<Position>(new Position(-1, 0, 0), null)).size());
 	}
+	/**
+	 * checkIfTheEvaluatedNumberOfNodesOfTheSolutionIsValid
+	 * @test
+	 */
 	
 	@Test
 	public void checkIfTheEvaluatedNumberOfNodesOfTheSolutionIsValid() {
 		assertEquals(true, bfs.getNumberOfNodesEvaluated() >= sol.getStates().size());
 	}
+	/**
+	 * shouldReturnAllThePossibleMovesOfState
+	 * check the neighbors of a position
+	 * add to to a list all the true neighbors 
+	 * assertEquals between the two lists
+	 * @test
+	 */
 	
 	@Test
 	public void shouldReturnAllThePossibleMovesOfState() {

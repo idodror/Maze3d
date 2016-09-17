@@ -3,7 +3,10 @@ package GUI;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-
+/**
+ * class Character
+ * @author Gal Basre & Ido Dror
+ */
 public class Character {
 	private Point pos;
 	private Image img;
@@ -27,5 +30,7 @@ public class Character {
 	public void moveRight() {
 		pos.x++;
 	}
+	
+	
 	
 }
