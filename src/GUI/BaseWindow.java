@@ -48,9 +48,9 @@ public abstract class BaseWindow extends UI {
 				this.display.sleep();
 		exit();
 	}
+	
 	/**
-	 * exit	
-	 * @override
+	 * exit	- dispose the display
 	 */
 	@Override
 	public void exit() {

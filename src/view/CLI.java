@@ -1,6 +1,8 @@
 package view;
 
 import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
 
 /**
  * This is the CLI which presents the Viewer of the MVP
@@ -41,9 +43,9 @@ public class CLI extends UI {
 					try {
 						executeCommand(commandLine);
 					} catch (IllegalArgumentException e) {
-						printToOutputStream(e.getMessage());
+						printMessage(e.getMessage());
 					} catch (NullPointerException e) {
-						printToOutputStream(e.getMessage());
+						printMessage(e.getMessage());
 					}
 				} while (!(commandLine.equals("exit")));
 			}	
@@ -55,7 +57,8 @@ public class CLI extends UI {
 	 * Execute the commandLine to the View
 	 * @param commandLine, String
 	 */
-	private void executeCommand(String commandLine) {
+	@Override
+	public void executeCommand(String commandLine) {
 		this.view.executeCommand(commandLine);
 	}
 	
@@ -70,25 +73,25 @@ public class CLI extends UI {
 	 * Menu
 	 */
 	private void menu() {
-		this.view.printToOutputStream("*****MENU*****");
-		this.view.printToOutputStream("(0) <u/d/f/b/r/l> <maze_name>");
-		this.view.printToOutputStream("(1) dir <path>");
-		this.view.printToOutputStream("(2) generate_maze <name> <other params>");
-		this.view.printToOutputStream("(3) display <name>");
-		this.view.printToOutputStream("(4) display_cross_section <index> <{X,Y,Z}> <name>");
-		this.view.printToOutputStream("(5) save_maze <name> <file name>");
-		this.view.printToOutputStream("(6) load_maze <file name> <name>");
-		this.view.printToOutputStream("(7) solve <name> <algorithm>");
-		this.view.printToOutputStream("(8) display_solution <name>");
-		this.view.printToOutputStream("(9) exit");
+		this.view.printMessage("*****MENU*****");
+		this.view.printMessage("(0) <u/d/f/b/r/l> <maze_name>");
+		this.view.printMessage("(1) dir <path>");
+		this.view.printMessage("(2) generate_maze <name> <other params>");
+		this.view.printMessage("(3) display <name>");
+		this.view.printMessage("(4) display_cross_section <index> <{X,Y,Z}> <name>");
+		this.view.printMessage("(5) save_maze <name> <file name>");
+		this.view.printMessage("(6) load_maze <file name> <name>");
+		this.view.printMessage("(7) solve <name> <algorithm>");
+		this.view.printMessage("(8) display_solution <name>");
+		this.view.printMessage("(9) exit");
 	}
 	
 	/**
 	 * Print to the output stream
 	 * @param out, String
 	 */
-	public void printToOutputStream(String out) {
-		this.view.printToOutputStream(out);
+	public void printMessage(String msg) {
+		this.view.printToOutputStream(msg);
 	}
 	
 	/**
@@ -101,7 +104,22 @@ public class CLI extends UI {
 
 	@Override
 	public void mazeReady(Maze3d maze, String mazeName) {
-		this.printToOutputStream(maze.toString());
+		this.printMessage(maze.toString());
+	}
+
+	@Override
+	public void displaySolution(Solution<Maze3d> solution) {
+		this.printMessage(solution.toString());
+	}
+
+	@Override
+	public void move(Position pos) {
+		this.printMessage(pos.toString());
+	}
+
+	@Override
+	public void winner() {
+		this.printMessage("You are the winner!");
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.Observable;
 
 import GUI.Maze3dWindow;
 import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Position;
 import utils.MyJaxbUtil;
 
 /**
@@ -24,7 +25,7 @@ public class MyView extends Observable implements View {
 	 * Constructor
 	 * @param controller,BufferedReader ,PrintWriter
 	 */
-	public MyView (BufferedReader in, PrintWriter out) {
+	public MyView(BufferedReader in, PrintWriter out) {
 		this.ui = chooseUIFromProperties();
 		this.in = in;
 		this.out = out;
@@ -82,8 +83,8 @@ public class MyView extends Observable implements View {
 	 * @param out, String to print
 	 */
 	@Override
-	public void printToOutputStream(String out) {
-		this.out.println(out);
+	public void printMessage(String msg) {
+		this.ui.printMessage(msg);
 	}
 
 	/**
@@ -96,7 +97,7 @@ public class MyView extends Observable implements View {
 		try {
 			line = this.in.readLine();
 		} catch (IOException e) {
-			printToOutputStream("IO Exception");
+			printMessage("IO Exception");
 		}
 		return line;
 	}
@@ -118,5 +119,19 @@ public class MyView extends Observable implements View {
 	@Override
 	public void generatedMaze(Maze3d maze, String mazeName) {
 		this.ui.mazeReady(maze, mazeName);
+	}
+	
+	public void printToOutputStream(String msg) {
+		this.out.println(msg);
+	}
+
+	@Override
+	public void move(Position pos) {
+		this.ui.move(pos);
+	}
+
+	@Override
+	public void winner() {
+		this.ui.winner();
 	}
 }

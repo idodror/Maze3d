@@ -1,6 +1,8 @@
 package view;
 
 import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
 /**
  *  abstract class UI
  *  implements Runnable
@@ -22,11 +24,23 @@ public abstract class UI implements Runnable {
 	 * abstract
 	 */
 	public abstract void exit();
+	
 	/**
 	 * mazeReady
 	 * abstract
-	 * @param Maze3 dmaze
+	 * @param Maze3d maze
 	 * @param String mazeName
 	 */
 	public abstract void mazeReady(Maze3d maze, String mazeName);
+	
+	public abstract void printMessage(String msg);
+	
+	public abstract void displaySolution(Solution<Maze3d> solution);
+	
+	public abstract void move(Position pos);
+	
+	public abstract void winner();
+	
+	public abstract void executeCommand(String commandLine);
+	
 }

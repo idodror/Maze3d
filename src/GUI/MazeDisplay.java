@@ -1,11 +1,19 @@
 package GUI;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+
+import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
+import view.MyView;
 
 /**
  * MazeDisplay
@@ -16,6 +24,9 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class MazeDisplay extends Canvas {
 	
+	private MyView view;
+	private String mazeName;
+
 	private int[][] crossSection = { {0}, {0} };
 	private Character character;
 
@@ -24,11 +35,14 @@ public class MazeDisplay extends Canvas {
 	 * @param Composite parent
 	 * @param int style
 	 */
-	public MazeDisplay(Composite parent, int style) {
+	public MazeDisplay(Composite parent, int style, MyView view) {
 		super(parent, style);
 		
+		this.view = view;
+		this.mazeName = null;
+		
 		character = new Character();
-		character.setPos(new Point(0, 0));
+		character.setPos(new Position(-1, -1, -1));
 		
 		// draw the maze
 		this.addPaintListener(new PaintListener() {
@@ -41,8 +55,8 @@ public class MazeDisplay extends Canvas {
 				int cellWidth = canvasWidth / crossSection[0].length;
 				int cellHeight = canvasHeight / crossSection.length;
 				
-				e.gc.setForeground(new Color(null,1,255,0));
-				e.gc.setBackground(new Color(null,0, 0, 0));
+				e.gc.setForeground(new Color(null, 1, 255, 0));
+				e.gc.setBackground(new Color(null, 0, 0, 0));
 
 				for (int i = 0; i < crossSection.length; i++) {
 					for (int j = 0; j < crossSection[i].length; j++) {
@@ -55,6 +69,42 @@ public class MazeDisplay extends Canvas {
 				character.draw(cellWidth, cellHeight, e.gc);
 			}
 		});
+		
+		this.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyReleased(KeyEvent arg0) { }
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				String command = null;
+				switch (e.keyCode) {
+				case SWT.ARROW_RIGHT:
+					command = "r " + mazeName;
+					break;
+				case SWT.ARROW_LEFT:
+					command = "l " + mazeName;
+					break;
+				case SWT.ARROW_UP:
+					command = "b " + mazeName;
+					break;
+				case SWT.ARROW_DOWN:
+					command = "f " + mazeName;
+					break;
+				case SWT.PAGE_DOWN:
+					command = "d " + mazeName;
+					break;
+				case SWT.PAGE_UP:
+					command = "u " + mazeName;
+					break;
+				default: break;
+				}
+				if (command != null) {
+					view.executeCommand(command);
+					redraw();
+				}
+			}
+		});
 
 	}
 
@@ -65,17 +115,7 @@ public class MazeDisplay extends Canvas {
 	 */
 	public void setCrossSection(int[][] crossSection) {
 		this.crossSection = crossSection;
-		getDisplay().syncExec(new Runnable() {
-			/**
-			 * run
-			 * @Override
-			 * redraw -paint again
-			 */
-			@Override
-			public void run() {
-				redraw();
-			}
-		});
+		redrawMe();
 	}
 
 	/**
@@ -83,9 +123,28 @@ public class MazeDisplay extends Canvas {
 	 * @param int x
 	 * @param int y
 	 */
-	public void setCharacterPosition(int x, int y) {
-		this.character.setPos(new Point(x, y));
-		
+	public void setCharacterPosition(int z, int y, int x) {
+		this.character.setPos(new Position(z, y, x));
+		redrawMe();
+	}
+
+	public void displaySolutionOnCanvas(Solution<Maze3d> solution) {
+		redrawMe();
+	}
+
+	public void moveTheCharacter(Position pos) {
+		this.character.setPos(pos);
+		redrawMe();
+	}
+	
+	public void setMazeName(String mazeName) {
+		this.mazeName = mazeName;
+	}
+	
+	/**
+	 * 
+	 */
+	private void redrawMe() {
 		getDisplay().syncExec(new Runnable() {
 
 			@Override
@@ -93,7 +152,6 @@ public class MazeDisplay extends Canvas {
 				redraw();
 			}
 			
-		});	
+		});
 	}
-	
 }

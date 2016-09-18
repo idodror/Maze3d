@@ -45,6 +45,7 @@ public class MyModel extends Observable implements Model {
 	private Position wantedPosition;
 	private Maze3d currMaze;		// current maze play on from the database
 	private Position currPosition;	// current maze's position on the maze
+
 	private Solution<Maze3d> currSolution;
 	private Map<String, MazeRecord> mazeDatabase;
 	private ExecutorService threadPool;
@@ -249,14 +250,16 @@ public class MyModel extends Observable implements Model {
 	 * asks the controller to display the current position now
 	 */
 	private void goSomewhere() {
-		String out;
+		String str;
 		if (this.currMaze.validPos(this.wantedPosition) && !this.currMaze.isWall(this.wantedPosition)) { 
 			setCurrentToWanted();
-			out = this.currPosition.toString();
+			if (this.currPosition.equals(this.currMaze.getGoalPosition()))
+				str = "WIN";
+			else str = "CharacterMoved";
 		}
-		else out = "sorry, you can't go there";
+		else str = "DisplayMessage sorry, you can't go there";
 		setChanged();
-		notifyObservers("DisplayOnOutputStream " + out);
+		notifyObservers(str);
 	}
 
 	/**
@@ -287,7 +290,7 @@ public class MyModel extends Observable implements Model {
 		for (int i = 0; i < listOfFiles.length; i++)
 			sb.append(listOfFiles[i].getName() + "\n");
 		setChanged();
-		notifyObservers("DisplayOnOutputStream " + sb.toString());
+		notifyObservers("DisplayMessage " + sb.toString());
 	}
 
 	/**
@@ -328,7 +331,7 @@ public class MyModel extends Observable implements Model {
 			throw new IllegalArgumentException("Invalid Arguments!");
 		}
 		setChanged();
-		notifyObservers("DisplayOnOutputStream " + Array2dtoString(crossSection));
+		notifyObservers("DisplayMessage " + Array2dtoString(crossSection));
 	}
 
 	/**
@@ -368,6 +371,8 @@ public class MyModel extends Observable implements Model {
 		} catch (FileNotFoundException e) {
 			 new IllegalArgumentException("File not found");
 		}
+		setChanged();
+		notifyObservers("DisplayMessage Maze " + args[0] + " saved!");
 	}
 	
 	/**
@@ -495,7 +500,7 @@ public class MyModel extends Observable implements Model {
 			out = this.mazeDatabase.get(args[0]).getSolution().toString();
 		else out = "There is no solution available for this maze";
 		setChanged();
-		notifyObservers("DisplayOnOutputStream " + out);
+		notifyObservers("DisplayMessage " + out);
 	}
 	
 	/**
@@ -538,7 +543,7 @@ public class MyModel extends Observable implements Model {
 			objectOut.close();
 		} catch (IOException e) {
 			setChanged();
-			notifyObservers("DisplayOnOutputStream There was a problem to save the .zip file");
+			notifyObservers("DisplayMessage There was a problem to save the .zip file");
 		}
 	}
 	
@@ -580,6 +585,10 @@ public class MyModel extends Observable implements Model {
 	public Solution<Maze3d> getSolution(String mazeName) {
 		getMazeFromDatabase(mazeName);
 		return this.currSolution;
+	}
+	
+	public Position getCurrPosition() {
+		return this.currPosition;
 	}
 
 }

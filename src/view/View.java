@@ -1,6 +1,7 @@
 package view;
 
 import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Position;
 
 /**
  * This is the view interface of the MVP
@@ -23,15 +24,19 @@ public interface View {
 	 * Print the string to output stream
 	 * @param out, String
 	 */
-	public void printToOutputStream(String out);
+	public void printMessage(String msg);
 	
 	/**
 	 * 
 	 */
 	public void generatedMaze(Maze3d maze, String mazeName);
 	
+	public void move(Position pos);
+	
 	/**
 	 * exit the program without anything open
 	 */
 	public void exit();
+
+	public void winner();
 }

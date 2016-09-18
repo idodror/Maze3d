@@ -1,6 +1,7 @@
 package model;
 
 import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 
 /**
@@ -128,4 +129,6 @@ public interface Model {
 	 * @return Solution
 	 */
 	public Solution<Maze3d> getSolution(String mazeName);
+	
+	public Position getCurrPosition();
 }

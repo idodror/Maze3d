@@ -2,7 +2,9 @@ package presenter;
 
 import java.util.Arrays;
 import java.util.HashMap;
+
 import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 import model.Model;
 import view.View;
@@ -53,7 +55,9 @@ public class CommandsManager {
 		this.commandMap.put("exit", new Exit());
 		this.commandMap.put("MazeIsReady", new MazeIsReady());
 		this.commandMap.put("SolutionIsReady", new SolutionIsReady());
-		this.commandMap.put("DisplayOnOutputStream", new DisplayOnOutputStream());
+		this.commandMap.put("DisplayMessage", new DisplayMessage());
+		this.commandMap.put("CharacterMoved", new CharacterMoved());
+		this.commandMap.put("WIN", new Winner());
 	}
 	
 	/**
@@ -367,15 +371,15 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			Solution<Maze3d> solution = model.getSolution(args[0]);
-			view.printToOutputStream(solution.toString());	
+			view.printMessage(solution.toString());
 		}
 		
 	}
 	/**
-	 * DisplayOnOutputStream
-	 *implements Command
+	 * DisplayMessage
+	 * implements Command
 	 */
-	class DisplayOnOutputStream implements Command {
+	class DisplayMessage implements Command {
 
 		/**
 		 * doCommand
@@ -388,7 +392,26 @@ public class CommandsManager {
 			for (String s : args) {
 				sb.append(s + " ");
 			}
-			view.printToOutputStream(sb.toString());
+			view.printMessage(sb.toString());
+		}
+		
+	}
+	
+	public class CharacterMoved implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			Position currPos = model.getCurrPosition();
+			view.move(currPos);
+		}
+		
+	}
+	
+	public class Winner implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			view.winner();
 		}
 		
 	}
