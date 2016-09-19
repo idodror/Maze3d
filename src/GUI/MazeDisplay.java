@@ -186,7 +186,6 @@ public class MazeDisplay extends Canvas {
 			
 			@Override
 			public void run() {
-				
 				redrawMe();
 			}
 		};

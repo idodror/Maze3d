@@ -131,4 +131,6 @@ public interface Model {
 	public Solution<Position> getSolution(String mazeName);
 	
 	public Position getCurrPosition();
+
+	public void whereAmI(String[] args);
 }

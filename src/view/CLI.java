@@ -122,4 +122,9 @@ public class CLI extends UI {
 		this.printMessage("You are the winner!");
 	}
 
+	@Override
+	public void setPosition(Position myPos) {
+		this.printMessage(myPos.toString());
+	}
+
 }

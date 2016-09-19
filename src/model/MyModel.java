@@ -591,4 +591,11 @@ public class MyModel extends Observable implements Model {
 		return this.currPosition;
 	}
 
+	@Override
+	public void whereAmI(String[] args) {
+		getMazeFromDatabase(args[0]);
+		setChanged();
+		notifyObservers("MyPositionInitialized");
+	}
+
 }

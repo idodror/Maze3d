@@ -56,6 +56,8 @@ public class CommandsManager {
 		this.commandMap.put("MazeIsReady", new MazeIsReady());
 		this.commandMap.put("SolutionIsReady", new SolutionIsReady());
 		this.commandMap.put("DisplayMessage", new DisplayMessage());
+		this.commandMap.put("WhereAmI", new WhereAmI());
+		this.commandMap.put("MyPositionInitialized", new MyPositionInitialized());
 		this.commandMap.put("CharacterMoved", new CharacterMoved());
 		this.commandMap.put("WIN", new Winner());
 	}
@@ -310,6 +312,25 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			model.displaySolution(args);			
+		}
+		
+	}
+	
+	class WhereAmI implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			model.whereAmI(args);
+		}
+		
+	}
+	
+	class MyPositionInitialized implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			Position myPos = model.getCurrPosition();
+			view.setPosition(myPos);
 		}
 		
 	}

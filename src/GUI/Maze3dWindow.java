@@ -34,6 +34,7 @@ public class Maze3dWindow extends BaseWindow {
 	private Maze3d myMaze;
 	private String mazeName;
 	private MazeDisplay mazeDisplay;
+	private Position myCurrPos;
 	private List<Point> canMoveUp;
 	private List<Point> canMoveDown;
 	private int[][] crossSection;
@@ -48,6 +49,7 @@ public class Maze3dWindow extends BaseWindow {
 		this.view = view;
 		this.myMaze = null;
 		this.mazeName = null;
+		this.myCurrPos = null;
 		this.canMoveUp = null;
 		this.canMoveDown = null;
 		this.crossSection = null;
@@ -88,6 +90,17 @@ public class Maze3dWindow extends BaseWindow {
 		Button btnHint = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnHint);
 		btnHint.setText("Hint");
+		btnHint.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				executeCommand("WhereAmI " + mazeName);
+				Maze3d newMaze = new Maze3d(myMaze.getMaze3d(), myCurrPos, myMaze.getGoalPosition());
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) { }
+		});
 		
 		@SuppressWarnings("unused")
 		Label lblSpace1 = new Label(buttons, SWT.NONE);
@@ -287,6 +300,11 @@ public class Maze3dWindow extends BaseWindow {
 	private void checkForUp(int y, int x) {
 		if (this.upperCrossSection[y][x] == this.crossSection[y][x] && this.crossSection[y][x] == Maze3d.FREE)
 			this.canMoveUp.add(new Point(y, x));
+	}
+
+	@Override
+	public void setPosition(Position myPos) {
+		this.myCurrPos = myPos;
 	}
 	
 }

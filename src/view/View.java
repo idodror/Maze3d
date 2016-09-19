@@ -42,4 +42,6 @@ public interface View {
 	public void exit();
 
 	public void winner();
+
+	public void setPosition(Position myPos);
 }

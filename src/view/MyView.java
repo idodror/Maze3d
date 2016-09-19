@@ -140,4 +140,9 @@ public class MyView extends Observable implements View {
 	public void displaySolution(Solution<Position> solution) {
 		this.ui.displaySolution(solution);
 	}
+
+	@Override
+	public void setPosition(Position myPos) {
+		this.ui.setPosition(myPos);
+	}
 }
