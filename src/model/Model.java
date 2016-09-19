@@ -128,7 +128,7 @@ public interface Model {
 	 * @param String
 	 * @return Solution
 	 */
-	public Solution<Maze3d> getSolution(String mazeName);
+	public Solution<Position> getSolution(String mazeName);
 	
 	public Position getCurrPosition();
 }

@@ -2,6 +2,7 @@ package view;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
 
 /**
  * This is the view interface of the MVP
@@ -32,6 +33,8 @@ public interface View {
 	public void generatedMaze(Maze3d maze, String mazeName);
 	
 	public void move(Position pos);
+	
+	public void displaySolution(Solution<Position> solution);
 	
 	/**
 	 * exit the program without anything open

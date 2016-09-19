@@ -8,4 +8,5 @@
     <threadPoolNumber>10</threadPoolNumber>
     <userInterface>GUI</userInterface>
     <zipFilePath>data\mymap.zip</zipFilePath>
+    <GUIUpDownHints>false</GUIUpDownHints>
 </properties>

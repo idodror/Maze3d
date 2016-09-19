@@ -14,7 +14,7 @@ public class MazeRecord implements Serializable{
 	
 	private Maze3d maze;
 	private Position currPosition;
-	private Solution<Maze3d> solution;
+	private Solution<Position> solution;
 
 	/**
 	 * Constructor
@@ -71,7 +71,7 @@ public class MazeRecord implements Serializable{
 	 * returns the solution of the maze
 	 * @return solution
 	 */
-	public Solution<Maze3d> getSolution() {
+	public Solution<Position> getSolution() {
 		return solution;
 	}
 
@@ -79,7 +79,7 @@ public class MazeRecord implements Serializable{
 	 * Set the solution of the maze
 	 * @param solution
 	 */
-	public void setSolution(Solution<Maze3d> solution) {
+	public void setSolution(Solution<Position> solution) {
 		this.solution = solution;
 	}
 }

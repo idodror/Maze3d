@@ -23,6 +23,7 @@ public class Properties implements Serializable {
 	private String solveAlgorithm;
 	private String userInterface;
 	private String zipFilePath;
+	private String GUIUpDownHints;
 	
 	/**
 	 * Constructor Properties
@@ -36,8 +37,9 @@ public class Properties implements Serializable {
 		this.solveAlgorithm = null;
 		this.userInterface = null;
 		this.zipFilePath = null;
+		this.GUIUpDownHints = null;
 	}
-	
+
 	/**
 	 * getFloors 
 	 * @return int 
@@ -172,6 +174,15 @@ public class Properties implements Serializable {
 	@XmlElement
 	public void setZipFilePath(String zipFilePath) {
 		this.zipFilePath = zipFilePath;
+	}
+	
+	public String getGUIUpDownHints() {
+		return GUIUpDownHints;
+	}
+
+	@XmlElement
+	public void setGUIUpDownHints(String gUIUpDownHints) {
+		GUIUpDownHints = gUIUpDownHints;
 	}
 
 }

@@ -46,7 +46,7 @@ public class MyModel extends Observable implements Model {
 	private Maze3d currMaze;		// current maze play on from the database
 	private Position currPosition;	// current maze's position on the maze
 
-	private Solution<Maze3d> currSolution;
+	private Solution<Position> currSolution;
 	private Map<String, MazeRecord> mazeDatabase;
 	private ExecutorService threadPool;
 
@@ -452,25 +452,25 @@ public class MyModel extends Observable implements Model {
 		if (this.mazeDatabase.get(args[0]).getSolution() != null)
 			displaySolution(Arrays.copyOfRange(args, 0, 1));
 		else { 
-			threadPool.submit(new Callable<Solution<Maze3d>>() {
+			threadPool.submit(new Callable<Solution<Position>>() {
 	
 				@Override
-				public Solution<Maze3d> call() throws Exception {
+				public Solution<Position> call() throws Exception {
 					getMazeFromDatabase(args[0]);
 					MazeRecord mazeRecord = new MazeRecord();
-					Solution<Maze3d> solution = null;
-					Searcher<Maze3d> searchAlgorithm = null;
+					Solution<Position> solution = null;
+					Searcher<Position> searchAlgorithm = null;
 					mazeRecord = getMazeDatabase().get(args[0]);
-					Searchable<Maze3d> searchInMaze = new Maze3dDomain<Maze3d>(mazeRecord.getMaze());
+					Searchable<Position> searchInMaze = new Maze3dDomain<Position>(mazeRecord.getMaze());
 					switch (args[1]) {
 					case "bfs":
 					case "BFS":
-						searchAlgorithm = new BFS<Maze3d>();
+						searchAlgorithm = new BFS<Position>();
 						solution = searchAlgorithm.search(searchInMaze);
 						break;
 					case "dfs":
 					case "DFS":
-						searchAlgorithm = new DFS<Maze3d>();
+						searchAlgorithm = new DFS<Position>();
 						solution = searchAlgorithm.search(searchInMaze);
 						break;
 					default: throw new IllegalArgumentException("Invalid Arguments!");
@@ -582,7 +582,7 @@ public class MyModel extends Observable implements Model {
 	 * @return Solution, maze solution
 	 */
 	@Override
-	public Solution<Maze3d> getSolution(String mazeName) {
+	public Solution<Position> getSolution(String mazeName) {
 		getMazeFromDatabase(mazeName);
 		return this.currSolution;
 	}

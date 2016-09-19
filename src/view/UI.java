@@ -35,7 +35,7 @@ public abstract class UI implements Runnable {
 	
 	public abstract void printMessage(String msg);
 	
-	public abstract void displaySolution(Solution<Maze3d> solution);
+	public abstract void displaySolution(Solution<Position> solution);
 	
 	public abstract void move(Position pos);
 	

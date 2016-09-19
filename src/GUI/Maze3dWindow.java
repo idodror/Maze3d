@@ -1,8 +1,14 @@
 package GUI;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -11,6 +17,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
+
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
@@ -27,6 +34,11 @@ public class Maze3dWindow extends BaseWindow {
 	private Maze3d myMaze;
 	private String mazeName;
 	private MazeDisplay mazeDisplay;
+	private List<Point> canMoveUp;
+	private List<Point> canMoveDown;
+	private int[][] crossSection;
+	private int[][] upperCrossSection;
+	private int[][] lowerCrossSection;
 	
 	/**
 	 * Constructor
@@ -36,6 +48,11 @@ public class Maze3dWindow extends BaseWindow {
 		this.view = view;
 		this.myMaze = null;
 		this.mazeName = null;
+		this.canMoveUp = null;
+		this.canMoveDown = null;
+		this.crossSection = null;
+		this.upperCrossSection = null;
+		this.lowerCrossSection = null;
 	}
 
 	/**
@@ -72,6 +89,7 @@ public class Maze3dWindow extends BaseWindow {
 		this.shell.setDefaultButton(btnHint);
 		btnHint.setText("Hint");
 		
+		@SuppressWarnings("unused")
 		Label lblSpace1 = new Label(buttons, SWT.NONE);
 		
 		Label lblSolve = new Label(buttons, SWT.NONE);
@@ -96,6 +114,7 @@ public class Maze3dWindow extends BaseWindow {
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 		
+		@SuppressWarnings("unused")
 		Label lblSpace2 = new Label(buttons, SWT.NONE);
 		
 		Button btnSave = new Button(buttons, SWT.PUSH | SWT.FILL);
@@ -157,8 +176,11 @@ public class Maze3dWindow extends BaseWindow {
 	public void mazeReady(Maze3d maze, String mazeName) {
 		this.mazeName = mazeName;
 		this.myMaze = maze;
-		this.mazeDisplay.setCharacterPosition(this.myMaze.getGoalPosition().z, this.myMaze.getStartPosition().y, this.myMaze.getStartPosition().x);
-		this.mazeDisplay.setCrossSection(this.myMaze.getCrossSectionByZ(0));
+		this.mazeDisplay.setCharacterPosition(this.myMaze.getStartPosition());
+		this.crossSection = this.myMaze.getCrossSectionByZ(0);
+		setIfCanGoUpOrDown(0);
+		this.mazeDisplay.setCrossSection(this.crossSection, this.canMoveUp, this.canMoveDown);
+		this.mazeDisplay.setGoalPosition(this.myMaze.getGoalPosition());
 		this.mazeDisplay.setMazeName(this.mazeName);
 	}
 
@@ -187,19 +209,84 @@ public class Maze3dWindow extends BaseWindow {
 	}
 
 	@Override
-	public void displaySolution(Solution<Maze3d> solution) {
-		this.mazeDisplay.displaySolutionOnCanvas(solution);
+	public void displaySolution(Solution<Position> solution) {
+		TimerTask animationSolutionTask = new TimerTask() {
+			
+			int i = 0;
+			
+			@Override
+			public void run() {
+				if (i < solution.getStates().size())
+					move(solution.getStates().get(i++).getValue());
+				else {
+					display.syncExec(new Runnable() {
+
+						@Override
+						public void run() {
+							winner();
+						}
+						
+					});
+					cancel();
+				}
+			}
+		};
+		Timer showSolutionByAnimation = new Timer();
+		showSolutionByAnimation.scheduleAtFixedRate(animationSolutionTask, 0, 500);
 	}
 
 	@Override
 	public void move(Position pos) {
-		this.mazeDisplay.setCrossSection(this.myMaze.getCrossSectionByZ(pos.z));
+		this.crossSection = this.myMaze.getCrossSectionByZ(pos.z);
+		setIfCanGoUpOrDown(pos.z);
+		this.mazeDisplay.setCrossSection(this.crossSection, this.canMoveUp, this.canMoveDown);
+		this.mazeDisplay.setWhichFloorAmI(pos.z);
 		this.mazeDisplay.moveTheCharacter(pos);
 	}
 
 	@Override
 	public void winner() {
+		this.crossSection = this.myMaze.getCrossSectionByZ(this.myMaze.getGoalPosition().z);
+		this.mazeDisplay.setWhichFloorAmI(this.myMaze.getGoalPosition().z);
+		setIfCanGoUpOrDown(this.myMaze.getGoalPosition().z);
+		this.mazeDisplay.setCrossSection(this.crossSection, this.canMoveUp, this.canMoveDown);
+		this.mazeDisplay.setWinner(true);
 		this.printMessage("You are the winner!");
+	}
+	
+	private void setIfCanGoUpOrDown(int floor) {
+		boolean upPossible = false;
+		boolean downPossible = false;
+		this.canMoveUp = new ArrayList<Point>();
+		this.canMoveDown = new ArrayList<Point>();
+		
+		if (floor < this.myMaze.getMaze3d().length - 1) {
+			this.upperCrossSection = this.myMaze.getCrossSectionByZ(floor + 1);
+			upPossible = true;
+		}
+		if (floor > 0) {
+			this.lowerCrossSection = this.myMaze.getCrossSectionByZ(floor - 1);
+			downPossible = true;
+		}
+		
+		for (int i = 0; i < this.crossSection.length; i++) {
+			for (int j = 0; j < this.crossSection[0].length; j++) {
+				if (upPossible)
+					checkForUp(i, j);
+				if (downPossible)
+					checkForDown(i, j);
+			}
+		}
+	}
+
+	private void checkForDown(int y, int x) {
+		if (this.lowerCrossSection[y][x] == this.crossSection[y][x] && this.crossSection[y][x] == Maze3d.FREE)
+			this.canMoveDown.add(new Point(y, x));
+	}
+
+	private void checkForUp(int y, int x) {
+		if (this.upperCrossSection[y][x] == this.crossSection[y][x] && this.crossSection[y][x] == Maze3d.FREE)
+			this.canMoveUp.add(new Point(y, x));
 	}
 	
 }

@@ -108,7 +108,7 @@ public class CLI extends UI {
 	}
 
 	@Override
-	public void displaySolution(Solution<Maze3d> solution) {
+	public void displaySolution(Solution<Position> solution) {
 		this.printMessage(solution.toString());
 	}
 

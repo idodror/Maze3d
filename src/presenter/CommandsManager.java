@@ -370,8 +370,8 @@ public class CommandsManager {
 		 */
 		@Override
 		public void doCommand(String[] args) {
-			Solution<Maze3d> solution = model.getSolution(args[0]);
-			view.printMessage(solution.toString());
+			Solution<Position> solution = model.getSolution(args[0]);
+			view.displaySolution(solution);
 		}
 		
 	}

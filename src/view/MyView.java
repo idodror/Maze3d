@@ -8,6 +8,7 @@ import java.util.Observable;
 import GUI.Maze3dWindow;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
 import utils.MyJaxbUtil;
 
 /**
@@ -133,5 +134,10 @@ public class MyView extends Observable implements View {
 	@Override
 	public void winner() {
 		this.ui.winner();
+	}
+
+	@Override
+	public void displaySolution(Solution<Position> solution) {
+		this.ui.displaySolution(solution);
 	}
 }
