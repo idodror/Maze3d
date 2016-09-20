@@ -43,5 +43,5 @@ public interface View {
 
 	public void winner();
 
-	public void setPosition(Position myPos);
+	public void databaseValues(String databaseValues);
 }

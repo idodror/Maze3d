@@ -133,4 +133,8 @@ public interface Model {
 	public Position getCurrPosition();
 
 	public void whereAmI(String[] args);
+
+	public void hint(String[] args);
+
+	public void getDatabaseValues(String[] args);
 }

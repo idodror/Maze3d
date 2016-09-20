@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -101,9 +102,7 @@ public class MyModel extends Observable implements Model {
 			public Maze3d call() throws Exception {
 				int[] mazeDimensions = argsToMazeDimension(Arrays.copyOfRange(args, 1, args.length));
 				Maze3dGenerator mg = GenerateByAlgorithmFromProperties();
-				MazeRecord maze = new MazeRecord();
-				maze.setMaze(mg.generate(mazeDimensions[0], mazeDimensions[1], mazeDimensions[2]));
-				maze.setCurrPosition(maze.getMaze().getStartPosition());
+				MazeRecord maze = new MazeRecord(mg.generate(mazeDimensions[0], mazeDimensions[1], mazeDimensions[2]));
 				putInDatabase(args[0], maze);
 				setChanged();
 				notifyObservers("MazeIsReady " + args[0]);
@@ -449,39 +448,51 @@ public class MyModel extends Observable implements Model {
 		if (args.length != 2)
 			throw new IllegalArgumentException("Illegal Arguments!");
 		getMazeFromDatabase(args[0]);
-		if (this.mazeDatabase.get(args[0]).getSolution() != null)
-			displaySolution(Arrays.copyOfRange(args, 0, 1));
-		else { 
-			threadPool.submit(new Callable<Solution<Position>>() {
+		if (this.currSolution != null && this.currPosition.equals(this.currSolution.getStates().get(0).getValue())) {
+			setChanged();
+			notifyObservers("SolutionIsReady " + args[0]);
+		} else solveInThread(args);
+		
+	}
 	
-				@Override
-				public Solution<Position> call() throws Exception {
-					getMazeFromDatabase(args[0]);
-					MazeRecord mazeRecord = new MazeRecord();
-					Solution<Position> solution = null;
-					Searcher<Position> searchAlgorithm = null;
-					mazeRecord = getMazeDatabase().get(args[0]);
-					Searchable<Position> searchInMaze = new Maze3dDomain<Position>(mazeRecord.getMaze());
-					switch (args[1]) {
-					case "bfs":
-					case "BFS":
-						searchAlgorithm = new BFS<Position>();
-						solution = searchAlgorithm.search(searchInMaze);
-						break;
-					case "dfs":
-					case "DFS":
-						searchAlgorithm = new DFS<Position>();
-						solution = searchAlgorithm.search(searchInMaze);
-						break;
-					default: throw new IllegalArgumentException("Invalid Arguments!");
-					}
-					mazeRecord.setSolution(solution);
-					setChanged();
-					notifyObservers("SolutionIsReady " + args[0]);
-					return solution;
+	@Override
+	public void hint(String[] args) {
+		if (args.length != 2)
+			throw new IllegalArgumentException("Illegal Arguments!");
+		getMazeFromDatabase(args[0]);
+		solveInThread(args);
+	}
+
+	private void solveInThread(String[] args) {
+		threadPool.submit(new Callable<Solution<Position>>() {
+
+			@Override
+			public Solution<Position> call() throws Exception {
+				getMazeFromDatabase(args[0]);
+				MazeRecord mazeRecord = new MazeRecord();
+				Solution<Position> solution = null;
+				Searcher<Position> searchAlgorithm = null;
+				mazeRecord = getMazeDatabase().get(args[0]);
+				Searchable<Position> searchInMaze = new Maze3dDomain<Position>(mazeRecord.getMaze());
+				switch (args[1]) {
+				case "bfs":
+				case "BFS":
+					searchAlgorithm = new BFS<Position>();
+					solution = searchAlgorithm.search(searchInMaze);
+					break;
+				case "dfs":
+				case "DFS":
+					searchAlgorithm = new DFS<Position>();
+					solution = searchAlgorithm.search(searchInMaze);
+					break;
+				default: throw new IllegalArgumentException("Invalid Arguments!");
 				}
-			});
-		}
+				mazeRecord.setSolution(solution);
+				setChanged();
+				notifyObservers("SolutionIsReady " + args[0]);
+				return solution;
+			}
+		});
 	}
 
 	/**
@@ -596,6 +607,18 @@ public class MyModel extends Observable implements Model {
 		getMazeFromDatabase(args[0]);
 		setChanged();
 		notifyObservers("MyPositionInitialized");
+	}
+
+	@Override
+	public void getDatabaseValues(String[] args) {
+		if (args.length != 0)
+			throw new IllegalArgumentException("Illegal Arguments!");
+		StringBuilder sb = new StringBuilder();
+		for (Entry<String, MazeRecord> entry : this.mazeDatabase.entrySet())  {
+			sb.append(entry.getKey() + ",");
+		}
+		setChanged();
+		notifyObservers("DatabaseValues " + sb.toString());
 	}
 
 }

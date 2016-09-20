@@ -50,14 +50,15 @@ public class CommandsManager {
 		this.commandMap.put("display_cross_section", new DisplayCrossSection());
 		this.commandMap.put("save_maze", new SaveMaze());
 		this.commandMap.put("load_maze", new LoadMaze());
+		this.commandMap.put("hint", new Hint());
 		this.commandMap.put("solve", new Solve());
 		this.commandMap.put("display_solution", new DisplaySolution());
 		this.commandMap.put("exit", new Exit());
+		this.commandMap.put("GetDatabaseValues", new GetDatabaseValues());
+		this.commandMap.put("DatabaseValues", new DatabaseValues());
 		this.commandMap.put("MazeIsReady", new MazeIsReady());
 		this.commandMap.put("SolutionIsReady", new SolutionIsReady());
 		this.commandMap.put("DisplayMessage", new DisplayMessage());
-		this.commandMap.put("WhereAmI", new WhereAmI());
-		this.commandMap.put("MyPositionInitialized", new MyPositionInitialized());
 		this.commandMap.put("CharacterMoved", new CharacterMoved());
 		this.commandMap.put("WIN", new Winner());
 	}
@@ -278,6 +279,15 @@ public class CommandsManager {
 		}
 	}
 	
+	class Hint implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			model.hint(args);
+		}
+		
+	}
+	
 	/**
 	 * class Solve 
 	 * the command that will be Solve-the maze in the cli
@@ -316,25 +326,6 @@ public class CommandsManager {
 		
 	}
 	
-	class WhereAmI implements Command {
-
-		@Override
-		public void doCommand(String[] args) {
-			model.whereAmI(args);
-		}
-		
-	}
-	
-	class MyPositionInitialized implements Command {
-
-		@Override
-		public void doCommand(String[] args) {
-			Position myPos = model.getCurrPosition();
-			view.setPosition(myPos);
-		}
-		
-	}
-	
 	/**
 	 * This command will kiil Threads/Files open on the model
 	 * implements Command
@@ -355,11 +346,27 @@ public class CommandsManager {
 		
 	}
 	
+	class GetDatabaseValues implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			model.getDatabaseValues(args);
+		}
+	}
+	
+	class DatabaseValues implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			view.databaseValues(args[0]);
+		}
+	}
+	
 	/**
 	 * class MazeIsReady 
 	 * this command will be used after we will generate_maze and return  maze is ready
 	 * we have a command that called mazeIsReady
-	 *implements Command
+	 * implements Command
 	 */
 	class MazeIsReady implements Command {
 

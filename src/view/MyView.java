@@ -142,7 +142,7 @@ public class MyView extends Observable implements View {
 	}
 
 	@Override
-	public void setPosition(Position myPos) {
-		this.ui.setPosition(myPos);
+	public void databaseValues(String databaseValues) {
+		this.ui.databaseValues(databaseValues);
 	}
 }

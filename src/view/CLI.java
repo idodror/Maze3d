@@ -123,8 +123,7 @@ public class CLI extends UI {
 	}
 
 	@Override
-	public void setPosition(Position myPos) {
-		this.printMessage(myPos.toString());
+	public void databaseValues(String databaseValues) {
+		this.printMessage(databaseValues);
 	}
-
 }

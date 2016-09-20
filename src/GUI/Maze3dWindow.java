@@ -15,7 +15,12 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 
 import algorithms.mazeGenerators.Maze3d;
@@ -31,15 +36,18 @@ import view.MyView;
  */
 public class Maze3dWindow extends BaseWindow {
 	
+	private boolean giveMeAHint;
 	private Maze3d myMaze;
 	private String mazeName;
+	private String[] itemsFromDatabase;
 	private MazeDisplay mazeDisplay;
-	private Position myCurrPos;
 	private List<Point> canMoveUp;
 	private List<Point> canMoveDown;
 	private int[][] crossSection;
 	private int[][] upperCrossSection;
 	private int[][] lowerCrossSection;
+	
+	final String WINNER = "You are the winner!";
 	
 	/**
 	 * Constructor
@@ -47,9 +55,10 @@ public class Maze3dWindow extends BaseWindow {
 	 */
 	public Maze3dWindow(MyView view) {
 		this.view = view;
+		this.giveMeAHint = false;
 		this.myMaze = null;
 		this.mazeName = null;
-		this.myCurrPos = null;
+		this.itemsFromDatabase = null;
 		this.canMoveUp = null;
 		this.canMoveDown = null;
 		this.crossSection = null;
@@ -66,6 +75,15 @@ public class Maze3dWindow extends BaseWindow {
 		GridLayout grid = new GridLayout(2, false);
 		this.shell.setLayout(grid);
 		this.shell.setText("MyMaze3d");
+		
+		// handle with the RED X
+		shell.addListener(SWT.Close, new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+				executeCommand("exit");
+			}
+		});
 		
 		Composite buttons = new Composite(shell, SWT.NONE);
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL | SWT.FILL);
@@ -86,7 +104,7 @@ public class Maze3dWindow extends BaseWindow {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
-	
+		Button btnSolve = null;
 		Button btnHint = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnHint);
 		btnHint.setText("Hint");
@@ -94,8 +112,8 @@ public class Maze3dWindow extends BaseWindow {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				executeCommand("WhereAmI " + mazeName);
-				Maze3d newMaze = new Maze3d(myMaze.getMaze3d(), myCurrPos, myMaze.getGoalPosition());
+				giveMeAHint = true;
+				executeCommand("hint " + mazeName + " BFS");
 			}
 			
 			@Override
@@ -112,17 +130,16 @@ public class Maze3dWindow extends BaseWindow {
 		String items[] = {"BFS", "DFS"};
 		cmbSolveAlgo.setItems(items);
 	
-		Button btnSolve = new Button(buttons, SWT.PUSH | SWT.FILL);
+		btnSolve = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnSolve);
 		btnSolve.setText("Solve");
 		btnSolve.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				String chosen = cmbSolveAlgo.getText();
-				executeCommand("solve " + mazeName + " " + chosen);
+				executeCommand("solve " + mazeName + " " + cmbSolveAlgo.getText());
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
@@ -130,9 +147,34 @@ public class Maze3dWindow extends BaseWindow {
 		@SuppressWarnings("unused")
 		Label lblSpace2 = new Label(buttons, SWT.NONE);
 		
+		Label lblLoadFromDatabase = new Label(buttons, SWT.NONE);
+		lblLoadFromDatabase.setText("Load maze from database");
+
+		Combo cmbLoadFromDatabase = new Combo(buttons, SWT.READ_ONLY);
+		executeCommand("GetDatabaseValues");
+		cmbLoadFromDatabase.setItems(this.itemsFromDatabase);
+		
+		Button btnLoadFromDatabase = new Button(buttons, SWT.PUSH | SWT.FILL);
+		this.shell.setDefaultButton(btnLoadFromDatabase);
+		btnLoadFromDatabase.setText("Load Maze");
+		btnLoadFromDatabase.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				executeCommand("display " + cmbLoadFromDatabase.getText());
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) { }
+		});
+		
+		
+		@SuppressWarnings("unused")
+		Label lblSpace3 = new Label(buttons, SWT.NONE);
+		
 		Button btnSave = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnSave);
-		btnSave.setText("Save Maze");
+		btnSave.setText("Save to file");
 		btnSave.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -146,13 +188,12 @@ public class Maze3dWindow extends BaseWindow {
 		
 		Button btnLoad = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnLoad);
-		btnLoad.setText("Load Maze");
+		btnLoad.setText("Load from file");
 		btnLoad.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				//view.executeCommand("load_maze");
-				
+
 			}
 			
 			@Override
@@ -210,6 +251,8 @@ public class Maze3dWindow extends BaseWindow {
 		MessageBox msgBox = new MessageBox(shell, SWT.ICON_INFORMATION);
 		msgBox.setMessage(msg);
 		msgBox.open();
+		if (msg.equals(this.WINNER))	// new game
+			this.mazeDisplay.setWinner(false);
 	}
 
 	@Override
@@ -223,29 +266,34 @@ public class Maze3dWindow extends BaseWindow {
 
 	@Override
 	public void displaySolution(Solution<Position> solution) {
-		TimerTask animationSolutionTask = new TimerTask() {
-			
-			int i = 0;
-			
-			@Override
-			public void run() {
-				if (i < solution.getStates().size())
-					move(solution.getStates().get(i++).getValue());
-				else {
-					display.syncExec(new Runnable() {
-
-						@Override
-						public void run() {
-							winner();
-						}
-						
-					});
-					cancel();
+		if (this.giveMeAHint) { // the user asked for only one step from the solution (a hint)
+			this.giveMeAHint = false;
+			this.mazeDisplay.drawHint(solution.getStates().get(1).getValue());
+		} else {
+			TimerTask animationSolutionTask = new TimerTask() {
+				
+				int i = 0;
+				
+				@Override
+				public void run() {
+					if (i < solution.getStates().size())
+						move(solution.getStates().get(i++).getValue());
+					else {
+						display.syncExec(new Runnable() {
+	
+							@Override
+							public void run() {
+								winner();
+							}
+							
+						});
+						cancel();
+					}
 				}
-			}
-		};
-		Timer showSolutionByAnimation = new Timer();
-		showSolutionByAnimation.scheduleAtFixedRate(animationSolutionTask, 0, 500);
+			};
+			Timer showSolutionByAnimation = new Timer();
+			showSolutionByAnimation.scheduleAtFixedRate(animationSolutionTask, 0, 500);
+		}
 	}
 
 	@Override
@@ -264,7 +312,7 @@ public class Maze3dWindow extends BaseWindow {
 		setIfCanGoUpOrDown(this.myMaze.getGoalPosition().z);
 		this.mazeDisplay.setCrossSection(this.crossSection, this.canMoveUp, this.canMoveDown);
 		this.mazeDisplay.setWinner(true);
-		this.printMessage("You are the winner!");
+		this.printMessage(this.WINNER);
 	}
 	
 	private void setIfCanGoUpOrDown(int floor) {
@@ -303,8 +351,8 @@ public class Maze3dWindow extends BaseWindow {
 	}
 
 	@Override
-	public void setPosition(Position myPos) {
-		this.myCurrPos = myPos;
+	public void databaseValues(String databaseValues) {
+		this.itemsFromDatabase = databaseValues.split(",");
 	}
 	
 }

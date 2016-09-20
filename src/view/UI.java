@@ -43,6 +43,6 @@ public abstract class UI implements Runnable {
 	
 	public abstract void executeCommand(String commandLine);
 
-	public abstract void setPosition(Position myPos);
+	public abstract void databaseValues(String databaseValues);
 	
 }
