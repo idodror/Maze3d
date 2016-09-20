@@ -11,18 +11,13 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
-
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
@@ -114,12 +109,7 @@ public class Maze3dWindow extends BaseWindow {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if (mazeName == null)
-					view.printMessage("Generate/Load a maze first!");
-				else {
-					giveMeAHint = true;
-					executeCommand("hint " + mazeName + " BFS");
-				}
+				createHint();
 			}
 			
 			@Override
@@ -127,7 +117,7 @@ public class Maze3dWindow extends BaseWindow {
 		});
 		
 		GridData gd = new GridData(GridData.GRAB_VERTICAL); 
-		gd.verticalSpan = 10; 
+		gd.verticalSpan = 5; 
 		
 		Label lblSpace1 = new Label(buttons, SWT.NONE);
 		lblSpace1.setLayoutData(gd);
@@ -178,7 +168,9 @@ public class Maze3dWindow extends BaseWindow {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				executeCommand("display " + cmbLoadFromDatabase.getText());
+				if (cmbLoadFromDatabase.getText() != "")
+					executeCommand("display " + cmbLoadFromDatabase.getText());
+				else view.printMessage("Pick a maze from the list first!");
 			}
 			
 			@Override
@@ -243,6 +235,15 @@ public class Maze3dWindow extends BaseWindow {
 		mazeDisplay.setFocus();
 	}
 	
+	protected void createHint() {
+		if (mazeName == null)
+			view.printMessage("Generate/Load a maze first!");
+		else {
+			giveMeAHint = true;
+			executeCommand("hint " + mazeName + " BFS");
+		}
+	}
+
 	/**
 	 * mazeReady
 	 * @param Maze3d, the maze
@@ -335,7 +336,8 @@ public class Maze3dWindow extends BaseWindow {
 		this.mazeDisplay.setCrossSection(this.crossSection, this.canMoveUp, this.canMoveDown);
 		this.mazeDisplay.setWinner(true);
 		this.printMessage(this.WINNER);
-		
+		this.mazeDisplay.setEnabled(false);
+		this.mazeDisplay.setWinner(false);
 	}
 	
 	private void setIfCanGoUpOrDown(int floor) {

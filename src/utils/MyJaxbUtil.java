@@ -44,13 +44,12 @@ public class MyJaxbUtil {
 	public static void writeXml() {
 		properties = new Properties();
 		
-		properties.setFloors(1);
-		properties.setRows(5);
-		properties.setCols(5);
 		properties.setThreadPoolNumber(10);
 		properties.setGenerateAlgorithm("GrowingTree");
 		properties.setSolveAlgorithm("BFS");
 		properties.setUserInterface("GUI");
+		properties.setZipFilePath("data\\mymap.zip");
+		properties.setGUIUpDownHints("false");
 		
 		File file = null;
 		JAXBContext jaxbContext = null;

@@ -15,9 +15,6 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement
 public class Properties implements Serializable {
 	
-	private int floors;
-	private int cols;
-	private int rows;
 	private int threadPoolNumber;
 	private String generateAlgorithm;
 	private String solveAlgorithm;
@@ -29,66 +26,12 @@ public class Properties implements Serializable {
 	 * Constructor Properties
 	 */
 	public Properties() {
-		this.floors = 0;
-		this.cols = 0;
-		this.rows = 0;
 		this.threadPoolNumber = 0;
 		this.generateAlgorithm = null;
 		this.solveAlgorithm = null;
 		this.userInterface = null;
 		this.zipFilePath = null;
 		this.GUIUpDownHints = null;
-	}
-
-	/**
-	 * getFloors 
-	 * @return int 
-	 */
-	public int getFloors() {
-		return floors;
-	}
-	
-	/**
-	 * setFloors 
-	 * @param floors, int
-	 */
-	@XmlElement
-	public void setFloors(int floors) {
-		this.floors = floors;
-	}
-	
-	/**
-	 * getCols 
-	 * @return int 
-	 */
-	public int getCols() {
-		return cols;
-	}
-
-	/**
-	 * setCols
-	 * @param cols, int
-	 */
-	@XmlElement
-	public void setCols(int cols) {
-		this.cols = cols;
-	}
-
-	/**
-	 * getRows 
-	 * @return int 
-	 */
-	public int getRows() {
-		return rows;
-	}
-
-	/**
-	 * setRows 
-	 * @param rows, int
-	 */
-	@XmlElement
-	public void setRows(int rows) {
-		this.rows = rows;
 	}
 
 	/**

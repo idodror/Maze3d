@@ -30,7 +30,6 @@ import view.MyView;
  */
 public class MazeDisplay extends Canvas {
 	
-	private MyView view;
 	private String mazeName;
 	private int whichFloorAmI;
 	private int[][] crossSection = { {0}, {0} };
@@ -56,7 +55,6 @@ public class MazeDisplay extends Canvas {
 	public MazeDisplay(Composite parent, int style, MyView view) {
 		super(parent, style);
 		
-		this.view = view;
 		this.mazeName = null;
 		this.whichFloorAmI = 0;
 		this.character = new Character();
@@ -112,6 +110,7 @@ public class MazeDisplay extends Canvas {
 						e.gc.drawImage(imgGoal, 0, 0, imgGoal.getBounds().width, imgGoal.getBounds().height, cellWidth * goalPosition.x, cellHeight * goalPosition.y, cellWidth, cellHeight);
 				} else e.gc.drawImage(imgWinner, 0, 0, imgWinner.getBounds().width, imgWinner.getBounds().height, cellWidth * goalPosition.x, cellHeight * goalPosition.y, cellWidth, cellHeight);
 				
+				forceFocus();
 			}
 			
 			private void paintUpDownHints(PaintEvent e, int i, int j, int cellWidth, int cellHeight) {
@@ -268,6 +267,7 @@ public class MazeDisplay extends Canvas {
 
 			@Override
 			public void run() {
+				setEnabled(true);
 				redraw();
 			}
 			
