@@ -358,7 +358,9 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			view.databaseValues(args[0]);
+			if (args.length > 0)
+				view.databaseValues(args[0]);
+			else view.databaseValues("");
 		}
 	}
 	
