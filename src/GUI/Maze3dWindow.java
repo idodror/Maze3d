@@ -86,12 +86,13 @@ public class Maze3dWindow extends BaseWindow {
 		});
 		
 		Composite buttons = new Composite(shell, SWT.NONE);
-		RowLayout rowLayout = new RowLayout(SWT.VERTICAL | SWT.FILL);
-		buttons.setLayout(rowLayout);
+		//RowLayout rowLayout = new RowLayout(SWT.VERTICAL | SWT.FILL | SWT.CENTER);
+		buttons.setLayout(new GridLayout(1, false));
 		
 		Button btnGenerateMaze = new Button(buttons, SWT.PUSH);
 		this.shell.setDefaultButton(btnGenerateMaze);
 		btnGenerateMaze.setText("Generate new maze");
+		btnGenerateMaze.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnGenerateMaze.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -108,55 +109,71 @@ public class Maze3dWindow extends BaseWindow {
 		Button btnHint = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnHint);
 		btnHint.setText("Hint");
+		btnHint.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnHint.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				giveMeAHint = true;
-				executeCommand("hint " + mazeName + " BFS");
+				if (mazeName == null)
+					view.printMessage("Generate/Load a maze first!");
+				else {
+					giveMeAHint = true;
+					executeCommand("hint " + mazeName + " BFS");
+				}
 			}
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 		
-		@SuppressWarnings("unused")
+		GridData gd = new GridData(GridData.GRAB_VERTICAL); 
+		gd.verticalSpan = 10; 
+		
 		Label lblSpace1 = new Label(buttons, SWT.NONE);
+		lblSpace1.setLayoutData(gd);
 		
 		Label lblSolve = new Label(buttons, SWT.NONE);
 		lblSolve.setText("Choose Algorithm");
+		lblSolve.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 
-		Combo cmbSolveAlgo = new Combo(buttons, SWT.READ_ONLY);
+		Combo cmbSolveAlgo = new Combo(buttons, SWT.READ_ONLY | SWT.FILL);
 		String items[] = {"BFS", "DFS"};
 		cmbSolveAlgo.setItems(items);
+		cmbSolveAlgo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 	
 		btnSolve = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnSolve);
 		btnSolve.setText("Solve");
+		btnSolve.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnSolve.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				executeCommand("solve " + mazeName + " " + cmbSolveAlgo.getText());
+				if (mazeName == null)
+					view.printMessage("Generate/Load a maze first!");
+				else executeCommand("solve " + mazeName + " " + cmbSolveAlgo.getText());
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 		
-		@SuppressWarnings("unused")
 		Label lblSpace2 = new Label(buttons, SWT.NONE);
+		lblSpace2.setLayoutData(gd);
 		
 		Label lblLoadFromDatabase = new Label(buttons, SWT.NONE);
 		lblLoadFromDatabase.setText("Load maze from database");
+		lblLoadFromDatabase.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 
 		Combo cmbLoadFromDatabase = new Combo(buttons, SWT.READ_ONLY);
 		executeCommand("GetDatabaseValues");
 		cmbLoadFromDatabase.setItems(this.itemsFromDatabase);
+		cmbLoadFromDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Button btnLoadFromDatabase = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnLoadFromDatabase);
 		btnLoadFromDatabase.setText("Load Maze");
+		btnLoadFromDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnLoadFromDatabase.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -168,13 +185,13 @@ public class Maze3dWindow extends BaseWindow {
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 		
-		
-		@SuppressWarnings("unused")
 		Label lblSpace3 = new Label(buttons, SWT.NONE);
+		lblSpace3.setLayoutData(gd);
 		
 		Button btnSave = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnSave);
 		btnSave.setText("Save to file");
+		btnSave.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnSave.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -189,6 +206,7 @@ public class Maze3dWindow extends BaseWindow {
 		Button btnLoad = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnLoad);
 		btnLoad.setText("Load from file");
+		btnLoad.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnLoad.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -200,9 +218,13 @@ public class Maze3dWindow extends BaseWindow {
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 		
+		Label lblSpace4 = new Label(buttons, SWT.NONE);
+		lblSpace4.setLayoutData(gd);
+		
 		Button btnExit = new Button(buttons, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnExit);
 		btnExit.setText("Exit");
+		btnExit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnExit.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -313,6 +335,7 @@ public class Maze3dWindow extends BaseWindow {
 		this.mazeDisplay.setCrossSection(this.crossSection, this.canMoveUp, this.canMoveDown);
 		this.mazeDisplay.setWinner(true);
 		this.printMessage(this.WINNER);
+		
 	}
 	
 	private void setIfCanGoUpOrDown(int floor) {

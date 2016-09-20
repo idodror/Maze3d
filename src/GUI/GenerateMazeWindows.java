@@ -76,18 +76,15 @@ public class GenerateMazeWindows extends DialogWindow {
 					rows = Integer.parseInt(txtRows.getText());
 					cols = Integer.parseInt(txtCols.getText());
 					mazeName = txtName.getText();
-				} catch (NullPointerException e) {
-					throw new IllegalArgumentException("Invalid Arguments!");
-				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Invalid Arguments!");
+				} catch (NullPointerException | NumberFormatException e) {
+					view.printMessage("Invalid Arguments!");
 				}
 				view.executeCommand("generate_maze " + mazeName + " " + floors + " " + rows + " " + cols);
 				shell.dispose();
 			}
 
 			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-			}
+			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 	}
 

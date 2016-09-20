@@ -40,6 +40,7 @@ public class MazeDisplay extends Canvas {
 	private Image imgUp;
 	private Image imgDown;
 	private Image imgUpDown;
+	private Image imgWall;
 	private boolean drawMeAHint;
 	private Position hintPosition;
 	private boolean winner;
@@ -65,6 +66,7 @@ public class MazeDisplay extends Canvas {
 		this.imgUp = new Image(null, "images/up.gif");
 		this.imgDown = new Image(null, "images/down.gif");
 		this.imgUpDown = new Image(null, "images/updown.gif");
+		this.imgWall = new Image(null, "images/wall.gif");
 		this.drawMeAHint = false;
 		this.hintPosition = null;
 		this.winner = false;
@@ -92,7 +94,8 @@ public class MazeDisplay extends Canvas {
 						x = j * cellWidth;
 						y = i * cellHeight;
 						if (crossSection[i][j] != 0)
-							e.gc.fillRectangle(x, y, cellWidth, cellHeight);
+							//e.gc.fillRectangle(x, y, cellWidth, cellHeight);
+							e.gc.drawImage(imgWall, 0, 0, imgWall.getBounds().width, imgWall.getBounds().height, x, y, cellWidth, cellHeight);
 						if (MyJaxbUtil.getProperties().getGUIUpDownHints().equals("true"))
 							paintUpDownHints(e, i, j, cellWidth, cellHeight);
 					}
