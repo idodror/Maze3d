@@ -95,12 +95,12 @@ public class Maze3dWindow extends BaseWindow {
 		
 		Image imgMenu = new Image(display, "images/menu.png");
 		Label lblMenu = new Label(buttons, SWT.NONE);
-		lblMenu.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 20));
+		lblMenu.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 1));
 		lblMenu.setImage(imgMenu);
 		
 		Composite cmpGenerateHint = new Composite(buttons, SWT.NONE);
 		cmpGenerateHint.setLayout(new GridLayout(1, false));
-		cmpGenerateHint.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 18));
+		cmpGenerateHint.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 13));
 		
 		Button btnGenerateMaze = new Button(cmpGenerateHint, SWT.PUSH);
 		this.shell.setDefaultButton(btnGenerateMaze);
@@ -136,7 +136,7 @@ public class Maze3dWindow extends BaseWindow {
 		
 		Composite cmpSolve = new Composite(buttons, SWT.NONE);
 		cmpSolve.setLayout(new GridLayout(1, false));
-		cmpSolve.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 18));
+		cmpSolve.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 13));
 		
 		Label lblSolve = new Label(cmpSolve, SWT.NONE);
 		lblSolve.setText("Choose Solve Algorithm");
@@ -166,7 +166,7 @@ public class Maze3dWindow extends BaseWindow {
 		
 		Composite cmpLoad = new Composite(buttons, SWT.NONE);
 		cmpLoad.setLayout(new GridLayout(1, false));
-		cmpLoad.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 21));
+		cmpLoad.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 15));
 		
 		Label lblLoadFromDatabase = new Label(cmpLoad, SWT.NONE);
 		lblLoadFromDatabase.setText("Load maze from database");
@@ -196,7 +196,7 @@ public class Maze3dWindow extends BaseWindow {
 		
 		Composite cmpSaveLoadFromFile = new Composite(buttons, SWT.NONE);
 		cmpSaveLoadFromFile.setLayout(new GridLayout(1, false));
-		cmpSaveLoadFromFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 18));
+		cmpSaveLoadFromFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 13));
 		
 		Label lblLoadSaveFromFile = new Label(cmpSaveLoadFromFile, SWT.NONE);
 		lblLoadSaveFromFile.setText("Load/Save (Files)");
