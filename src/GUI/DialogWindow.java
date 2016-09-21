@@ -11,6 +11,7 @@ import view.MyView;
  */
 public abstract class DialogWindow {
 
+	protected Display display;
 	protected Shell shell;
 	protected MyView view;
 	
@@ -25,7 +26,8 @@ public abstract class DialogWindow {
 	 * @param display
 	 */
 	public void start(Display display) {
-		this.shell = new Shell(display);
+		this.display = display;
+		this.shell = new Shell(this.display);
 		initWidgets();
 		this.shell.open();
 	}

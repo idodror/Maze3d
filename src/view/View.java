@@ -44,4 +44,6 @@ public interface View {
 	public void winner();
 
 	public void databaseValues(String databaseValues);
+
+	public void dirListReady(String[] dirList);
 }

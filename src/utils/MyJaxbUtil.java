@@ -41,15 +41,15 @@ public class MyJaxbUtil {
 	 * writeXml
 	 * write the the xml file 
 	 */
-	public static void writeXml() {
+	public static void writeXml(String userInterface, String GUIUpDownHints) {
 		properties = new Properties();
 		
 		properties.setThreadPoolNumber(10);
 		properties.setGenerateAlgorithm("GrowingTree");
 		properties.setSolveAlgorithm("BFS");
-		properties.setUserInterface("GUI");
+		properties.setUserInterface(userInterface);
 		properties.setZipFilePath("data\\mymap.zip");
-		properties.setGUIUpDownHints("false");
+		properties.setGUIUpDownHints(GUIUpDownHints);
 		
 		File file = null;
 		JAXBContext jaxbContext = null;
@@ -62,7 +62,7 @@ public class MyJaxbUtil {
 			// output printed
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			marshaller.marshal(properties, file);
-			marshaller.marshal(properties, System.out);
+			//marshaller.marshal(properties, System.out);
 			
 		} catch (JAXBException e) {
 			e.printStackTrace();

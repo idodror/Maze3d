@@ -47,6 +47,7 @@ public class CommandsManager {
 		this.commandMap.put("generate_maze", new GenerateMaze());
 		this.commandMap.put("display", new DisplayMaze());
 		this.commandMap.put("dir", new DisplayFilesInPath());
+		this.commandMap.put("DirListReady", new DirListReady());
 		this.commandMap.put("display_cross_section", new DisplayCrossSection());
 		this.commandMap.put("save_maze", new SaveMaze());
 		this.commandMap.put("load_maze", new LoadMaze());
@@ -361,6 +362,14 @@ public class CommandsManager {
 			if (args.length > 0)
 				view.databaseValues(args[0]);
 			else view.databaseValues("");
+		}
+	}
+	
+	class DirListReady implements Command{
+
+		@Override
+		public void doCommand(String[] args) {
+			view.dirListReady(args);
 		}
 	}
 	

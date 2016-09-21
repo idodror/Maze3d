@@ -289,7 +289,7 @@ public class MyModel extends Observable implements Model {
 		for (int i = 0; i < listOfFiles.length; i++)
 			sb.append(listOfFiles[i].getName() + "\n");
 		setChanged();
-		notifyObservers("DisplayMessage " + sb.toString());
+		notifyObservers("DirListReady " + sb.toString());
 	}
 
 	/**
@@ -413,8 +413,11 @@ public class MyModel extends Observable implements Model {
 			throw new NullPointerException("File not found");
 		}
 		loadedMaze = new Maze3d(readedData);
-		if (loadedMaze != null)
+		if (loadedMaze != null) {
 			mazeDatabase.put(args[1], new MazeRecord(loadedMaze));
+			setChanged();
+			notifyObservers("MazeIsReady " + args[1]);
+		}
 	}
 	
 	/**
@@ -620,5 +623,4 @@ public class MyModel extends Observable implements Model {
 		setChanged();
 		notifyObservers("DatabaseValues " + sb.toString());
 	}
-
 }

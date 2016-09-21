@@ -145,4 +145,10 @@ public class MyView extends Observable implements View {
 	public void databaseValues(String databaseValues) {
 		this.ui.databaseValues(databaseValues);
 	}
+
+	@Override
+	public void dirListReady(String[] dirList) {
+		this.ui.dirListReady(dirList);
+		
+	}
 }

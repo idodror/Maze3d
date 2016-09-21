@@ -3,10 +3,14 @@ package GUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import view.MyView;
 
@@ -32,8 +36,24 @@ public class GenerateMazeWindows extends DialogWindow {
 	 */
 	@Override
 	protected void initWidgets() {
-		this.shell.setText("Generate maze windows");
+		this.shell = new Shell(display, SWT.TITLE | SWT.CLOSE);
+		this.shell.setText("Generate maze window");
 		this.shell.setLayout(new GridLayout(2, false));
+		this.shell.setSize(200, 200);
+		
+		// Open in center of screen
+		Rectangle bounds = display.getPrimaryMonitor().getBounds();
+		Rectangle rect = shell.getBounds();
+		int x = bounds.x + (bounds.width - rect.width) / 2;
+		int y = bounds.y + (bounds.height - rect.height) / 2;
+		shell.setLocation(x, y);
+		
+		Label lblHead = new Label(shell, SWT.BOLD);
+		FontData fontData = lblHead.getFont().getFontData()[0];
+		Font font = new Font(display, new FontData(fontData.getName(), fontData.getHeight()+3, SWT.BOLD));
+		lblHead.setFont(font);
+		lblHead.setText("Enter maze dimensions");
+		lblHead.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblFloors = new Label(this.shell, SWT.NONE);
 		lblFloors.setText("Floors: ");

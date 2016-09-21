@@ -126,4 +126,11 @@ public class CLI extends UI {
 	public void databaseValues(String databaseValues) {
 		this.printMessage(databaseValues);
 	}
+
+	@Override
+	public void dirListReady(String[] dirList) {
+		System.out.println("");
+//		this.printMessage(dirList);
+		
+	}
 }

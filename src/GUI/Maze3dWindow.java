@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -70,6 +71,13 @@ public class Maze3dWindow extends BaseWindow {
 		GridLayout grid = new GridLayout(2, false);
 		this.shell.setLayout(grid);
 		this.shell.setText("MyMaze3d");
+		
+		// Open in center of screen
+		Rectangle bounds = display.getPrimaryMonitor().getBounds();
+		Rectangle rect = shell.getBounds();
+		int x = bounds.x + (bounds.width - rect.width) / 2;
+		int y = bounds.y + (bounds.height - rect.height) / 2;
+		shell.setLocation(x, y);
 		
 		// handle with the RED X
 		shell.addListener(SWT.Close, new Listener() {
@@ -203,7 +211,7 @@ public class Maze3dWindow extends BaseWindow {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-
+				executeCommand("dir .");
 			}
 			
 			@Override
@@ -379,5 +387,13 @@ public class Maze3dWindow extends BaseWindow {
 	public void databaseValues(String databaseValues) {
 		this.itemsFromDatabase = databaseValues.split(",");
 	}
+
+	@Override
+	public void dirListReady(String[] dirList) {
+		LoadWindow winLoad = new LoadWindow(view, dirList[0]);
+		winLoad.start(display);
+
+	}
+	
 	
 }

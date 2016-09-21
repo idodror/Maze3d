@@ -44,5 +44,7 @@ public abstract class UI implements Runnable {
 	public abstract void executeCommand(String commandLine);
 
 	public abstract void databaseValues(String databaseValues);
+
+	public abstract void dirListReady(String[] dirList);
 	
 }
