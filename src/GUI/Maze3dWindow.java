@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -71,6 +71,8 @@ public class Maze3dWindow extends BaseWindow {
 		GridLayout grid = new GridLayout(2, false);
 		this.shell.setLayout(grid);
 		this.shell.setText("MyMaze3d");
+		this.shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		this.shell.setBackgroundImage(new Image(null, "images/backgroundBig.jpg"));
 		
 		// Open in center of screen
 		Rectangle bounds = display.getPrimaryMonitor().getBounds();
@@ -89,10 +91,18 @@ public class Maze3dWindow extends BaseWindow {
 		});
 		
 		Composite buttons = new Composite(shell, SWT.NONE);
-		//RowLayout rowLayout = new RowLayout(SWT.VERTICAL | SWT.FILL | SWT.CENTER);
 		buttons.setLayout(new GridLayout(1, false));
 		
-		Button btnGenerateMaze = new Button(buttons, SWT.PUSH);
+		Image imgMenu = new Image(display, "images/menu.png");
+		Label lblMenu = new Label(buttons, SWT.NONE);
+		lblMenu.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 20));
+		lblMenu.setImage(imgMenu);
+		
+		Composite cmpGenerateHint = new Composite(buttons, SWT.NONE);
+		cmpGenerateHint.setLayout(new GridLayout(1, false));
+		cmpGenerateHint.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 18));
+		
+		Button btnGenerateMaze = new Button(cmpGenerateHint, SWT.PUSH);
 		this.shell.setDefaultButton(btnGenerateMaze);
 		btnGenerateMaze.setText("Generate new maze");
 		btnGenerateMaze.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -109,7 +119,7 @@ public class Maze3dWindow extends BaseWindow {
 			}
 		});
 		Button btnSolve = null;
-		Button btnHint = new Button(buttons, SWT.PUSH | SWT.FILL);
+		Button btnHint = new Button(cmpGenerateHint, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnHint);
 		btnHint.setText("Hint");
 		btnHint.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -124,22 +134,20 @@ public class Maze3dWindow extends BaseWindow {
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 		
-		GridData gd = new GridData(GridData.GRAB_VERTICAL); 
-		gd.verticalSpan = 5; 
+		Composite cmpSolve = new Composite(buttons, SWT.NONE);
+		cmpSolve.setLayout(new GridLayout(1, false));
+		cmpSolve.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 18));
 		
-		Label lblSpace1 = new Label(buttons, SWT.NONE);
-		lblSpace1.setLayoutData(gd);
-		
-		Label lblSolve = new Label(buttons, SWT.NONE);
-		lblSolve.setText("Choose Algorithm");
-		lblSolve.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		Label lblSolve = new Label(cmpSolve, SWT.NONE);
+		lblSolve.setText("Choose Solve Algorithm");
+		lblSolve.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
 
-		Combo cmbSolveAlgo = new Combo(buttons, SWT.READ_ONLY | SWT.FILL);
+		Combo cmbSolveAlgo = new Combo(cmpSolve, SWT.READ_ONLY | SWT.FILL);
 		String items[] = {"BFS", "DFS"};
 		cmbSolveAlgo.setItems(items);
 		cmbSolveAlgo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 	
-		btnSolve = new Button(buttons, SWT.PUSH | SWT.FILL);
+		btnSolve = new Button(cmpSolve, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnSolve);
 		btnSolve.setText("Solve");
 		btnSolve.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -156,19 +164,20 @@ public class Maze3dWindow extends BaseWindow {
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 		
-		Label lblSpace2 = new Label(buttons, SWT.NONE);
-		lblSpace2.setLayoutData(gd);
+		Composite cmpLoad = new Composite(buttons, SWT.NONE);
+		cmpLoad.setLayout(new GridLayout(1, false));
+		cmpLoad.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 21));
 		
-		Label lblLoadFromDatabase = new Label(buttons, SWT.NONE);
+		Label lblLoadFromDatabase = new Label(cmpLoad, SWT.NONE);
 		lblLoadFromDatabase.setText("Load maze from database");
 		lblLoadFromDatabase.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 
-		Combo cmbLoadFromDatabase = new Combo(buttons, SWT.READ_ONLY);
+		Combo cmbLoadFromDatabase = new Combo(cmpLoad, SWT.READ_ONLY);
 		executeCommand("GetDatabaseValues");
 		cmbLoadFromDatabase.setItems(this.itemsFromDatabase);
 		cmbLoadFromDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Button btnLoadFromDatabase = new Button(buttons, SWT.PUSH | SWT.FILL);
+		Button btnLoadFromDatabase = new Button(cmpLoad, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnLoadFromDatabase);
 		btnLoadFromDatabase.setText("Load Maze");
 		btnLoadFromDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -185,10 +194,15 @@ public class Maze3dWindow extends BaseWindow {
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 		
-		Label lblSpace3 = new Label(buttons, SWT.NONE);
-		lblSpace3.setLayoutData(gd);
+		Composite cmpSaveLoadFromFile = new Composite(buttons, SWT.NONE);
+		cmpSaveLoadFromFile.setLayout(new GridLayout(1, false));
+		cmpSaveLoadFromFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 18));
 		
-		Button btnSave = new Button(buttons, SWT.PUSH | SWT.FILL);
+		Label lblLoadSaveFromFile = new Label(cmpSaveLoadFromFile, SWT.NONE);
+		lblLoadSaveFromFile.setText("Load/Save (Files)");
+		lblLoadSaveFromFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		
+		Button btnSave = new Button(cmpSaveLoadFromFile, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnSave);
 		btnSave.setText("Save to file");
 		btnSave.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -203,7 +217,7 @@ public class Maze3dWindow extends BaseWindow {
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 		
-		Button btnLoad = new Button(buttons, SWT.PUSH | SWT.FILL);
+		Button btnLoad = new Button(cmpSaveLoadFromFile, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnLoad);
 		btnLoad.setText("Load from file");
 		btnLoad.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -218,10 +232,11 @@ public class Maze3dWindow extends BaseWindow {
 			public void widgetDefaultSelected(SelectionEvent arg0) { }
 		});
 		
-		Label lblSpace4 = new Label(buttons, SWT.NONE);
-		lblSpace4.setLayoutData(gd);
+		Composite cmpExit = new Composite(buttons, SWT.NONE);
+		cmpExit.setLayout(new GridLayout(1, false));
+		cmpExit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 10));
 		
-		Button btnExit = new Button(buttons, SWT.PUSH | SWT.FILL);
+		Button btnExit = new Button(cmpExit, SWT.PUSH | SWT.FILL);
 		this.shell.setDefaultButton(btnExit);
 		btnExit.setText("Exit");
 		btnExit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -277,6 +292,9 @@ public class Maze3dWindow extends BaseWindow {
 		return mazeName;
 	}
 
+	/**
+	 * Open Message Box and view the message msg on it
+	 */
 	@Override
 	public void printMessage(String msg) {
 		MessageBox msgBox = new MessageBox(shell, SWT.ICON_INFORMATION);
@@ -286,6 +304,9 @@ public class Maze3dWindow extends BaseWindow {
 			this.mazeDisplay.setWinner(false);
 	}
 
+	/**
+	 * Get a commandLine and call the view to execute it
+	 */
 	@Override
 	public void executeCommand(String commandLine) {
 		try {
@@ -295,6 +316,12 @@ public class Maze3dWindow extends BaseWindow {
 		}
 	}
 
+	/**
+	 * Display the solution of the maze
+	 * If the user asked for a hint, it show only the first step of the solution
+	 * else, the solution will be showd in animation
+	 * @param Solution<Position>, the solution
+	 */
 	@Override
 	public void displaySolution(Solution<Position> solution) {
 		if (this.giveMeAHint) { // the user asked for only one step from the solution (a hint)
@@ -392,8 +419,6 @@ public class Maze3dWindow extends BaseWindow {
 	public void dirListReady(String[] dirList) {
 		LoadWindow winLoad = new LoadWindow(view, dirList[0]);
 		winLoad.start(display);
-
 	}
-	
 	
 }

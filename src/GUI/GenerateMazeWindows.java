@@ -5,6 +5,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -40,6 +41,8 @@ public class GenerateMazeWindows extends DialogWindow {
 		this.shell.setText("Generate maze window");
 		this.shell.setLayout(new GridLayout(2, false));
 		this.shell.setSize(200, 200);
+		this.shell.setBackgroundImage(new Image(null, "images/backgroundSmall.png"));
+		this.shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		
 		// Open in center of screen
 		Rectangle bounds = display.getPrimaryMonitor().getBounds();

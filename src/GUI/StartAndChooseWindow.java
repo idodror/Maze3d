@@ -1,6 +1,8 @@
 package GUI;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
@@ -30,6 +32,7 @@ public class StartAndChooseWindow implements Runnable {
 		this.shell.setLayout(new GridLayout(2, false));
 		this.shell.setSize(300, 620);
 		this.shell.setBackgroundImage(new Image(null, "images/background.png"));
+		this.shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		
 		// Open in center of screen
 		Rectangle bounds = display.getPrimaryMonitor().getBounds();
@@ -46,88 +49,97 @@ public class StartAndChooseWindow implements Runnable {
 				System.exit(0);
 			}
 		});
-		
-		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
-		Label lblSpace1 = new Label(shell, SWT.NONE);
-		Label lblSpace2 = new Label(shell, SWT.NONE);
-		Label lblSpace3 = new Label(shell, SWT.NONE);
-		Label lblSpace4 = new Label(shell, SWT.NONE);
-		Label lblSpace5 = new Label(shell, SWT.NONE);
-		Label lblSpace6 = new Label(shell, SWT.NONE);
-		Label lblSpace7 = new Label(shell, SWT.NONE);
-		Label lblSpace8 = new Label(shell, SWT.NONE);
-		Label lblSpace9 = new Label(shell, SWT.NONE);
-		Label lblSpace10 = new Label(shell, SWT.NONE);
-		Label lblSpace11 = new Label(shell, SWT.NONE);
-		Label lblSpace12 = new Label(shell, SWT.NONE);
+		//Empty spaces
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
 		
 		Label lblHead = new Label(shell, SWT.BOLD);
 		FontData fontData = lblHead.getFont().getFontData()[0];
-		Font font = new Font(display, new FontData(fontData.getName(), fontData.getHeight()+6, SWT.BOLD));
-		lblHead.setFont(font);
+		lblHead.setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+10, SWT.BOLD)));
 		lblHead.setText("Choose your favorite UI");
 		lblHead.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
 		
-		Button btnCLI = new Button(shell, SWT.PUSH);
-		btnCLI.setText("CLI");
-		btnCLI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		btnCLI.addSelectionListener(new SelectionListener() {
+		Image imgGUI = new Image(display, "images/GUIButton.png");
+		Image imgCLI = new Image(display, "images/CLIButton.png");
+		
+		Label lblCLI = new Label(shell, SWT.PUSH);
+		lblCLI.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		lblCLI.setImage(imgCLI);
+		lblCLI.addMouseListener(new MouseListener() {
 			
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				MyJaxbUtil.writeXml(btnCLI.getText(), "false");
+			public void mouseUp(MouseEvent arg0) { }
+			
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+				MyJaxbUtil.writeXml("CLI", "false");
 				shell.dispose();
 			}
 			
 			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) { }
+			public void mouseDoubleClick(MouseEvent arg0) { }
 		});
 		
-		Button btnGUI = new Button(shell, SWT.PUSH);
+		/*Button btnGUI = new Button(shell, SWT.PUSH);
 		btnGUI.setText("GUI");
-		btnGUI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblSpace13 = new Label(shell, SWT.NONE);
-		Label lblSpace14 = new Label(shell, SWT.NONE);
+		btnGUI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));*/
+		Label lblGUI = new Label(shell, SWT.NONE);
+		lblGUI.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		lblGUI.setImage(imgGUI);
 		
 		Label lblYesNo = new Label(shell, SWT.NONE);
-		lblYesNo.setText("Get up/down hints [GUI ONLY]?");
+		lblYesNo.setText("Get up/down hints?\n      [GUI ONLY]");
+		lblYesNo.setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+6, SWT.BOLD)));
 		lblYesNo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
 		
 		Composite radioChoose = new Composite(shell, SWT.NONE);
-		radioChoose.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-
+		radioChoose.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
 		
 		Button[] radios = new Button[2];
 		radios[0] = new Button(radioChoose, SWT.RADIO);
 		radios[0].setText("YES");
-		radios[0].setBounds(10, 30, 40, 30);
+		radios[0].setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+3, SWT.BOLD)));
+		radios[0].setBounds(10, 0, 50, 15);
 		radios[0].setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		radios[0].setEnabled(false);
 		radios[1] = new Button(radioChoose, SWT.RADIO);
 		radios[1].setText("NO");
-		radios[1].setBounds(100, 30, 40, 30);
+		radios[1].setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+3, SWT.BOLD)));
+		radios[1].setBounds(100, 0, 50, 15);
 		radios[1].setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		radios[1].setEnabled(false);
 		
-		btnGUI.addSelectionListener(new SelectionListener() {
+		lblGUI.addMouseListener(new MouseListener() {
 			
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void mouseUp(MouseEvent arg0) { }
+			
+			@Override
+			public void mouseDown(MouseEvent arg0) {
 				radios[0].setEnabled(true);
 				radios[1].setEnabled(true);
 			}
 			
 			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) { }
+			public void mouseDoubleClick(MouseEvent arg0) { }
 		});
 		
 		radios[0].addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				MyJaxbUtil.writeXml(btnGUI.getText(), "true");
+				MyJaxbUtil.writeXml("GUI", "true");
 				shell.dispose();
 			}
 			
@@ -139,7 +151,7 @@ public class StartAndChooseWindow implements Runnable {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				MyJaxbUtil.writeXml(btnGUI.getText(), "false");
+				MyJaxbUtil.writeXml("GUI", "false");
 				shell.dispose();
 			}
 			
