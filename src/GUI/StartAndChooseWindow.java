@@ -5,6 +5,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -27,7 +28,8 @@ public class StartAndChooseWindow implements Runnable {
 		this.shell.setText("Start");
 		
 		this.shell.setLayout(new GridLayout(2, false));
-		this.shell.setSize(250, 200);
+		this.shell.setSize(300, 620);
+		this.shell.setBackgroundImage(new Image(null, "images/background.png"));
 		
 		// Open in center of screen
 		Rectangle bounds = display.getPrimaryMonitor().getBounds();
@@ -45,9 +47,24 @@ public class StartAndChooseWindow implements Runnable {
 			}
 		});
 		
+		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+
+		Label lblSpace1 = new Label(shell, SWT.NONE);
+		Label lblSpace2 = new Label(shell, SWT.NONE);
+		Label lblSpace3 = new Label(shell, SWT.NONE);
+		Label lblSpace4 = new Label(shell, SWT.NONE);
+		Label lblSpace5 = new Label(shell, SWT.NONE);
+		Label lblSpace6 = new Label(shell, SWT.NONE);
+		Label lblSpace7 = new Label(shell, SWT.NONE);
+		Label lblSpace8 = new Label(shell, SWT.NONE);
+		Label lblSpace9 = new Label(shell, SWT.NONE);
+		Label lblSpace10 = new Label(shell, SWT.NONE);
+		Label lblSpace11 = new Label(shell, SWT.NONE);
+		Label lblSpace12 = new Label(shell, SWT.NONE);
+		
 		Label lblHead = new Label(shell, SWT.BOLD);
 		FontData fontData = lblHead.getFont().getFontData()[0];
-		Font font = new Font(display, new FontData(fontData.getName(), fontData.getHeight()+3, SWT.BOLD));
+		Font font = new Font(display, new FontData(fontData.getName(), fontData.getHeight()+6, SWT.BOLD));
 		lblHead.setFont(font);
 		lblHead.setText("Choose your favorite UI");
 		lblHead.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
@@ -70,6 +87,9 @@ public class StartAndChooseWindow implements Runnable {
 		Button btnGUI = new Button(shell, SWT.PUSH);
 		btnGUI.setText("GUI");
 		btnGUI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblSpace13 = new Label(shell, SWT.NONE);
+		Label lblSpace14 = new Label(shell, SWT.NONE);
 		
 		Label lblYesNo = new Label(shell, SWT.NONE);
 		lblYesNo.setText("Get up/down hints [GUI ONLY]?");
