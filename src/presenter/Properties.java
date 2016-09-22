@@ -7,8 +7,8 @@ import javax.xml.bind.annotation.*;
  * class Properties implements Serializable
  * This class is for the xml file
  * All the data member  are the decision  of the user
- * Data Member int floor, int cols, int rows, int threadPoolNumber
- *  Data Member String solveAlgorithm, String userInterface
+ * Data Member int threadPoolNumber, String generateAlgorithm, String solveAlgorithm
+ * Data Member String userInterface, String zipFilePath, String GUIUpDownHints  
  * @author Gal Basre & Ido Dror
  */
 @SuppressWarnings("serial")
@@ -111,7 +111,7 @@ public class Properties implements Serializable {
 	}
 
 	/**
-	 * 
+	 * setZipFilePath
 	 * @param zipFilePath, String
 	 */
 	@XmlElement
@@ -119,10 +119,18 @@ public class Properties implements Serializable {
 		this.zipFilePath = zipFilePath;
 	}
 	
+	/**
+	 * getGUIUpDownHints
+	 * @return String
+	 */
 	public String getGUIUpDownHints() {
 		return GUIUpDownHints;
 	}
 
+	/**
+	 * setGUIUpDownHints
+	 * @param gUIUpDownHints, String
+	 */
 	@XmlElement
 	public void setGUIUpDownHints(String gUIUpDownHints) {
 		GUIUpDownHints = gUIUpDownHints;

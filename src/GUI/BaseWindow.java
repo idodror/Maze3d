@@ -1,8 +1,11 @@
 package GUI;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import view.UI;
+
 /**
  * abstract class BaseWindow
  * extends UI
@@ -13,6 +16,9 @@ public abstract class BaseWindow extends UI {
 	
 	protected Display display;
 	protected Shell shell;
+	protected Timer showSolutionByAnimation;
+	protected TimerTask animationSolutionTask;
+	
 	/**
 	 * initWidgets
 	 * abstract
@@ -50,10 +56,14 @@ public abstract class BaseWindow extends UI {
 	}
 	
 	/**
-	 * exit	- dispose the display
+	 * exit	- dispose the display and cancel the Timer and TimerTask (if runs)
 	 */
 	@Override
 	public void exit() {
+		if (this.showSolutionByAnimation != null && this.animationSolutionTask != null) {
+			this.animationSolutionTask.cancel();
+			this.showSolutionByAnimation.cancel();
+		}
 		this.display.dispose();
 	}
 

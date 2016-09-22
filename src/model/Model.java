@@ -130,11 +130,27 @@ public interface Model {
 	 */
 	public Solution<Position> getSolution(String mazeName);
 	
+	/**
+	 * getCurrPosition
+	 * @return Position
+	 */
 	public Position getCurrPosition();
-
+	
+	/**
+	 * whereAmI
+	 * @param String[]
+	 */
 	public void whereAmI(String[] args);
 
+	/**
+	 * hint
+	 * @param String[]
+	 */
 	public void hint(String[] args);
-
+	
+	/**
+	 * getDatabaseValues
+	 * @param String[]
+	 */
 	public void getDatabaseValues(String[] args);
 }

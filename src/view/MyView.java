@@ -32,6 +32,10 @@ public class MyView extends Observable implements View {
 		this.out = out;
 	}
 
+	/**
+	 * choose which UI from the properties: CLI/GUI
+	 * @return the choose 
+	 */
 	private UI chooseUIFromProperties() {
 		switch (MyJaxbUtil.getProperties().getUserInterface()) {
 		case "CLI":
@@ -117,38 +121,69 @@ public class MyView extends Observable implements View {
 		this.ui.exit();
 	}
 
+	/**
+	 * call the ui.mazeReady
+	 * @param maze, Maze3d
+	 * @param mazeName, String
+	 */
 	@Override
 	public void generatedMaze(Maze3d maze, String mazeName) {
 		this.ui.mazeReady(maze, mazeName);
 	}
 	
+	/**
+	 * Print the message to the output stream
+	 * @param msg, String
+	 */
 	public void printToOutputStream(String msg) {
 		this.out.println(msg);
 	}
-
+	
+	/**
+	 * call the ui.move of the position
+	 * @param pos, Position
+	 */
 	@Override
 	public void move(Position pos) {
 		this.ui.move(pos);
 	}
 
+	/**
+	 * Call the ui.winner  
+	 */
 	@Override
 	public void winner() {
 		this.ui.winner();
 	}
 
+	/**
+	 * display the solution - call the ui.displaySolution
+	 * @param solution, Solution<Position>
+	 */
 	@Override
 	public void displaySolution(Solution<Position> solution) {
 		this.ui.displaySolution(solution);
 	}
-
+	
+	/**
+	 * Call the ui. databaseValues
+	 * @param databaseValues, String
+	 */
 	@Override
 	public void databaseValues(String databaseValues) {
 		this.ui.databaseValues(databaseValues);
 	}
 
+	/**
+	 * display all the dir in the path
+	 * @param dirList, String[]
+	 */
 	@Override
 	public void dirListReady(String[] dirList) {
-		this.ui.dirListReady(dirList);
+		if(dirList.length != 0)
+			this.ui.dirListReady(dirList);
+		else this.printMessage("This path is empty!");
+		
 		
 	}
 }

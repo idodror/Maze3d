@@ -27,7 +27,7 @@ public class MyJaxbUtil {
 		JAXBContext jaxbContext = null;
 		Unmarshaller unmarshaller = null;
 		try {
-			file = new File("properties.xml");
+			file = new File("resources\\properties.xml");
 			jaxbContext = JAXBContext.newInstance(Properties.class);
 			unmarshaller = jaxbContext.createUnmarshaller();
 			properties = (Properties)unmarshaller.unmarshal(file);
@@ -48,14 +48,14 @@ public class MyJaxbUtil {
 		properties.setGenerateAlgorithm("GrowingTree");
 		properties.setSolveAlgorithm("BFS");
 		properties.setUserInterface(userInterface);
-		properties.setZipFilePath("data\\mymap.zip");
+		properties.setZipFilePath("resources\\data\\mymap.zip");
 		properties.setGUIUpDownHints(GUIUpDownHints);
 		
 		File file = null;
 		JAXBContext jaxbContext = null;
 		Marshaller marshaller = null;
 		try {
-			file = new File(System.getProperty("user.dir") + "//" + "properties.xml");
+			file = new File(System.getProperty("user.dir") + "//" + "resources\\properties.xml");
 			jaxbContext = JAXBContext.newInstance(properties.getClass());
 			marshaller = jaxbContext.createMarshaller();
 			

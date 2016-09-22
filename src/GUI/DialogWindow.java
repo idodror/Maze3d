@@ -6,7 +6,7 @@ import view.MyView;
 
 /**
  * abstract class DialogWindow
- * Data member Shell, MyView
+ * Data member Display, Shell, MyView
  * @author Gal Basre & Ido Dror
  */
 public abstract class DialogWindow {
@@ -23,7 +23,7 @@ public abstract class DialogWindow {
 	
 	/**
 	 * start the window
-	 * @param display
+	 * @param display, Display
 	 */
 	public void start(Display display) {
 		this.display = display;

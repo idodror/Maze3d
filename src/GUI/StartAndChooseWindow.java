@@ -20,18 +20,32 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import utils.MyJaxbUtil;
 
+/**
+ * class StartAndChooseWindow
+ * implements Runnable
+ * Data member Display display, Shell shell 
+ * This is the first window, in this window we will choose our favorite UI
+ * if it is GUI we will choose with or without up/down hint
+ * if it is CLI we will see in the console
+ * @author Gal Basre & Ido Dror
+ */
 public class StartAndChooseWindow implements Runnable {
 
 	private Display display;
 	private Shell shell;
 
+	/**
+	 * Create the new window 
+	 * create the new label of GUI and CLI and allowed them to do SWT.PUSH
+	 * GUi - ask if  hse up/down hint
+	 */
 	private void initWidgets() {
 		this.shell = new Shell(display, SWT.TITLE | SWT.CLOSE);
 		this.shell.setText("Start");
 		
 		this.shell.setLayout(new GridLayout(2, false));
 		this.shell.setSize(300, 620);
-		this.shell.setBackgroundImage(new Image(null, "images/background.png"));
+		this.shell.setBackgroundImage(new Image(null, "resources/images/background.png"));		
 		this.shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		
 		// Open in center of screen
@@ -70,8 +84,8 @@ public class StartAndChooseWindow implements Runnable {
 		lblHead.setText("Choose your favorite UI");
 		lblHead.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
 		
-		Image imgGUI = new Image(display, "images/GUIButton.png");
-		Image imgCLI = new Image(display, "images/CLIButton.png");
+		Image imgGUI = new Image(display, "resources/images/GUIButton.png");
+		Image imgCLI = new Image(display, "resources/images/CLIButton.png");
 		
 		Label lblCLI = new Label(shell, SWT.PUSH);
 		lblCLI.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
@@ -91,9 +105,6 @@ public class StartAndChooseWindow implements Runnable {
 			public void mouseDoubleClick(MouseEvent arg0) { }
 		});
 		
-		/*Button btnGUI = new Button(shell, SWT.PUSH);
-		btnGUI.setText("GUI");
-		btnGUI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));*/
 		Label lblGUI = new Label(shell, SWT.NONE);
 		lblGUI.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		lblGUI.setImage(imgGUI);
@@ -160,11 +171,16 @@ public class StartAndChooseWindow implements Runnable {
 		});
 	}
 
+	/**	
+	 *This method call the start method 
+	 */
 	@Override
 	public void run() {
 		start();
 	}
-
+	/**
+	 *This method loop of the first window
+	 */
 	private void start() {
 		this.display = new Display();
 		this.shell = new Shell(this.display);

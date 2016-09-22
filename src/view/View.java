@@ -28,12 +28,22 @@ public interface View {
 	public void printMessage(String msg);
 	
 	/**
-	 * 
+	 * Generate the maze
+	 * @param maze, Maze3d
+	 * @param mazeName, String
 	 */
 	public void generatedMaze(Maze3d maze, String mazeName);
 	
+	/**
+	 * Move the position
+	 * @param pos, Position
+	 */
 	public void move(Position pos);
 	
+	/**
+	 * Display the solution
+	 * @param solution, Solution<Position>
+	 */
 	public void displaySolution(Solution<Position> solution);
 	
 	/**
@@ -41,9 +51,20 @@ public interface View {
 	 */
 	public void exit();
 
+	/**
+	 * winner
+	 */
 	public void winner();
 
+	/**
+	 * databaseValues
+	 * @param databaseValues, String
+	 */
 	public void databaseValues(String databaseValues);
 
+	/**
+	 * dirListReady
+	 * @param dirList, String[]
+	 */
 	public void dirListReady(String[] dirList);
 }

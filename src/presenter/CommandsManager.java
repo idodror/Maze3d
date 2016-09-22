@@ -9,12 +9,12 @@ import algorithms.search.Solution;
 import model.Model;
 import view.View;
 
-/**
- * CommandsManager
- * This is the CommandsManager that will control all the MVP
- * It have Model, View and HashMap<String, Command>
- * @author Gal Basre & Ido Dror
- */
+	/**
+	 * CommandsManager
+	 * his is the CommandsManager that will control all the MVP
+	 * It have Model, View and HashMap<String, Command>
+	 * @author Gal Basre & Ido Dror
+	 */
 public class CommandsManager {
 	
 	private Model model;
@@ -23,7 +23,8 @@ public class CommandsManager {
 	
 	/**
 	 * Contractor
-	 * @param Model, View
+	 * @param model, Model
+	 * @param view, View
 	 * at the end of the Contractor we will put all the command in the hashmap
 	 */
 	public CommandsManager(Model model, View view) {
@@ -65,17 +66,12 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class UpCommand
-	 * the command that will be up in the cli
-	 *implements Command
+	 * class UpCommand - call the go up of model
+	 * the command that will be up in the UI
+	 * implements Command
 	 */
 	class UpCommand implements Command {
-
-		/**
-		 * doCommand
-		 * call the go up of model
-		 * @param String[]
-		 */
+		
 		@Override
 		public void doCommand(String[] args) {
 			model.goUp(args);
@@ -83,17 +79,12 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class DownCommand
-	 * the command that will be down in the cli
-	 *implements Command
+	 * class DownCommand - call the go down of model
+	 * the command that will be down in the UI
+	 * implements Command
 	 */
 	class DownCommand implements Command {
 
-		/**
-		 * doCommand
-		 * call the go down of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.goDown(args);
@@ -101,17 +92,12 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class RightCommand
-	 * the command that will be right in the cli
-	 *implements Command
+	 * class RightCommand - call the go Right of model
+	 * the command that will be right in the UI
+	 * implements Command
 	 */
 	class RightCommand implements Command {
 
-		/**
-		 * doCommand
-		 * call the go Right of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.goRight(args);
@@ -119,17 +105,12 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class LeftCommand
-	 * the command that will be left in the cli
-	 *implements Command
+	 * class LeftCommand - call the go Left of model
+	 * the command that will be left in the UI
+	 * implements Command
 	 */
 	class LeftCommand implements Command {
 
-		/**
-		 * doCommand
-		 * call the go Left of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.goLeft(args);
@@ -137,17 +118,12 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class ForwardCommand
-	 * the command that will be forward in the cli
-	 *implements Command
+	 * class ForwardCommand - call the go Forward of model
+	 * the command that will be forward in the UI
+	 * implements Command
 	 */
 	class ForwardCommand implements Command {
 
-		/**
-		 * doCommand
-		 * call the go Forward of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.goForward(args);
@@ -155,17 +131,12 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class BackwardCommand 
-	  * the command that will be backward in the cli
-	 *implements Command
+	 * class BackwardCommand - call the go Backward of model
+	 * the command that will be backward in the UI
+	 * implements Command
 	 */
 	class BackwardCommand implements Command {
 
-		/**
-		 * doCommand
-		 * call the go Backward of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.goBackward(args);
@@ -173,35 +144,25 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class GenerateMaze 
-	 * the command that will be generate_maze in the cli
-	 *implements Command
+	 * class GenerateMaze - call the generateMaze of model
+	 * the command that will be generate_maze in the UI
+	 * implements Command
 	 */
 	class GenerateMaze implements Command {
 
-		/**
-		 * doCommand
-		 * call the generateMaze of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.generateMaze(args);
 		}
 	}
 	/**
-	 * class DisplayMaze 
-	 * the command that will be display in the cli
-	 *implements Command
+	 * class DisplayMaze - call the displayMaze of model 
+	 * the command that will be display in the UI
+	 * implements Command
 	 */
 	
 	class DisplayMaze implements Command {
 
-		/**
-		 * doCommand
-		 * call the displayMaze of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.displayMaze(args);	
@@ -209,17 +170,12 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class DisplayFilesInPath 
-	 *  * the command that will be dir in the cli
-	 *implements Command
+	 * class DisplayFilesInPath - call the displayFilesInPath of model
+	 * the command that will be dir in the UI
+	 * implements Command
 	 */
 	class DisplayFilesInPath implements Command {
 
-		/**
-		 * doCommand
-		 * call the displayFilesInPath of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.displayFilesInPath(args);
@@ -227,17 +183,12 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class DisplayCrossSection 
-	 *  * the command that will be display_crocss_section in the cli
-	 *implements Command
+	 * class DisplayCrossSection - call the displayCrossSection of model
+	 * the command that will be display_crocss_section in the UI
+	 * implements Command
 	 */
 	class DisplayCrossSection implements Command {
 
-		/**
-		 * doCommand
-		 * call the displayCrossSection of model
-		 * @param String[]
-		 */		
 		@Override
 		public void doCommand(String[] args) {
 			model.displayCrossSection(args);
@@ -245,17 +196,12 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class SaveMaze 
-	 * the command that will be save_maze in the cli
-	 *implements Command
+	 * class SaveMaze - call the saveMaze of model 
+	 * the command that will be save_maze in the UI
+	 * implements Command
 	 */
 	class SaveMaze implements Command {
 
-		/**
-		 * doCommand
-		 * call the saveMaze of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.saveMaze(args);
@@ -263,82 +209,64 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class LoadMaze 
-	 * the command that will be load_maze in the cli
-	 *implements Command
+	 * class LoadMaze - call the LoadMaze of model
+	 * the command that will be load_maze in the UI
+	 * implements Command
 	 */
 	class LoadMaze implements Command {
 
-		/**
-		 * doCommand
-		 * call the LoadMaze of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.loadMaze(args);
 		}
 	}
 	
+	/**
+	 * class Hint-call the hint in the model
+	 * the command that will be hint in the UI
+	 * implements Command
+	 */
 	class Hint implements Command {
 
 		@Override
 		public void doCommand(String[] args) {
 			model.hint(args);
 		}
-		
 	}
 	
 	/**
-	 * class Solve 
-	 * the command that will be Solve-the maze in the cli
-	 *implements Command
+	 * class Solve - call the solve of model
+	 * the command that will be Solve-the maze in the UI
+	 * implements Command
 	 */
 	class Solve implements Command{
 		
-		/**
-		 * doCommand
-		 * call the solve of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.solve(args);			
-		}
-		
+		}	
 	}
 	
 	/**
-	 * class DisplaySolution 
+	 * class DisplaySolution - call the displaySolution of model 
 	 * the command that will be display_solution in the cli
-	 *implements Command
+	 * implements Command
 	 */
 	class DisplaySolution implements Command{
 
-		/**
-		 * doCommand
-		 * call the displaySolution of model
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.displaySolution(args);			
 		}
-		
 	}
 	
 	/**
+	 * class Exit - call the exit of model, call the exit of view  
 	 * This command will kiil Threads/Files open on the model
 	 * implements Command
 	 */
 	class Exit implements Command {
 
-		/**
-		 * doCommand
-		 * call the exit of model
-		 * call the exit of view
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			model.exit();
@@ -347,6 +275,11 @@ public class CommandsManager {
 		
 	}
 	
+	/**
+	 * class GetDatabaseValues - call the getDatabaseValues of the model
+	 * This command get all the name of maze
+	 * implements Command
+	 */
 	class GetDatabaseValues implements Command {
 
 		@Override
@@ -355,6 +288,11 @@ public class CommandsManager {
 		}
 	}
 	
+	/**
+	 * class DatabaseValues - call the databaseValues of the view
+	 * display the DatabaseValues 
+	 * implements Command
+	 */
 	class DatabaseValues implements Command {
 
 		@Override
@@ -365,6 +303,11 @@ public class CommandsManager {
 		}
 	}
 	
+	/**
+	 * class DirListReady - call the DirListReady of the view
+	 * display the DirListReady
+	 * implements Command
+	 */
 	class DirListReady implements Command{
 
 		@Override
@@ -374,57 +317,41 @@ public class CommandsManager {
 	}
 	
 	/**
-	 * class MazeIsReady 
+	 * class MazeIsReady - the command will get the maze from the model and print it to the view
 	 * this command will be used after we will generate_maze and return  maze is ready
 	 * we have a command that called mazeIsReady
 	 * implements Command
 	 */
 	class MazeIsReady implements Command {
 
-		/**
-		 * doCommand
-		 * the command will get the maze from the model and print it to the view
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			Maze3d maze = model.getMaze(args[0]);
 			view.generatedMaze(maze, args[0]);
 		}
-		
 	}
 	
 	/**
-	 * class SolutionIsReady 
+	 * class SolutionIsReady - the command will get the solution from the model and print it to the view
 	 * this command will be used after we will solve_maze and return  solution is ready
 	 * we have a command that called SolutionIsReady
 	 *implements Command
 	 */
 	class SolutionIsReady implements Command {
 		
-		/**
-		 * doCommand
-		 * the command will get the solution from the model and print it to the view
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			Solution<Position> solution = model.getSolution(args[0]);
 			view.displaySolution(solution);
-		}
-		
+		}	
 	}
 	/**
-	 * DisplayMessage
+	 * DisplayMessage - call the printMessage of the view
+	 * use string builder for strings 
 	 * implements Command
 	 */
 	class DisplayMessage implements Command {
 
-		/**
-		 * doCommand
-		 * use string builder for strings
-		 * @param String[]
-		 */
 		@Override
 		public void doCommand(String[] args) {
 			StringBuilder sb = new StringBuilder();
@@ -433,9 +360,13 @@ public class CommandsManager {
 			}
 			view.printMessage(sb.toString());
 		}
-		
 	}
 	
+	/**
+	 * class CharacterMoved -  call the move of the view with the current position
+	 * get the current position 
+	 * implements Command
+	 */
 	public class CharacterMoved implements Command {
 
 		@Override
@@ -446,6 +377,11 @@ public class CommandsManager {
 		
 	}
 	
+	/**
+	 * class Winner - call the winner of the view 
+	 * use when we will have a winner in the maze
+	 *  implements Command
+	 */
 	public class Winner implements Command {
 
 		@Override

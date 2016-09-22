@@ -24,7 +24,7 @@ public class GenerateMazeWindows extends DialogWindow {
 	
 	/**
 	 * Constructor
-	 * @param MyView
+	 * @param view, MyView
 	 */
 	public GenerateMazeWindows(MyView view) {
 		this.view = view;
@@ -41,7 +41,7 @@ public class GenerateMazeWindows extends DialogWindow {
 		this.shell.setText("Generate maze window");
 		this.shell.setLayout(new GridLayout(2, false));
 		this.shell.setSize(200, 200);
-		this.shell.setBackgroundImage(new Image(null, "images/backgroundSmall.png"));
+		this.shell.setBackgroundImage(new Image(null, "resources/images/backgroundSmall.png"));
 		this.shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		
 		// Open in center of screen

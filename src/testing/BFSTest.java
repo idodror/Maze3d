@@ -38,7 +38,6 @@ public class BFSTest {
 	 * shouldReturnCountOfPathFromStartToFinishPosition
 	 * the way from the start position to the end is 5
 	 * we check if it is 5 by the assertEquals
-	 * @test
 	 */
 	@Test
 	public void shouldReturnCountOfPathFromStartToFinishPosition() {
@@ -48,7 +47,6 @@ public class BFSTest {
 	/**
 	 * shouldReturnTheGoalStateOfTheMaze
 	 * check if the goal state is the same with the assertEquals
-	 * @test
 	 */
 	@Test
 	public void shouldReturnTheGoalStateOfTheMaze() {
@@ -58,7 +56,6 @@ public class BFSTest {
 	/**
 	 *  shouldReturnTheStartStateOfTheMaze
 	 *  check if the start state is the same with the assertEquals
-	 *  @test
 	 */
 	@Test
 	public void shouldReturnTheStartStateOfTheMaze() {
@@ -66,8 +63,7 @@ public class BFSTest {
 	}
 	
 	/**
-	 * checkIfReturnsZeroNeighborsOfInvalidPosition
-	 * @test	
+	 * checkIfReturnsZeroNeighborsOfInvalidPosition	
 	 */
 	@Test
 	public void checkIfReturnsZeroNeighborsOfInvalidPosition() {
@@ -76,7 +72,6 @@ public class BFSTest {
 	
 	/**
 	 * checkIfTheEvaluatedNumberOfNodesOfTheSolutionIsValid
-	 * @test
 	 */
 	@Test
 	public void checkIfTheEvaluatedNumberOfNodesOfTheSolutionIsValid() {
@@ -88,7 +83,6 @@ public class BFSTest {
 	 * check the neighbors of a position
 	 * add to to a list all the true neighbors 
 	 * assertEquals between the two lists
-	 * @test
 	 */
 	@Test
 	public void shouldReturnAllThePossibleMovesOfState() {

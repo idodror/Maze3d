@@ -12,18 +12,33 @@ public class Character {
 	private Position pos;
 	private Image img;
 	
+	/**
+	 * constractor
+	 */
 	public Character() {
-		this.img = new Image(null, "images/android.png");
+		this.img = new Image(null, "resources/images/android.png");
 	}
 
+	/**
+	 * getPos
+	 */
 	public Position getPos() {
 		return pos;
 	}
 
+	/**
+	 * setPos
+	 * @param pos, Position
+	 */
 	public void setPos(Position pos) {
 		this.pos = pos;
 	}
-	
+	/**
+	 *this method draw the image
+	 *@param cellWidth, int
+	 *@param cellHeight, int
+	 *@param gc, GC
+	 */
 	public void draw(int cellWidth, int cellHeight, GC gc) {
 		gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, cellWidth * pos.x, cellHeight * pos.y, cellWidth, cellHeight);
 	}

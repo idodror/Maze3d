@@ -25,9 +25,11 @@ import algorithms.search.Solution;
 import view.MyView;
 
 /**
- * class Maze3dWindow
+ * class Maze3dWindow - this class will open the window of all the category we can select
  * extends BaseWindow
- * Data member Maze3d  myMaze, String mazeName, MazeDisplay mazeDisplay
+ * Data member boolean giveMeAHint, Maze3d  myMaze, String mazeName, String[] itemsFromDatabase
+ * Data member MazeDisplay mazeDisplay, List<Point> canMoveUp, List<Point> canMoveDown, int[][] crossSection
+ * Data member int[][] upperCrossSection, int[][] lowerCrossSection, String WINNER
  * @author Gal Basre & Ido Dror
  */
 public class Maze3dWindow extends BaseWindow {
@@ -42,7 +44,7 @@ public class Maze3dWindow extends BaseWindow {
 	private int[][] crossSection;
 	private int[][] upperCrossSection;
 	private int[][] lowerCrossSection;
-	
+
 	final String WINNER = "You are the winner!";
 	
 	/**
@@ -60,11 +62,13 @@ public class Maze3dWindow extends BaseWindow {
 		this.crossSection = null;
 		this.upperCrossSection = null;
 		this.lowerCrossSection = null;
+		this.showSolutionByAnimation = null;
 	}
 
 	/**
 	 * initWidgets
-	 * New grid layout, create a new composite and a new button to push.
+	 * New grid layout, create a new composite and all the button
+	 * 
 	 */
 	@Override
 	protected void initWidgets() {
@@ -72,7 +76,7 @@ public class Maze3dWindow extends BaseWindow {
 		this.shell.setLayout(grid);
 		this.shell.setText("MyMaze3d");
 		this.shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		this.shell.setBackgroundImage(new Image(null, "images/backgroundBig.jpg"));
+		this.shell.setBackgroundImage(new Image(null, "resources/images/backgroundBig.jpg"));
 		
 		// Open in center of screen
 		Rectangle bounds = display.getPrimaryMonitor().getBounds();
@@ -93,7 +97,7 @@ public class Maze3dWindow extends BaseWindow {
 		Composite buttons = new Composite(shell, SWT.NONE);
 		buttons.setLayout(new GridLayout(1, false));
 		
-		Image imgMenu = new Image(display, "images/menu.png");
+		Image imgMenu = new Image(display, "resources/images/menu.png");
 		Label lblMenu = new Label(buttons, SWT.NONE);
 		lblMenu.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 1));
 		lblMenu.setImage(imgMenu);
@@ -225,7 +229,7 @@ public class Maze3dWindow extends BaseWindow {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				executeCommand("dir .");
+				executeCommand("dir ./resources/saved_mazes");
 			}
 			
 			@Override
@@ -258,6 +262,11 @@ public class Maze3dWindow extends BaseWindow {
 		mazeDisplay.setFocus();
 	}
 	
+	/**
+	 * This method check if we have maze name
+	 * else we will sent with executeCommand the "hint " + mazeName + " BFS" 
+	 * to call the hint command
+	 */
 	protected void createHint() {
 		if (mazeName == null)
 			view.printMessage("Generate/Load a maze first!");
@@ -268,7 +277,8 @@ public class Maze3dWindow extends BaseWindow {
 	}
 
 	/**
-	 * mazeReady
+	 * This method  will intalise data member so we could call the mazeDisplay 
+	 * and drew the maze
 	 * @param Maze3d, the maze
 	 * @param String, maze name  
 	 */
@@ -328,7 +338,7 @@ public class Maze3dWindow extends BaseWindow {
 			this.giveMeAHint = false;
 			this.mazeDisplay.drawHint(solution.getStates().get(1).getValue());
 		} else {
-			TimerTask animationSolutionTask = new TimerTask() {
+			this.animationSolutionTask = new TimerTask() {
 				
 				int i = 0;
 				
@@ -349,11 +359,16 @@ public class Maze3dWindow extends BaseWindow {
 					}
 				}
 			};
-			Timer showSolutionByAnimation = new Timer();
-			showSolutionByAnimation.scheduleAtFixedRate(animationSolutionTask, 0, 500);
+			this.showSolutionByAnimation = new Timer();
+			this.showSolutionByAnimation.scheduleAtFixedRate(this.animationSolutionTask, 0, 500);
 		}
 	}
 
+	/**
+	 * Initalise the crossSection data member, check if there is option to move up/down
+	 * call the mazeDisplay data member and enter to the setCrossSection the crossSection of Maze3dWindow 
+	 * and the list of upHint, the list of downHint
+	 */
 	@Override
 	public void move(Position pos) {
 		this.crossSection = this.myMaze.getCrossSectionByZ(pos.z);
@@ -363,6 +378,10 @@ public class Maze3dWindow extends BaseWindow {
 		this.mazeDisplay.moveTheCharacter(pos);
 	}
 
+	/**
+	 * This method display the winner and after that ww would like to display another
+	 * winner so we will set winner as false 
+	 */
 	@Override
 	public void winner() {
 		this.crossSection = this.myMaze.getCrossSectionByZ(this.myMaze.getGoalPosition().z);
@@ -375,6 +394,12 @@ public class Maze3dWindow extends BaseWindow {
 		this.mazeDisplay.setWinner(false);
 	}
 	
+	/**
+	 * check if we can go up or down in the floor the Character is
+	 * we have list of can move up and a list of can move down
+	 * if the up/down possible is true we will add it to the list
+	 * @param floor, int
+	 */
 	private void setIfCanGoUpOrDown(int floor) {
 		boolean upPossible = false;
 		boolean downPossible = false;
@@ -400,21 +425,37 @@ public class Maze3dWindow extends BaseWindow {
 		}
 	}
 
+	/**
+	 * This method check if we can go down with the character
+	 * @param y, the rows
+	 * @param x, the cols
+	 */
 	private void checkForDown(int y, int x) {
 		if (this.lowerCrossSection[y][x] == this.crossSection[y][x] && this.crossSection[y][x] == Maze3d.FREE)
 			this.canMoveDown.add(new Point(y, x));
 	}
 
+	/**
+	 * This method check if we can go up with the character
+	 * @param y, the rows
+	 * @param x, the cols
+	 */
 	private void checkForUp(int y, int x) {
 		if (this.upperCrossSection[y][x] == this.crossSection[y][x] && this.crossSection[y][x] == Maze3d.FREE)
 			this.canMoveUp.add(new Point(y, x));
 	}
 
+	/**
+	 * get the databaseValues after split with ,
+	 */
 	@Override
 	public void databaseValues(String databaseValues) {
 		this.itemsFromDatabase = databaseValues.split(",");
 	}
 
+	/**
+	 *create new load Window and open it
+	 */
 	@Override
 	public void dirListReady(String[] dirList) {
 		LoadWindow winLoad = new LoadWindow(view, dirList[0]);

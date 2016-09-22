@@ -2,8 +2,6 @@ package GUI;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -15,7 +13,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import algorithms.mazeGenerators.Position;
-import algorithms.search.Solution;
 import utils.MyJaxbUtil;
 import view.MyView;
 
@@ -23,9 +20,10 @@ import view.MyView;
  * MazeDisplay
  * extends Canvas
  * this class will paint the maze
- * Data Member MyView view, String mazeName, int [][] crossSection, Character character
- * Data Member Image imgGoal,Image imgWinner,Image imgUp, Image imgDown,Image imgUpDown
- * Data Member boolean winner, List<Point> downHint,List<Point> upHint
+ * Data Member String mazeName,int whichFloorAmI, int [][] crossSection, Character character
+ * Data Member Image imgGoal, Image imgWinner,Image imgUp, Image imgDown,Image imgUpDown
+ * Data Member Image imgWall, boolean drawMeAHint, Position hintPosition,  boolean winner,
+ * Data Member Position goalPosition, List<Point> downHint,List<Point> upHint
  * @author Gal Basre & Ido Dror
  */
 public class MazeDisplay extends Canvas {
@@ -59,12 +57,12 @@ public class MazeDisplay extends Canvas {
 		this.whichFloorAmI = 0;
 		this.character = new Character();
 		this.character.setPos(new Position(-1, -1, -1));
-		this.imgGoal = new Image(null,"images/apple.png");
-		this.imgWinner = new Image(null,"images/winner.gif");
-		this.imgUp = new Image(null, "images/up.gif");
-		this.imgDown = new Image(null, "images/down.gif");
-		this.imgUpDown = new Image(null, "images/updown.gif");
-		this.imgWall = new Image(null, "images/wall.gif");
+		this.imgGoal = new Image(null,"resources/images/apple.png");
+		this.imgWinner = new Image(null,"resources/images/winner.gif");
+		this.imgUp = new Image(null, "resources/images/up.gif");
+		this.imgDown = new Image(null, "resources/images/down.gif");
+		this.imgUpDown = new Image(null, "resources/images/updown.gif");
+		this.imgWall = new Image(null, "resources/images/wall.gif");
 		this.drawMeAHint = false;
 		this.hintPosition = null;
 		this.winner = false;
@@ -127,8 +125,10 @@ public class MazeDisplay extends Canvas {
 		});
 		
 		/**
-		 * this methud will listene to the key from iu
+		 * This method will listene to the key from io and if it isn't null will 
+		 * execute the command and than draw again
 		 * leagel command : ARROW_RIGHT, ARROW_LEFT, ARROW_UP, ARROW_DOWN, PAGE_DOWN, PAGE_UP
+		 * deafult None
 		 */
 		this.addKeyListener(new KeyListener() {
 			
@@ -170,7 +170,7 @@ public class MazeDisplay extends Canvas {
 	
 	/**
 	 * setWinner
-	 * @param winner
+	 * @param winner, boolean
 	 */
 
 	public void setWinner(boolean winner) {
@@ -178,17 +178,18 @@ public class MazeDisplay extends Canvas {
 	}
 
 	/**
-	 * setWhichFloorAmI-we could know where are we
-	 * @param whichFloorAmI
+	 *This method tell us where are we in the maze
+	 * @param whichFloorAmI, int
 	 */
 	public void setWhichFloorAmI(int whichFloorAmI) {
 		this.whichFloorAmI = whichFloorAmI;
 	}
 
 	/**
-	 * setCrossSection
 	 * paint the maze in crossSection [][]
-	 * @param int[][] crossSection
+	 * @param crossSection, crossSection
+	 * @param upHint, List<Point>
+	 * @param downHint, List<Point>
 	 */
 	public void setCrossSection(int[][] crossSection, List<Point> upHint, List<Point> downHint) {
 		this.crossSection = crossSection;
@@ -198,9 +199,8 @@ public class MazeDisplay extends Canvas {
 	}
 
 	/**
-	 * setCharacterPosition
-	 * @param int x
-	 * @param int y
+	 * set the character position then draw the maze
+	 * @param pos, the position 
 	 */
 	public void setCharacterPosition(Position pos) {
 		this.character.setPos(pos);
@@ -208,26 +208,8 @@ public class MazeDisplay extends Canvas {
 	}
 
 	/**
-	 * This methud will display the solution on canvas
-	 * we will use timertask and timer to make the Character  move every 0.5 second
-	 * @param Solution<Position>
-	 */
-	public void displaySolutionOnCanvas(Solution<Position> solution) {
-		TimerTask task = new TimerTask() {
-			
-			@Override
-			public void run() {
-				redrawMe();
-			}
-		};
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(task, 0, 500);
-		
-	}
-
-	/**
-	 * moveTheCharacter
-	 * @param Position pos
+	 * move the character
+	 * @param pos, the position
 	 */
 	public void moveTheCharacter(Position pos) {
 		this.character.setPos(pos);
@@ -242,7 +224,7 @@ public class MazeDisplay extends Canvas {
 	}
 	
 	/**
-	 * setGoalPosition
+	 * set goal position
 	 * @param Position goalPosition
 	 */
 	public void setGoalPosition(Position goalPosition) {
@@ -250,7 +232,7 @@ public class MazeDisplay extends Canvas {
 	}
 	
 	/**
-	 * This method draw a hint to the player
+	 *This method draw a hint to the player
 	 * @param PositionhintPos
 	 */
 	public void drawHint(Position hintPos) {
@@ -260,7 +242,7 @@ public class MazeDisplay extends Canvas {
 	}
 	
 	/**
-	 * 
+	 *This method readraw the canvas in runnable sync
 	 */
 	private void redrawMe() {
 		getDisplay().syncExec(new Runnable() {

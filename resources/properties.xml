@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <properties>
-    <GUIUpDownHints>true</GUIUpDownHints>
+    <GUIUpDownHints>false</GUIUpDownHints>
     <generateAlgorithm>GrowingTree</generateAlgorithm>
     <solveAlgorithm>BFS</solveAlgorithm>
     <threadPoolNumber>10</threadPoolNumber>
     <userInterface>GUI</userInterface>
-    <zipFilePath>data\mymap.zip</zipFilePath>
+    <zipFilePath>resources\data\mymap.zip</zipFilePath>
 </properties>

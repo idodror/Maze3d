@@ -32,19 +32,52 @@ public abstract class UI implements Runnable {
 	 * @param String mazeName
 	 */
 	public abstract void mazeReady(Maze3d maze, String mazeName);
-	
+	/**
+	 * printMessage
+	 * abstract
+	 * @param msg, String
+	 */
 	public abstract void printMessage(String msg);
 	
+	/**
+	 * displaySolution
+	 * abstract
+	 * @param solution, Solution<Position>
+	 */
 	public abstract void displaySolution(Solution<Position> solution);
 	
+	/**
+	 * move
+	 * abstract
+	 * @param pos,Position
+	 */
 	public abstract void move(Position pos);
 	
+	/**
+	 * winner
+	 * abstract
+	 */
 	public abstract void winner();
 	
+	/**
+	 * executeCommand
+	 * abstract
+	 * @param commandLine, String
+	 */
 	public abstract void executeCommand(String commandLine);
 
+	/**
+	 * databaseValues
+	 * abstract
+	 * @param databaseValues, String
+	 */
 	public abstract void databaseValues(String databaseValues);
 
+	/**
+	 * dirListReady
+	 * abstract
+	 * @param dirList, String[]
+	 */
 	public abstract void dirListReady(String[] dirList);
 	
 }

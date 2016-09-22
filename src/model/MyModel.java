@@ -39,6 +39,7 @@ import utils.MyJaxbUtil;
  * This is the Model layer of the MVP
  * Makes all the calculations of the game
  * Holds a HashMap of the maze's created (database)
+ * Have a thread pool
  * @author Gal Basre & Ido Dror
  */
 public class MyModel extends Observable implements Model {
@@ -111,6 +112,11 @@ public class MyModel extends Observable implements Model {
 		});
 	}
 	
+	/**
+	 * This method choose the algorithm to built the maze
+	 *Growing tree or simple
+	 * @return Maze3dGenerator
+	 */
 	private Maze3dGenerator GenerateByAlgorithmFromProperties() {
 		switch (MyJaxbUtil.getProperties().getGenerateAlgorithm()) {
 		case "GrowingTree":
@@ -364,7 +370,7 @@ public class MyModel extends Observable implements Model {
 		File myFile = null;
 		FileOutputStream fileOutput = null;
 		try {
-			myFile = new File(args[1]);
+			myFile = new File("resources\\saved_mazes\\" + args[1]);
 			fileOutput = new FileOutputStream(myFile);
 			save(fileOutput);
 		} catch (FileNotFoundException e) {
@@ -406,7 +412,7 @@ public class MyModel extends Observable implements Model {
 		FileInputStream input = null;
 		byte[] readedData = null;
 		try {
-			myFile = new File(args[0]);
+			myFile = new File("resources\\saved_mazes\\" + args[0]);
 			input = new FileInputStream(myFile);
 			readedData = load(input);
 		} catch (FileNotFoundException e){
@@ -458,6 +464,10 @@ public class MyModel extends Observable implements Model {
 		
 	}
 	
+	/**
+	 * This method get a maze name and algorithm and send to the method solveInThread 
+	 * @throws IllegalArgumentException, if something damaged with the maze
+	 */
 	@Override
 	public void hint(String[] args) {
 		if (args.length != 2)
@@ -465,7 +475,11 @@ public class MyModel extends Observable implements Model {
 		getMazeFromDatabase(args[0]);
 		solveInThread(args);
 	}
-
+	/**
+	 * This method try to solve in diffrent thread
+	 * we will solve the maze with bfs or dfs
+	 * @param args, maze name and algorithm
+	 */
 	private void solveInThread(String[] args) {
 		threadPool.submit(new Callable<Solution<Position>>() {
 
@@ -601,10 +615,17 @@ public class MyModel extends Observable implements Model {
 		return this.currSolution;
 	}
 	
+	/**
+	 * getCurrPosition
+	 * @return Position, the current position
+	 */
 	public Position getCurrPosition() {
 		return this.currPosition;
 	}
 
+	/**
+	 * This method tell us where is the diract position in the maze
+	 */
 	@Override
 	public void whereAmI(String[] args) {
 		getMazeFromDatabase(args[0]);
@@ -612,6 +633,10 @@ public class MyModel extends Observable implements Model {
 		notifyObservers("MyPositionInitialized");
 	}
 
+	/**
+	 * This method get all the name of the maze
+	 * @throws IllegalArgumentException if args is 0
+	 */
 	@Override
 	public void getDatabaseValues(String[] args) {
 		if (args.length != 0)

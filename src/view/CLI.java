@@ -6,6 +6,7 @@ import algorithms.search.Solution;
 
 /**
  * This is the CLI which presents the Viewer of the MVP
+ * Data member MyView view, Thread ioThread
  * @author Gal Basre & Ido Dror
  */
 public class CLI extends UI {
@@ -30,6 +31,10 @@ public class CLI extends UI {
 		run();
 	}
 	
+	/**
+	 * This method call have a new thread and it call the run of Runnable
+	 * this is the main loop of the cli
+	 */
 	@Override
 	public void run() {
 		this.ioThread = new Thread(new Runnable() {
@@ -102,35 +107,59 @@ public class CLI extends UI {
 		return this.view.getLine();
 	}
 
+	/**
+	 * This method display the maze when the maze is ready
+	 * @param maze, Maze3d
+	 * @param mazeName, String
+	 */
 	@Override
 	public void mazeReady(Maze3d maze, String mazeName) {
 		this.printMessage(maze.toString());
 	}
 
+	/**
+	 * Display the solution 
+	 * @param solution, Solution<Position>
+	 */
 	@Override
 	public void displaySolution(Solution<Position> solution) {
 		this.printMessage(solution.toString());
 	}
 
+	/**
+	 * When the position need to move
+	 * @param pos, Position
+	 */
 	@Override
 	public void move(Position pos) {
 		this.printMessage(pos.toString());
 	}
 
+	/**
+	 * call the print message "You are the winner!"
+	 */
 	@Override
 	public void winner() {
 		this.printMessage("You are the winner!");
 	}
 
+	/**
+	 * Call the print message
+	 * @param databaseValues, String
+	 */
 	@Override
 	public void databaseValues(String databaseValues) {
 		this.printMessage(databaseValues);
 	}
 
+	/**
+	 * display all the dir in the path
+	 * @param dirList, String[]
+	 */
 	@Override
 	public void dirListReady(String[] dirList) {
-		System.out.println("");
-//		this.printMessage(dirList);
-		
+		if (dirList.length != 0)
+			this.printMessage(dirList[0]);
+		else this.printMessage("This path is empty!");
 	}
 }

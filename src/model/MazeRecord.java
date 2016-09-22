@@ -7,6 +7,7 @@ import algorithms.search.Solution;
 
 /**
  * This class Represent a maze, a position of the player on the maze and it solution
+ * Data member Maze3d maze, Position currPosition, Solution<Position> solution
  * @author Gal Basre & Ido Dror
  */
 @SuppressWarnings("serial")
