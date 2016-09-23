@@ -40,7 +40,7 @@ public class GenerateMazeWindows extends DialogWindow {
 		this.shell = new Shell(display, SWT.TITLE | SWT.CLOSE);
 		this.shell.setText("Generate maze window");
 		this.shell.setLayout(new GridLayout(2, false));
-		this.shell.setSize(200, 200);
+		this.shell.setSize(215, 215);
 		this.shell.setBackgroundImage(new Image(null, "resources/images/backgroundSmall.png"));
 		this.shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		
@@ -53,7 +53,7 @@ public class GenerateMazeWindows extends DialogWindow {
 		
 		Label lblHead = new Label(shell, SWT.BOLD);
 		FontData fontData = lblHead.getFont().getFontData()[0];
-		Font font = new Font(display, new FontData(fontData.getName(), fontData.getHeight()+3, SWT.BOLD));
+		Font font = new Font(display, new FontData(fontData.getName(), fontData.getHeight()+1, SWT.BOLD));
 		lblHead.setFont(font);
 		lblHead.setText("Enter maze dimensions");
 		lblHead.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));

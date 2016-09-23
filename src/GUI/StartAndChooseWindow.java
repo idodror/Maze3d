@@ -80,7 +80,7 @@ public class StartAndChooseWindow implements Runnable {
 		
 		Label lblHead = new Label(shell, SWT.BOLD);
 		FontData fontData = lblHead.getFont().getFontData()[0];
-		lblHead.setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+10, SWT.BOLD)));
+		lblHead.setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+7, SWT.BOLD)));
 		lblHead.setText("Choose your favorite UI");
 		lblHead.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
 		
@@ -111,7 +111,7 @@ public class StartAndChooseWindow implements Runnable {
 		
 		Label lblYesNo = new Label(shell, SWT.NONE);
 		lblYesNo.setText("Get up/down hints?\n      [GUI ONLY]");
-		lblYesNo.setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+6, SWT.BOLD)));
+		lblYesNo.setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+3, SWT.BOLD)));
 		lblYesNo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
 		
 		Composite radioChoose = new Composite(shell, SWT.NONE);
@@ -120,13 +120,13 @@ public class StartAndChooseWindow implements Runnable {
 		Button[] radios = new Button[2];
 		radios[0] = new Button(radioChoose, SWT.RADIO);
 		radios[0].setText("YES");
-		radios[0].setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+3, SWT.BOLD)));
+		radios[0].setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+1, SWT.BOLD)));
 		radios[0].setBounds(10, 0, 50, 15);
 		radios[0].setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		radios[0].setEnabled(false);
 		radios[1] = new Button(radioChoose, SWT.RADIO);
 		radios[1].setText("NO");
-		radios[1].setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+3, SWT.BOLD)));
+		radios[1].setFont(new Font(display, new FontData(fontData.getName(), fontData.getHeight()+1, SWT.BOLD)));
 		radios[1].setBounds(100, 0, 50, 15);
 		radios[1].setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		radios[1].setEnabled(false);

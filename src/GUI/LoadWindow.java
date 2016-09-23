@@ -15,8 +15,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import view.MyView;
+
 /**
- * class LoadWindow-this is the load window
+ * class LoadWindow - this is the load window
  * after push the button "load from file" we will choose
  * from our older save maze
  * extends DialogWindow 

@@ -370,7 +370,7 @@ public class MyModel extends Observable implements Model {
 		File myFile = null;
 		FileOutputStream fileOutput = null;
 		try {
-			myFile = new File("resources\\saved_mazes\\" + args[1]);
+			myFile = new File("resources/saved_mazes/" + args[1]);
 			fileOutput = new FileOutputStream(myFile);
 			save(fileOutput);
 		} catch (FileNotFoundException e) {
@@ -412,7 +412,7 @@ public class MyModel extends Observable implements Model {
 		FileInputStream input = null;
 		byte[] readedData = null;
 		try {
-			myFile = new File("resources\\saved_mazes\\" + args[0]);
+			myFile = new File("resources/saved_mazes/" + args[0]);
 			input = new FileInputStream(myFile);
 			readedData = load(input);
 		} catch (FileNotFoundException e){
@@ -560,7 +560,7 @@ public class MyModel extends Observable implements Model {
 	public void zipSave() {
 		ObjectOutputStream objectOut = null;
 		FileOutputStream out = null;
-		File file = new File(System.getProperty("user.dir") + "\\" + MyJaxbUtil.getProperties().getZipFilePath());
+		File file = new File(MyJaxbUtil.getProperties().getZipFilePath());
 		file.getParentFile().mkdirs();
 		try {
 			file.createNewFile();
@@ -581,7 +581,7 @@ public class MyModel extends Observable implements Model {
 	 */
 	@SuppressWarnings("unchecked")
 	public void zipLoad() {
-		File file = new File(System.getProperty("user.dir") + "\\" + MyJaxbUtil.getProperties().getZipFilePath());
+		File file = new File(MyJaxbUtil.getProperties().getZipFilePath());
 		ObjectInputStream objectIn = null;
 		Map<String, MazeRecord> loadedMap = Collections.synchronizedMap(new HashMap<String, MazeRecord>());
 		try {
