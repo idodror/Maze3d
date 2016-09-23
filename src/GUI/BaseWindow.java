@@ -60,10 +60,10 @@ public abstract class BaseWindow extends UI {
 	 */
 	@Override
 	public void exit() {
-		if (this.showSolutionByAnimation != null && this.animationSolutionTask != null) {
-			this.animationSolutionTask.cancel();
+		if (this.showSolutionByAnimation != null)
 			this.showSolutionByAnimation.cancel();
-		}
+		if (this.animationSolutionTask != null)
+			this.animationSolutionTask.cancel();
 		this.display.dispose();
 	}
 
