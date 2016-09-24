@@ -79,9 +79,9 @@ public class MazeDisplay extends Canvas {
 		    public void mouseScrolled(MouseEvent g) {
 		        if((g.stateMask & SWT.CONTROL) == SWT.CONTROL) {
 		        	if (g.count > 0)
-		        		setSize((int)(getSize().x + 20), (int)(getSize().y + 20));
+		        		setSize(getSize().x + 20, getSize().y + 20);
 		        	if (g.count < 0)
-		        		setSize((int)(getSize().x - 20), (int)(getSize().y - 20));
+		        		setSize(getSize().x - 20, getSize().y - 20);
 		        }
 				redraw();
 		    }
