@@ -5,6 +5,8 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -69,6 +71,21 @@ public class MazeDisplay extends Canvas {
 		this.goalPosition= new Position(-1, -1, -1);
 		this.upHint = new ArrayList<Point>();
 		this.downHint = new ArrayList<Point>();
+		
+		// Zoom in/out bonus (Ctrl + MouseWheel)
+		this.addMouseWheelListener(new MouseWheelListener() {
+
+		    @Override
+		    public void mouseScrolled(MouseEvent g) {
+		        if((g.stateMask & SWT.CONTROL) == SWT.CONTROL) {
+		        	if (g.count > 0)
+		        		setSize((int)(getSize().x + 20), (int)(getSize().y + 20));
+		        	if (g.count < 0)
+		        		setSize((int)(getSize().x - 20), (int)(getSize().y - 20));
+		        }
+				redraw();
+		    }
+		});
 
 		// draw the maze
 		this.addPaintListener(new PaintListener() {
@@ -124,12 +141,6 @@ public class MazeDisplay extends Canvas {
 			}
 		});
 		
-		/**
-		 * This method will listene to the key from io and if it isn't null will 
-		 * execute the command and than draw again
-		 * leagel command : ARROW_RIGHT, ARROW_LEFT, ARROW_UP, ARROW_DOWN, PAGE_DOWN, PAGE_UP
-		 * deafult None
-		 */
 		this.addKeyListener(new KeyListener() {
 			
 			@Override
@@ -172,7 +183,6 @@ public class MazeDisplay extends Canvas {
 	 * setWinner
 	 * @param winner, boolean
 	 */
-
 	public void setWinner(boolean winner) {
 		this.winner = winner;
 	}
